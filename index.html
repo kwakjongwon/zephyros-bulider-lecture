@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,10 +12,51 @@
             <p class="eyebrow">Lucky Pick</p>
             <button id="theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
         </div>
-        <h1>Lotto Number Generator</h1>
-        <p class="subtitle">Generate six random numbers and switch between light and dark themes.</p>
-        <button id="generate-btn" type="button">Generate Numbers</button>
-        <div id="numbers-container" aria-live="polite"></div>
+        <section class="hero-section">
+            <h1>Lotto Number Generator</h1>
+            <p class="subtitle">Generate six random numbers and switch between light and dark themes.</p>
+            <button id="generate-btn" type="button">Generate Numbers</button>
+            <div id="numbers-container" aria-live="polite"></div>
+        </section>
+
+        <section class="form-section" aria-labelledby="partnership-title">
+            <div class="section-copy">
+                <p class="section-label">Partnership</p>
+                <h2 id="partnership-title">철학자 설문 서비스 제휴 문의</h2>
+                <p class="section-description">나와 가장 비슷한 철학자를 찾는 설문 서비스와 협업하고 싶다면 아래 폼으로 간단히 남겨주세요. 운영, 콘텐츠, 제휴, 광고 문의를 받을 수 있게 Formspree에 연결했습니다.</p>
+            </div>
+            <form id="partnership-form" class="contact-form" action="https://formspree.io/f/xwvraepd" method="POST">
+                <input type="hidden" name="_subject" value="Philosopher Survey Partnership Inquiry">
+                <label class="field">
+                    <span>이름</span>
+                    <input type="text" name="name" placeholder="홍길동" required>
+                </label>
+                <label class="field">
+                    <span>이메일</span>
+                    <input type="email" name="email" placeholder="you@example.com" required>
+                </label>
+                <label class="field">
+                    <span>소속 또는 브랜드</span>
+                    <input type="text" name="company" placeholder="회사명 또는 채널명">
+                </label>
+                <label class="field">
+                    <span>문의 유형</span>
+                    <select name="inquiry_type" required>
+                        <option value="">선택해 주세요</option>
+                        <option value="partnership">제휴</option>
+                        <option value="advertising">광고</option>
+                        <option value="content">콘텐츠 협업</option>
+                        <option value="other">기타</option>
+                    </select>
+                </label>
+                <label class="field">
+                    <span>문의 내용</span>
+                    <textarea name="message" rows="5" placeholder="협업 목적과 기대하는 진행 방식을 적어주세요." required></textarea>
+                </label>
+                <button class="submit-button" type="submit">문의 보내기</button>
+                <p id="form-status" class="form-status" aria-live="polite"></p>
+            </form>
+        </section>
     </div>
     <script src="main.js"></script>
 </body>

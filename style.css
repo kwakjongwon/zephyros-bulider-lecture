@@ -3,11 +3,14 @@
     --primary-hover: #1457b8;
     --background-color: #eef3fb;
     --surface-color: rgba(255, 255, 255, 0.88);
+    --surface-strong: rgba(255, 255, 255, 0.94);
     --text-color: #152033;
     --muted-text: #52607a;
     --shadow-color: rgba(31, 53, 91, 0.18);
     --border-color: rgba(84, 118, 168, 0.18);
     --button-text: #ffffff;
+    --input-background: rgba(244, 248, 255, 0.9);
+    --success-color: #127a53;
 }
 
 body.dark-mode {
@@ -15,11 +18,14 @@ body.dark-mode {
     --primary-hover: #58a9ea;
     --background-color: #09111f;
     --surface-color: rgba(12, 24, 42, 0.88);
+    --surface-strong: rgba(10, 20, 36, 0.94);
     --text-color: #edf4ff;
     --muted-text: #aac0de;
     --shadow-color: rgba(0, 0, 0, 0.42);
     --border-color: rgba(124, 196, 255, 0.16);
     --button-text: #06111f;
+    --input-background: rgba(8, 17, 30, 0.9);
+    --success-color: #8ce7bf;
 }
 
 * {
@@ -32,9 +38,6 @@ body {
         radial-gradient(circle at top, rgba(31, 111, 235, 0.18), transparent 28%),
         linear-gradient(180deg, var(--background-color) 0%, #dfe8f7 100%);
     color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: 100vh;
     margin: 0;
     padding: 24px;
@@ -48,8 +51,8 @@ body.dark-mode {
 }
 
 .container {
-    width: min(100%, 560px);
-    text-align: center;
+    width: min(100%, 860px);
+    margin: 0 auto;
     background-color: var(--surface-color);
     padding: 32px;
     border-radius: 24px;
@@ -66,7 +69,8 @@ body.dark-mode {
     margin-bottom: 20px;
 }
 
-.eyebrow {
+.eyebrow,
+.section-label {
     margin: 0;
     font-size: 13px;
     font-weight: 700;
@@ -75,16 +79,40 @@ body.dark-mode {
     color: var(--muted-text);
 }
 
-h1 {
+.hero-section {
+    text-align: center;
+    padding-bottom: 36px;
+}
+
+h1,
+h2 {
     margin: 0;
     color: var(--text-color);
+}
+
+h1 {
     font-size: clamp(2rem, 5vw, 2.8rem);
+}
+
+h2 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.subtitle,
+.section-description {
+    color: var(--muted-text);
+    line-height: 1.6;
 }
 
 .subtitle {
     margin: 16px 0 28px;
-    color: var(--muted-text);
-    line-height: 1.6;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
 button {
@@ -105,7 +133,8 @@ button:hover {
     border: 1px solid var(--border-color);
 }
 
-#generate-btn {
+#generate-btn,
+.submit-button {
     background-color: var(--primary-color);
     color: var(--button-text);
     padding: 15px 30px;
@@ -113,7 +142,8 @@ button:hover {
     font-weight: 700;
 }
 
-#generate-btn:hover {
+#generate-btn:hover,
+.submit-button:hover {
     background-color: var(--primary-hover);
 }
 
@@ -139,6 +169,85 @@ lotto-ball {
     animation: bounce-in 0.5s ease;
 }
 
+.form-section {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap: 28px;
+    align-items: start;
+    padding: 28px;
+    border-radius: 22px;
+    background: var(--surface-strong);
+    border: 1px solid var(--border-color);
+}
+
+.section-copy {
+    padding-top: 6px;
+}
+
+.section-description {
+    margin: 14px 0 0;
+}
+
+.contact-form {
+    display: grid;
+    gap: 16px;
+}
+
+.field {
+    display: grid;
+    gap: 8px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.field span {
+    font-size: 14px;
+}
+
+.field input,
+.field select,
+.field textarea {
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 14px 16px;
+    color: var(--text-color);
+    background-color: var(--input-background);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(31, 111, 235, 0.12);
+}
+
+.field textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.submit-button {
+    width: 100%;
+}
+
+.form-status {
+    min-height: 24px;
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted-text);
+}
+
+.form-status.is-success {
+    color: var(--success-color);
+}
+
+.form-status.is-error {
+    color: #d0021b;
+}
+
 @keyframes bounce-in {
     0% {
         transform: scale(0.5);
@@ -150,17 +259,24 @@ lotto-ball {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 720px) {
     .container {
         padding: 24px;
     }
 
-    .toolbar {
+    .toolbar,
+    .form-section {
+        grid-template-columns: 1fr;
         flex-direction: column;
     }
 
+    .toolbar {
+        display: flex;
+    }
+
     #theme-toggle,
-    #generate-btn {
+    #generate-btn,
+    .submit-button {
         width: 100%;
     }
 }
