@@ -5,7 +5,7 @@ class LottoBall extends HTMLElement {
     }
 
     connectedCallback() {
-        const number = this.getAttribute('number');
+        const number = Number(this.getAttribute('number'));
         const color = this.getColorForNumber(number);
         this.shadowRoot.innerHTML = `
             <style>
@@ -49,17 +49,49 @@ class LottoBall extends HTMLElement {
 
 customElements.define('lotto-ball', LottoBall);
 
-document.getElementById('generate-btn').addEventListener('click', () => {
-    const numbersContainer = document.getElementById('numbers-container');
+const themeToggleButton = document.getElementById('theme-toggle');
+const generateButton = document.getElementById('generate-btn');
+const numbersContainer = document.getElementById('numbers-container');
+const storageKey = 'lotto-theme';
+
+function applyTheme(theme) {
+    const isDarkMode = theme === 'dark';
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    themeToggleButton.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+    themeToggleButton.setAttribute('aria-pressed', String(isDarkMode));
+}
+
+function getInitialTheme() {
+    const savedTheme = localStorage.getItem(storageKey);
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+        return savedTheme;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function generateNumbers() {
     numbersContainer.innerHTML = '';
     const numbers = new Set();
+
     while (numbers.size < 6) {
         numbers.add(Math.floor(Math.random() * 45) + 1);
     }
 
-    numbers.forEach(number => {
+    [...numbers].sort((a, b) => a - b).forEach((number) => {
         const lottoBall = document.createElement('lotto-ball');
         lottoBall.setAttribute('number', number);
         numbersContainer.appendChild(lottoBall);
     });
+}
+
+const initialTheme = getInitialTheme();
+applyTheme(initialTheme);
+
+themeToggleButton.addEventListener('click', () => {
+    const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    localStorage.setItem(storageKey, nextTheme);
 });
+
+generateButton.addEventListener('click', generateNumbers);

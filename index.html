@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,9 +8,14 @@
 </head>
 <body>
     <div class="container">
+        <div class="toolbar">
+            <p class="eyebrow">Lucky Pick</p>
+            <button id="theme-toggle" type="button" aria-pressed="false">Dark Mode</button>
+        </div>
         <h1>Lotto Number Generator</h1>
-        <button id="generate-btn">Generate Numbers</button>
-        <div id="numbers-container"></div>
+        <p class="subtitle">Generate six random numbers and switch between light and dark themes.</p>
+        <button id="generate-btn" type="button">Generate Numbers</button>
+        <div id="numbers-container" aria-live="polite"></div>
     </div>
     <script src="main.js"></script>
 </body>

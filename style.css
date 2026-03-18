@@ -1,55 +1,129 @@
 :root {
-    --primary-color: #4a90e2;
-    --secondary-color: #f5a623;
-    --background-color: #f0f2f5;
-    --text-color: #333;
-    --white: #fff;
+    --primary-color: #1f6feb;
+    --primary-hover: #1457b8;
+    --background-color: #eef3fb;
+    --surface-color: rgba(255, 255, 255, 0.88);
+    --text-color: #152033;
+    --muted-text: #52607a;
+    --shadow-color: rgba(31, 53, 91, 0.18);
+    --border-color: rgba(84, 118, 168, 0.18);
+    --button-text: #ffffff;
+}
+
+body.dark-mode {
+    --primary-color: #7cc4ff;
+    --primary-hover: #58a9ea;
+    --background-color: #09111f;
+    --surface-color: rgba(12, 24, 42, 0.88);
+    --text-color: #edf4ff;
+    --muted-text: #aac0de;
+    --shadow-color: rgba(0, 0, 0, 0.42);
+    --border-color: rgba(124, 196, 255, 0.16);
+    --button-text: #06111f;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Helvetica Neue', sans-serif;
-    background-color: var(--background-color);
+    font-family: "Helvetica Neue", sans-serif;
+    background:
+        radial-gradient(circle at top, rgba(31, 111, 235, 0.18), transparent 28%),
+        linear-gradient(180deg, var(--background-color) 0%, #dfe8f7 100%);
     color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    padding: 24px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background:
+        radial-gradient(circle at top, rgba(124, 196, 255, 0.18), transparent 24%),
+        linear-gradient(180deg, #09111f 0%, #03070f 100%);
 }
 
 .container {
+    width: min(100%, 560px);
     text-align: center;
-    background-color: var(--white);
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    background-color: var(--surface-color);
+    padding: 32px;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 24px 60px var(--shadow-color);
+    backdrop-filter: blur(18px);
+}
+
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.eyebrow {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-text);
 }
 
 h1 {
-    color: var(--primary-color);
-    margin-bottom: 30px;
+    margin: 0;
+    color: var(--text-color);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+}
+
+.subtitle {
+    margin: 16px 0 28px;
+    color: var(--muted-text);
+    line-height: 1.6;
+}
+
+button {
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+#theme-toggle {
+    padding: 10px 16px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 #generate-btn {
     background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
+    color: var(--button-text);
     padding: 15px 30px;
     font-size: 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-weight: 700;
 }
 
 #generate-btn:hover {
-    background-color: #357abd;
+    background-color: var(--primary-hover);
 }
 
 #numbers-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 15px;
-    margin-top: 40px;
+    margin-top: 36px;
+    min-height: 60px;
 }
 
 lotto-ball {
@@ -61,7 +135,6 @@ lotto-ball {
     align-items: center;
     font-size: 24px;
     font-weight: bold;
-    color: var(--white);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     animation: bounce-in 0.5s ease;
 }
@@ -74,5 +147,20 @@ lotto-ball {
     100% {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 24px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+    }
+
+    #theme-toggle,
+    #generate-btn {
+        width: 100%;
     }
 }
