@@ -107,37 +107,38 @@ function patch(map, edits) {
   return out;
 }
 /** 화면 폭에 맞춰 정수 배율로 캔버스 크기 결정 (가로를 꽉 채우고 넘친 1도트 미만은 잘림) */
-function fitCanvas(canvas, cssW, cssH, targetW) {
+function fitSize(cssW, cssH, targetW) {
   const s = Math.max(1, Math.round(cssW / targetW));
-  const W = Math.ceil(cssW / s), H = Math.ceil(cssH / s);
+  return { W: Math.ceil(cssW / s), H: Math.ceil(cssH / s), s };
+}
+function applySize(canvas, { W, H, s }) {
   canvas.width = W; canvas.height = H;
   canvas.style.width = W * s + 'px';
   canvas.style.height = H * s + 'px';
-  return { W, H, s };
 }
 
 // ── SPRITES ────────────────────────────────────────────────────
 // 문자 = 팔레트: k 외곽선/가장 어두운 남색 · s 보조 면 · h 안개 · d 짙은 청록 · t 청록 · a 불빛 · c 크림 · . 투명
 // 실제 PNG로 바꿀 때는 ASSETS.sprites / ASSETS.apprenticeSheet 에 경로를 넣으세요.
 const SPRITES = {
-  // 견습생 11×16 — 오른쪽을 보고 등불을 든 모습
+  // 견습생 12×16 — 오른쪽을 보고 등불을 든 모습 (청록 외투 · 크림 목도리 · 편지 가방)
   apprenticeIdle0: [
-    '....kkkk...',
-    '...kttttk..',
-    '..kttttttk.',
-    '..kdddddkkk',
-    '..kscccck..',
-    '..kscckck..',
-    '...kccck...',
-    '..kttttk...',
-    '.khhhhhhk..',
-    '.kshdhhhhk.',
-    '.kshhdhhkck',
-    '.kshhhdkkak',
-    '.kshhhhkacak',
-    '..kkkkkkkak',
-    '...kk.kk.k.',
-    '...kk.kk...',
+    '...kkkk.....',
+    '..kdttdk....',
+    '.kddddddk...',
+    '.kkkkkkkkkk.',
+    '.kkkcccck...',
+    '.kkccckck...',
+    '..kcccack...',
+    '...kccck....',
+    '..kcccccck..',
+    '.kttttttttk.',
+    '.kdtttttkck.',
+    '.kdthttk.kk.',
+    '.kdthttkkaak',
+    '.kdtthtkkcak',
+    '..kkkkkk.kk.',
+    '..kk.kk.....',
   ],
   apprenticeIdle1: null, // 아래에서 생성 (등불 깜빡임)
   apprenticeWalk0: null,
@@ -157,22 +158,23 @@ const SPRITES = {
 
   // 등대 앞 작은 배 30×13 (뱃머리 왼쪽)
   boat: [
-    '......................k...........',
-    '.....................kak..........',
-    '......................h...........',
-    '......................h...kkkkkkk.',
-    '......................h...kccccck.',
-    '......................h...khhhhhk.',
-    '......................h...khaahsk.',
-    '......................h...khaahsk.',
-    'kk....................h...khhhhsk.',
-    'kckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
-    '.kccccccccccccccccccccccccccccccck',
-    '..ktttttttttttttttttttttttttttttk.',
-    '...kttttttttttttttttttttttttttdk..',
-    '....kddddddddddddddddddddddddddk...',
-    '.....kkkkkkkkkkkkkkkkkkkkkkkkkk....',
-  ].map((r) => r.slice(0, 34)),
+    '........................k...........',
+    '.......................kak..........',
+    '........................h...........',
+    '........................h...kkkkkkk.',
+    '........................h...kccccck.',
+    '........................h...khhhhsk.',
+    '........................h...khaahsk.',
+    'kk......................h...khaahsk.',
+    'kck.....................h...khhhhsk.',
+    'kcckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
+    '.kcccccccccccccccccccccccccccccccck.',
+    '..kttttttttttttttttttttttttttttttk..',
+    '...ktttttttttttttttttttttttttttdk...',
+    '....kttttttttttttttttttttttttddk....',
+    '.....kddddddddddddddddddddddddk.....',
+    '......kkkkkkkkkkkkkkkkkkkkkkkk......',
+  ],
 
   // 가로등 5×18
   lamp: [
@@ -499,9 +501,9 @@ const SPRITES = {
   ]),
 };
 // 파생 프레임
-SPRITES.apprenticeIdle1 = patch(SPRITES.apprenticeIdle0, [[9, 12, 'c'], [8, 13, 'a']]);
-SPRITES.apprenticeWalk0 = patch(SPRITES.apprenticeIdle0, [[2, 14, '.kk..kk..'], [2, 15, 'kk....kk.']]);
-SPRITES.apprenticeWalk1 = patch(SPRITES.apprenticeIdle0, [[2, 14, '..kkkk...'], [2, 15, '..kk.kk..']]);
+SPRITES.apprenticeIdle1 = patch(SPRITES.apprenticeIdle0, [[9, 12, 'ca'], [9, 13, 'aa']]);
+SPRITES.apprenticeWalk0 = patch(SPRITES.apprenticeIdle0, [[0, 15, '.kk...kk....']]);
+SPRITES.apprenticeWalk1 = patch(SPRITES.apprenticeIdle0, [[0, 15, '...kkkk.....']]);
 SPRITES.cat1 = patch(SPRITES.cat0, [[0, 2, 'kkkk']]);
 
 /** 집 한 채. 창문 좌표는 wins 배열에 기록(불빛은 프레임마다 따로 그림) */
@@ -577,30 +579,28 @@ function drawLighthouse(g, cx, base, h) {
   // 문
   px(g, 'k', cx - 1, base - 4, 3, 4);
   px(g, 's', cx - 1, base - 4, 1, 1);
-  // 회랑
-  px(g, 'k', cx - 5, top - 1, 11, 1);
-  px(g, 'h', cx - 5, top - 2, 11, 1);
-  for (let x = cx - 5; x <= cx + 5; x += 2) px(g, 'k', x, top - 3, 1, 1);
-  px(g, 'k', cx - 5, top - 4, 11, 1);
-  // 등불실 틀 (불빛은 프레임마다)
-  px(g, 'k', cx - 3, top - 9, 7, 5);
-  // 지붕
-  px(g, 'k', cx - 3, top - 10, 7, 1);
-  px(g, 'k', cx - 2, top - 11, 5, 1);
-  px(g, 'd', cx - 2, top - 10, 5, 1);
-  px(g, 't', cx - 2, top - 10, 2, 1);
-  px(g, 'k', cx - 1, top - 12, 3, 1);
-  px(g, 'k', cx, top - 13, 1, 1);
-  px(g, 'k', cx - 4, top - 10, 1, 1); px(g, 'k', cx + 4, top - 10, 1, 1);
+  // 회랑 + 난간
+  px(g, 'k', cx - 6, top - 1, 13, 1);
+  px(g, 'h', cx - 6, top - 2, 13, 1);
+  for (const dx of [-6, -3, 0, 3, 6]) px(g, 'k', cx + dx, top - 3, 1, 1);
+  px(g, 'k', cx - 6, top - 4, 13, 1);
+  // 등불실 틀 (유리 불빛은 프레임마다)
+  px(g, 'k', cx - 4, top - 9, 9, 5);
+  // 지붕 (돔)
+  px(g, 'k', cx - 5, top - 10, 11, 1);
+  px(g, 'k', cx - 4, top - 11, 9, 1); px(g, 'd', cx - 3, top - 11, 7, 1); px(g, 't', cx - 3, top - 11, 2, 1);
+  px(g, 'k', cx - 3, top - 12, 7, 1); px(g, 'd', cx - 2, top - 12, 5, 1); px(g, 't', cx - 2, top - 12, 1, 1);
+  px(g, 'k', cx - 2, top - 13, 5, 1);
+  px(g, 'k', cx, top - 15, 1, 2);
   return { lx: cx, ly: top - 7, top };
 }
 function drawLampRoom(g, cx, ly, mode) {
   // mode: 0 기본, 1 정면(번쩍)
-  const glass = mode === 1 ? 'c' : 'a';
-  px(g, glass, cx - 2, ly - 1, 5, 3);
-  if (mode !== 1) { px(g, 'c', cx - 1, ly, 1, 1); px(g, 'k', cx, ly - 1, 1, 3); }
+  if (mode === 1) { px(g, 'c', cx - 3, ly - 1, 7, 4); return; }
+  px(g, 'a', cx - 3, ly - 1, 7, 4);
+  px(g, 'c', cx - 1, ly, 3, 2);
+  px(g, 'k', cx - 2, ly - 1, 1, 4); px(g, 'k', cx + 2, ly - 1, 1, 4);
 }
-
 function drawTree(g, kind, x, base) {
   const m = SPRITES[kind];
   drawMap(g, m, x, base - m.length);
@@ -665,7 +665,8 @@ class HarborScene {
     // 하늘: 글자 뒤는 단색, 달과 마을 쪽으로 갈수록 수평선의 밝은 띠가 높아짐 (곡선 띠 + 2px 체크 디더)
     const sp0 = L.spanLeft ?? 12, sp1 = L.spanRight ?? 64;
     const gx0 = L.glowX0 ?? 0;
-    const spanAt = (x) => lerp(sp0, sp1, Math.exp(-Math.pow((x - L.domeX) / L.domeW, 2)) * smooth(gx0, gx0 + w * 0.1, x));
+    const dX = L.domeX ?? w * 0.6, dW = L.domeW ?? w * 0.3;
+    const spanAt = (x) => lerp(sp0, sp1, Math.exp(-Math.pow((x - dX) / dW, 2)) * (gx0 > 0 ? smooth(gx0, gx0 + w * 0.1, x) : 1));
     this.spanAt = spanAt;
     const BANDS = [[0.28, 'k'], [0.33, 'ks'], [0.56, 's'], [0.61, 'sh'], [2, 'h']];
     for (let x = 0; x < w; x++) {
@@ -1094,23 +1095,23 @@ class HarborScene {
     if (L.boat) {
       const bob = reduceMotion ? 0 : (Math.sin(t * 1.6) > 0.2 ? 1 : 0);
       boatX = Math.round(L.boat.x + (reduceMotion ? 0 : p * (L.boat.travel || 0))) - Math.round(pan * (L.boat.f ?? 1));
-      boatY = L.boat.water - 12 + bob;
+      boatY = L.boat.water - 13 + bob;
       const wl = L.boat.water;
       for (let k = 0; k < 6; k++) {
         const yy = wl + 1 + k;
         if (yy >= H) break;
         const wob = reduceMotion ? 0 : Math.round(Math.sin(t * 2 + k * 1.3) * 1);
-        dither(ctx, k < 2 ? 'd' : 's', boatX + 4 + wob + k, yy, 26 - k * 2, 1, 0.6 - k * 0.08);
+        dither(ctx, k < 2 ? 'd' : 's', boatX + 5 + wob + k, yy, 26 - k * 2, 1, 0.6 - k * 0.08);
       }
       const wob = reduceMotion ? 0 : Math.round(Math.sin(t * 2.4));
-      px(ctx, 'a', boatX + 28 + wob, wl + 4, 2, 1);
-      px(ctx, 'a', boatX + 22 - wob, wl + 7, 1, 1);
+      px(ctx, 'a', boatX + 30 + wob, wl + 6, 2, 1);
+      px(ctx, 'a', boatX + 24 - wob, wl + 9, 1, 1);
       // 물살 (뒤로 남는 잔물결)
-      for (let k = 0; k < 4; k++) if (!reduceMotion && (frame + k) % 4 < 3) px(ctx, 'h', boatX + 34 + k * 4 + ((frame >> 1) % 2), wl + (k % 2), 2, 1);
+      for (let k = 0; k < 4; k++) if (!reduceMotion && (frame + k) % 4 < 3) px(ctx, 'h', boatX + 32 + k * 4 + ((frame >> 1) % 2), wl + (k % 2), 2, 1);
       const bs = spriteCanvas('boat');
       const vis = wl - boatY + 1;
       ctx.drawImage(bs, 0, 0, bs.width, vis, boatX, boatY, bs.width, vis);
-      dither(ctx, 'h', boatX + 3, wl + 1, 28, 1, 0.5);
+      dither(ctx, 'h', boatX + 4, wl + 1, 27, 1, 0.5);
     }
     // 가로등 반영
     if (this.lampPos) {
@@ -1138,7 +1139,7 @@ class HarborScene {
       else name = (!reduceMotion && frame % 8 < 3) ? 'apprenticeIdle1' : 'apprenticeIdle0';
       const sprite = this.sheetFrame(name) || spriteCanvas(name);
       // 등불 빛 웅덩이
-      dither(ctx, 'a', cx + 4, L.pier.y, 10, 1, (xx) => 0.6 - Math.abs(xx - (cx + 9)) * 0.12);
+      dither(ctx, 'a', cx + 3, L.pier.y, 13, 1, (xx) => 0.62 - Math.abs(xx - (cx + 9)) * 0.11);
       ctx.drawImage(sprite, cx, cy);
       // 등불 반영
       const wob = reduceMotion ? 0 : Math.round(Math.sin(t * 2.3) * 1);
@@ -1179,7 +1180,7 @@ function layoutLandscape(W, H, text) {
     horizon,
     textZone: text ? { x0: 0, y0: 0, x1: text.right + 2, y1: text.bottom + 2 } : null,
     starTop: text ? text.header + 2 : 3,
-    spanLeft: 12, spanRight: 96, glowX0: textRight + 2, domeX: Math.round(W * 0.74), domeW: Math.round(W * 0.27),
+    spanLeft: 12, spanRight: 86, glowX0: textRight + 2, domeX: Math.round(W * 0.76), domeW: Math.round(W * 0.34),
     moon,
     farHeight: 24,
     farEnv: (x) => 0.2 + 0.8 * smooth(W * 0.3, W * 0.66, x),
@@ -1196,9 +1197,8 @@ function layoutLandscape(W, H, text) {
     quay: { x0: quayX0 },
     lamp: { x: pierX0 + 3 },
     crates: { x: quayX0 + 10 },
-    boat: { x: Math.round(W * 0.03), water: pierY + 28, travel: 26, f: 1.2 },
+    boat: { x: Math.round(W * 0.05), water: pierY + 27, travel: 30, f: 1.2 },
     char: { x0: pierX0 + 14, walk: 30 },
-    fore: { xs: [Math.round(W * 0.88), Math.round(W * 0.97), Math.round(W * 1.06)], top: pierY + 16 },
     pan: 36,
     factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1, fore: 1.35 },
   };
@@ -1236,7 +1236,6 @@ function layoutPortrait(W, H, text) {
     crates: { x: quayX0 + 5 },
     boat: { x: 2, water: pierY + 30, travel: 12, f: 1.2 },
     char: { x0: pierX0 + 8, walk: 14 },
-    fore: { xs: [Math.round(W * 0.9), Math.round(W * 1.02)], top: pierY + 22 },
     pan: 14,
     factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1, fore: 1.35 },
   };
@@ -1356,10 +1355,11 @@ function registerVignette(canvas, targetW, setup) {
   const size = () => {
     const r = box.getBoundingClientRect();
     if (!r.width) return;
-    const fit = fitCanvas(canvas, r.width, r.height || r.width * 9 / 16, targetW);
-    const k = `${fit.W}x${fit.H}`;
+    const fit = fitSize(r.width, r.height || r.width * 9 / 16, targetW);
+    const k = `${fit.W}x${fit.H}x${fit.s}`;
     if (k === v.key) return;
     v.key = k;
+    applySize(canvas, fit);
     v.state = setup(fit.W, fit.H);
     v.state.draw(v.ctx, performance.now() / 1000, true);
   };
@@ -1408,12 +1408,18 @@ function mapVignette(W, H) {
     const edge = !land(x - 1, y) || !land(x + 1, y) || !land(x, y - 1) || !land(x, y + 1);
     const shore = !land(x, y + 2) || !land(x - 2, y);
     px(g, edge ? 'k' : shore ? 'd' : 't', x, y);
-    if (!edge && !shore && bayer(x, y) < 0.18) px(g, 'd', x, y);
   }
   // 바닷가 거품
   for (let y = 1; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
     if (land(x, y)) continue;
     if ((land(x + 1, y) || land(x, y - 1)) && bayer(x, y) < 0.5) px(g, 'h', x, y);
+  }
+  // 숲 (작은 나무 무리)
+  const RT = rng(8);
+  for (let i = 0; i < 60; i++) {
+    const x = Math.round(W * (0.2 + RT() * 0.7)), y = Math.round(H * (0.12 + RT() * 0.7));
+    if (!land(x - 2, y - 2) || !land(x + 3, y + 3)) continue;
+    px(g, 'd', x, y + 1, 3, 2); px(g, 'd', x + 1, y, 1, 1); px(g, 'k', x, y + 3, 3, 1);
   }
   // 길 (배달 경로) — 선착장 → 우체국 → 언덕길 → 등대
   const pts = [[0.18, 0.80], [0.30, 0.66], [0.37, 0.52], [0.49, 0.44], [0.60, 0.34], [0.72, 0.26], [0.83, 0.18]];
@@ -1434,8 +1440,9 @@ function mapVignette(W, H) {
     const x = Math.round(W * (0.3 + R() * 0.45)), y = Math.round(H * (0.28 + R() * 0.38));
     if (!land(x - 2, y) || !land(x + 4, y + 3)) continue;
     if (P2.some(([px2, py2]) => Math.abs(px2 - x) < 4 && Math.abs(py2 - y) < 4)) continue;
-    px(g, 'k', x - 1, y - 1, 5, 4);
-    px(g, R() < 0.6 ? 'h' : 's', x, y, 3, 2);
+    px(g, 'k', x, y + 2, 4, 1);
+    px(g, R() < 0.6 ? 'h' : 'c', x, y, 3, 1);
+    px(g, 's', x, y + 1, 3, 1);
     if (R() < 0.6) px(g, 'a', x + 1, y + 1, 1, 1);
   }
   // 선착장
@@ -1504,10 +1511,9 @@ function trailerVignette(W, H) {
   const horizon = Math.round(H * 0.64);
   const cliffX = Math.round(W * 0.56);
   const L = {
-    seed: 21, horizon, skyStart: Math.round(H * 0.34),
-    textZone: null,
+    seed: 21, horizon,
+    textZone: null, spanLeft: 14, spanRight: 80, domeX: Math.round(W * 0.42), domeW: Math.round(W * 0.34),
     moon: { x: Math.round(W * 0.2), y: Math.round(H * 0.2), r: 9 },
-    cloud: { x: Math.round(W * 0.05), y: Math.round(H * 0.32), w: Math.round(W * 0.35) },
     farHeight: 22, farEnv: (x) => 0.4 + 0.6 * Math.sin((x / W) * Math.PI),
     island: { x: Math.round(W * 0.85), w: 20 },
     terraces: [
@@ -1535,8 +1541,8 @@ function finaleVignette(W, H) {
   const horizon = Math.round(H * 0.72);
   const cliffX = Math.round(W * 0.78);
   const L = {
-    seed: 33, horizon, skyStart: 2,
-    textZone: null, moon: null, cloud: null,
+    seed: 33, horizon,
+    textZone: null, moon: null, spanLeft: 10, spanRight: Math.round(H * 0.6), domeX: Math.round(W * 0.66), domeW: Math.round(W * 0.3),
     farHeight: 14, farEnv: (x) => 0.3 + 0.7 * smooth(0, W * 0.5, x),
     island: { x: Math.round(W * 0.06), w: 20 },
     terraces: [
@@ -1558,54 +1564,58 @@ function finaleVignette(W, H) {
 function postofficeVignette(W, H) {
   const Ly = makeLayer(W, H);
   const g = Ly.g;
-  const floorY = Math.round(H * 0.74);
-  // 벽 · 징두리
+  const floorY = Math.round(H * 0.78);
+  // 벽 · 몰딩 · 징두리
   px(g, 's', 0, 0, W, floorY);
-  for (let x = 0; x < W; x += 8) px(g, 'k', x, 0, 1, floorY - 18);
-  px(g, 'd', 0, floorY - 18, W, 18);
-  px(g, 't', 0, floorY - 18, W, 1);
-  for (let x = 3; x < W; x += 6) px(g, 'k', x, floorY - 16, 1, 15);
-  // 바닥
+  px(g, 'k', 0, 0, W, 3); px(g, 'h', 0, 3, W, 1);
+  const wsY = floorY - 15;
+  px(g, 'd', 0, wsY, W, 15);
+  px(g, 't', 0, wsY, W, 1); px(g, 'k', 0, wsY + 1, W, 1);
+  for (let x = 4; x < W; x += 7) px(g, 'k', x, wsY + 3, 1, 11);
+  px(g, 'k', 0, floorY - 1, W, 1);
+  // 바닥 판자
   px(g, 'k', 0, floorY, W, H - floorY);
-  for (let y = floorY + 2; y < H; y += 3) px(g, 's', 0, y, W, 1);
-  for (let y = floorY + 2, i = 0; y < H; y += 3, i++) for (let x = (i % 2) * 7; x < W; x += 14) px(g, 'k', x, y, 1, 1);
-  // 창문 (밤바다)
-  const wx = Math.round(W * 0.08), wy = Math.round(H * 0.14), ww = Math.round(W * 0.24), wh = Math.round(H * 0.32);
+  for (let y = floorY + 2, i = 0; y < H; y += 3, i++) {
+    px(g, 's', 0, y, W, 2);
+    for (let x = (i % 2) * 9; x < W; x += 18) px(g, 'k', x, y, 1, 2);
+  }
+  // 창문 (밤바다와 달)
+  const wx = Math.round(W * 0.05), wy = Math.round(H * 0.14), ww = Math.round(W * 0.24), wh = Math.round(H * 0.36);
   px(g, 'k', wx - 2, wy - 2, ww + 4, wh + 4);
-  px(g, 'k', wx, wy, ww, wh);
-  dither(g, 's', wx, wy + Math.round(wh * 0.55), ww, Math.round(wh * 0.45), (x, y) => (y - wy - wh * 0.55) / (wh * 0.45));
+  const sea = wy + Math.round(wh * 0.62);
+  px(g, 'k', wx, wy, ww, sea - wy);
+  px(g, 'h', wx, sea, ww, 1);
+  for (let y = sea + 1; y < wy + wh; y++) px(g, (y - sea) % 2 ? 's' : 'k', wx, y, ww, 1);
   px(g, 'c', wx + ww - 7, wy + 3, 3, 3); px(g, 'k', wx + ww - 6, wy + 3, 2, 2);
-  px(g, 'c', wx + 3, wy + 4, 1, 1); px(g, 'h', wx + 9, wy + 7, 1, 1);
-  px(g, 'h', wx + Math.round(ww / 2), wy, 1, wh); px(g, 'h', wx, wy + Math.round(wh / 2), ww, 1);
-  px(g, 'h', wx - 2, wy + wh + 2, ww + 4, 1);
-  // 선반 (편지 칸)
-  const sx = Math.round(W * 0.58), sy = Math.round(H * 0.1), cols = 5, rows = 4, cw = 8, ch = 7;
-  px(g, 'k', sx - 1, sy - 1, cols * cw + 2, rows * ch + 2);
+  px(g, 'c', wx + 3, wy + 4, 1, 1); px(g, 'h', wx + 8, wy + 8, 1, 1);
+  px(g, 'h', wx + (ww >> 1), wy, 1, wh); px(g, 'h', wx, wy + (wh >> 1), ww, 1);
+  px(g, 'h', wx - 3, wy + wh + 2, ww + 6, 1); px(g, 'k', wx - 3, wy + wh + 3, ww + 6, 1);
+  // 편지 칸 선반
+  const cols = Math.max(4, Math.floor((W * 0.36) / 8)), rows = 4, cw = 8, ch = 6;
+  const sx = W - 4 - cols * cw, sy = Math.round(H * 0.09);
+  px(g, 'k', sx - 2, sy - 2, cols * cw + 3, rows * ch + 3);
   const R = rng(9);
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
     const x = sx + c * cw, y = sy + r * ch;
-    px(g, 'h', x, y, cw - 1, ch - 1);
-    px(g, 'k', x + 1, y + 1, cw - 3, ch - 3);
-    if (R() < 0.7) { px(g, 'c', x + 1, y + 2, cw - 3, 2); if (R() < 0.4) px(g, 'a', x + 3, y + 2, 1, 1); }
+    px(g, 'h', x - 1, y - 1, cw - 1, 1);
+    if (R() < 0.75) { px(g, 'c', x + 1, y + 1, cw - 4, 2); if (R() < 0.35) px(g, 'a', x + cw - 4, y + 1, 1, 1); }
   }
   // 카운터
-  const kx = Math.round(W * 0.42), ky = Math.round(H * 0.56);
+  const kx = Math.round(W * 0.47), ky = Math.round(H * 0.56);
   px(g, 'k', kx - 1, ky - 1, W - kx + 1, floorY - ky + 1);
-  px(g, 'h', kx, ky, W - kx, 2);
-  px(g, 's', kx, ky + 2, W - kx, floorY - ky - 2);
-  for (let x = kx + 4; x < W; x += 10) px(g, 'k', x, ky + 4, 6, floorY - ky - 7), px(g, 'd', x + 1, ky + 5, 4, floorY - ky - 9);
-  // 저울·편지 더미
-  px(g, 'k', kx + 30, ky - 4, 9, 4); px(g, 'c', kx + 31, ky - 3, 7, 1); px(g, 'h', kx + 31, ky - 2, 7, 1);
-  px(g, 'k', kx + 44, ky - 3, 7, 3); px(g, 'c', kx + 45, ky - 2, 5, 1);
-  // 매달린 등
-  const hx = Math.round(W * 0.5), hy = Math.round(H * 0.24);
-  px(g, 'k', hx, 0, 1, hy);
+  px(g, 'h', kx, ky, W - kx, 1);
+  px(g, 's', kx, ky + 1, W - kx, 1);
+  for (let x = kx + 3; x < W - 3; x += 11) { px(g, 'd', x, ky + 4, 8, floorY - ky - 7); px(g, 't', x, ky + 4, 8, 1); }
+  // 저울 · 편지 더미
+  const ex = W - 22;
+  px(g, 'k', ex, ky - 4, 9, 4); px(g, 'c', ex + 1, ky - 3, 7, 1); px(g, 'h', ex + 1, ky - 2, 7, 1);
+  px(g, 'k', ex - 10, ky - 3, 8, 3); px(g, 'c', ex - 9, ky - 2, 6, 1); px(g, 'a', ex - 6, ky - 2, 1, 1);
+  // 매달린 등 + 카운터 위 불빛
+  const hx = Math.round(W * 0.42), hy = Math.round(H * 0.18);
+  px(g, 'k', hx, 4, 1, hy - 4);
   drawMap(g, SPRITES.iconLamp.slice(4, 15), hx - 8, hy);
-  for (let y = hy + 12; y < floorY; y++) {
-    const half = (y - hy) * 0.55;
-    dither(g, 'a', Math.round(hx - half), y, Math.round(half * 2), 1, (x) => 0.09 * (1 - Math.abs(x - hx) / (half + 1)) + (y > ky - 2 && y < ky + 2 ? 0.15 : 0));
-  }
-  const catX = kx + 10, catY = ky - 7;
+  dither(g, 'a', kx, ky, Math.round(W * 0.16), 1, (x) => 0.75 - (x - kx) * 0.04);
+  const catX = kx + 4, catY = ky - 7;
   const apX = Math.round(W * 0.3), apY = floorY - 16;
   return {
     animated: true,
@@ -1614,60 +1624,63 @@ function postofficeVignette(W, H) {
       const f = Math.floor(t * FPS);
       ctx.drawImage(spriteCanvas(!reduceMotion && f % 40 < 2 ? 'cat1' : 'cat0'), catX, catY);
       ctx.drawImage(spriteCanvas(!reduceMotion && f % 8 < 3 ? 'apprenticeIdle1' : 'apprenticeIdle0'), apX, apY);
+      dither(ctx, 'a', apX + 3, floorY, 13, 1, (xx) => 0.6 - Math.abs(xx - apX - 9) * 0.1);
     },
   };
 }
 
-/** 스크린샷 2 — 언덕길 계단 */
+/** 스크린샷 2 — 언덕길 돌계단 */
 function alleyVignette(W, H) {
   const Ly = makeLayer(W, H);
   const g = Ly.g;
-  px(g, 'k', 0, 0, W, H);
-  dither(g, 's', 0, Math.round(H * 0.18), W, Math.round(H * 0.2), (x, y) => (y - H * 0.18) / (H * 0.2));
-  px(g, 's', 0, Math.round(H * 0.38), W, H);
   const R = rng(17);
-  for (let i = 0; i < 14; i++) px(g, R() < 0.5 ? 'c' : 'h', Math.floor(R() * W), Math.floor(R() * H * 0.2));
+  const baseY = Math.round(H * 0.5);
+  // 하늘
+  px(g, 'k', 0, 0, W, baseY);
+  for (let y = Math.round(H * 0.2); y < baseY; y++) px(g, (y - Math.round(H * 0.2)) % 3 === 2 || y > baseY - 8 ? 's' : 'k', 0, y, W, 1);
+  for (let i = 0; i < 12; i++) px(g, R() < 0.5 ? 'c' : 'h', Math.floor(R() * W), 2 + Math.floor(R() * H * 0.16));
   const wins = [];
-  // 계단: 왼쪽 아래 → 오른쪽 위
-  const stepW = 6, stepH = 3;
-  const sx0 = Math.round(W * 0.18), sy0 = H;
-  const nSteps = Math.ceil((H * 0.6) / stepH);
-  const stair = [];
-  for (let i = 0; i < nSteps; i++) stair.push({ x: sx0 + i * stepW, y: sy0 - (i + 1) * stepH });
-  // 뒤쪽 집들 (계단 위쪽)
-  let x = Math.round(W * 0.02);
-  const backBase = Math.round(H * 0.58);
-  while (x < W - 14) {
-    const w = [13, 15, 13, 11][Math.floor(R() * 4)];
+  // 뒤쪽 집들
+  let x = 2;
+  while (x < W - 12) {
+    const w = [13, 15, 11, 13][Math.floor(R() * 4)];
     const hw = [];
-    drawHouse(g, x, backBase, { w, wallH: 10, roof: R() < 0.5 ? 'gable' : 'side', wall: 'h', roofCol: R() < 0.6 ? 'd' : 's', chimney: R() < 0.5, windows: w >= 13 ? [6, 9] : [7], doorX: 2 }, hw);
+    drawHouse(g, x, baseY, { w, wallH: 9, roof: R() < 0.5 ? 'gable' : 'side', wall: 'h', roofCol: R() < 0.6 ? 'd' : 's', chimney: R() < 0.5, windows: w >= 13 ? [6, 9] : [7], doorX: 2 }, hw);
     wins.push(...hw);
-    x += w + 3;
+    x += w + 2 + Math.floor(R() * 3);
   }
-  px(g, 'k', 0, backBase, W, H - backBase);
-  // 돌담
-  for (let y = backBase + 1; y < H; y++) for (let xx = 0; xx < W; xx++) {
-    const row = y - backBase;
-    const mortar = row % 4 === 0 || ((xx + (Math.floor(row / 4) % 2) * 4) % 8 === 0);
-    if (!mortar) px(g, row % 4 === 1 ? 'h' : 's', xx, y);
+  // 옹벽
+  px(g, 'k', 0, baseY, W, H - baseY);
+  px(g, 'h', 0, baseY, W, 1);
+  for (let y = baseY + 3; y < H; y += 4) for (let xx = ((y >> 2) % 2) * 5; xx < W; xx += 10) if (R() < 0.7) { px(g, 's', xx + 1, y, 7, 2); px(g, 'h', xx + 1, y, 3, 1); }
+  // 돌계단 (왼쪽 아래 → 오른쪽 위)
+  const stepW = 6, stepH = 3;
+  const sx0 = Math.round(W * 0.06);
+  const steps = [];
+  for (let i = 0; ; i++) {
+    const st = { x: sx0 + i * stepW, y: H - (i + 1) * stepH };
+    if (st.y < baseY + 1) break;
+    steps.push(st);
   }
-  // 계단 (앞)
-  for (const st of stair) {
-    if (st.y < backBase - 2) break;
-    px(g, 'k', st.x - 1, st.y - 1, W, H - st.y + 1);
-    px(g, 'h', st.x, st.y, W - st.x, 1);
-    px(g, 's', st.x, st.y + 1, W - st.x, 2);
+  for (const st of steps) {
+    px(g, 'k', st.x - 1, st.y, stepW + 2, H - st.y);
+    px(g, 'h', st.x, st.y, stepW + 1, 1);
+    px(g, 's', st.x, st.y + 1, stepW, stepH - 1);
   }
-  // 앞쪽 큰 집 (오른쪽)
-  const fx = Math.round(W * 0.68);
+  // 계단 난간
+  const last = steps[steps.length - 1];
+  for (let i = 0; i < steps.length; i += 3) px(g, 'k', steps[i].x + 1, steps[i].y - 6, 1, 6);
+  for (let i = 0; i < steps.length - 1; i++) px(g, 'k', steps[i].x + 1, steps[i].y - 6, stepW, 1);
+  // 앞쪽 집 (오른쪽)
+  const fx = Math.max(last.x + stepW + 6, Math.round(W * 0.7));
   const fhw = [];
-  drawHouse(g, fx, H - 2, { w: Math.max(23, W - fx + 6), wallH: Math.round(H * 0.42), roof: 'side', roofH: 6, wall: 'h', roofCol: 'd', chimney: true, windows: [6, 14], doorX: 3, door: true, porch: true }, fhw);
+  drawHouse(g, fx, H, { w: W - fx + 4, wallH: Math.round(H * 0.4), roof: 'side', roofH: 5, wall: 'h', roofCol: 'd', chimney: true, windows: [5, 12], doorX: W - fx - 6, porch: true }, fhw);
   wins.push(...fhw);
   // 가로등
-  const lpx = Math.round(W * 0.6);
-  const lpBase = stair.find((s) => s.x >= lpx - 3)?.y ?? H - 10;
-  drawMap(g, SPRITES.lamp, lpx - 2, lpBase - 18);
-  const ap = stair[Math.min(stair.length - 1, 5)];
+  const lampStep = steps[Math.min(steps.length - 1, 8)];
+  drawMap(g, SPRITES.lamp, lampStep.x + 2, lampStep.y - 18);
+  dither(g, 'a', lampStep.x - 4, lampStep.y, 16, 1, (xx) => 0.7 - Math.abs(xx - lampStep.x - 4) * 0.09);
+  const ap = steps[Math.min(steps.length - 1, 4)];
   return {
     animated: true,
     draw(ctx, t) {
@@ -1675,8 +1688,8 @@ function alleyVignette(W, H) {
       for (const wd of wins) { px(ctx, 'a', wd.x, wd.y, wd.w, wd.h); if (wd.h >= 3) px(ctx, 'c', wd.x, wd.y, 1, 1); }
       const f = Math.floor(t * FPS);
       const fr = reduceMotion ? 'apprenticeIdle0' : (f % 8 < 4 ? 'apprenticeWalk0' : 'apprenticeWalk1');
-      ctx.drawImage(spriteCanvas(fr), ap.x + 1, ap.y - 16);
-      dither(ctx, 'a', ap.x + 4, ap.y, 12, 1, (xx) => 0.6 - Math.abs(xx - ap.x - 10) * 0.1);
+      ctx.drawImage(spriteCanvas(fr), ap.x - 3, ap.y - 16);
+      dither(ctx, 'a', ap.x + 2, ap.y, 10, 1, (xx) => 0.65 - Math.abs(xx - ap.x - 6) * 0.12);
     },
   };
 }
@@ -1685,40 +1698,41 @@ function alleyVignette(W, H) {
 function lighthouseVignette(W, H) {
   const Ly = makeLayer(W, H);
   const g = Ly.g;
-  const hz = Math.round(H * 0.7);
+  const hz = Math.round(H * 0.72);
   px(g, 'k', 0, 0, W, hz);
-  dither(g, 's', 0, Math.round(hz * 0.5), W, Math.round(hz * 0.5), (x, y) => (y - hz * 0.5) / (hz * 0.5));
-  px(g, 'h', 0, hz - 1, W, 1);
-  for (let y = hz; y < H; y++) px(g, (y - hz) % 3 === 1 ? 'h' : (y - hz) > 10 && (y - hz) % 2 ? 'k' : 's', 0, y, W, 1);
+  for (let y = Math.round(hz * 0.55); y < hz; y++) {
+    const v = (y - hz * 0.55) / (hz * 0.45);
+    for (let x = 0; x < W; x++) px(g, v > 0.7 ? 'h' : v > 0.62 ? ((x + y) % 2 ? 's' : 'h') : v > 0.08 ? 's' : ((x + y) % 2 ? 'k' : 's'), x, y);
+  }
+  for (let y = hz; y < H; y++) px(g, y === hz ? 'h' : (y - hz) % 3 === 1 ? 's' : 'k', 0, y, W, 1);
   const R = rng(4);
-  for (let i = 0; i < 16; i++) px(g, R() < 0.5 ? 'c' : 'h', Math.floor(R() * W), Math.floor(R() * hz * 0.45));
-  // 먼 마을 불빛 (왼쪽 아래 해안)
-  for (let i = 0; i < 18; i++) {
-    const x = Math.round(W * 0.04 + R() * W * 0.36), y = hz - 1 - Math.floor(R() * 5);
+  for (let i = 0; i < 16; i++) px(g, R() < 0.5 ? 'c' : 'h', Math.floor(R() * W * 0.6), 2 + Math.floor(R() * hz * 0.45));
+  // 먼 해안 마을 불빛
+  for (let i = 0; i < 16; i++) {
+    const x = Math.round(W * 0.03 + R() * W * 0.34), y = hz - 1 - Math.floor(R() * 4);
     px(g, 'k', x - 1, y - 1, 4, hz - y + 1);
     if (R() < 0.7) px(g, 'a', x, y, 1, 1);
   }
-  // 등대 상부 (크게, 오른쪽)
-  const cx = Math.round(W * 0.74), top = Math.round(H * 0.44);
+  // 등대 상부 (가까이)
+  const cx = Math.round(W * 0.76), top = Math.round(H * 0.62);
   for (let y = top; y < H; y++) {
-    const half = 12 + Math.round((y - top) * 0.12);
+    const half = 11 + Math.round((y - top) * 0.15);
     for (let x = cx - half; x <= cx + half; x++) {
       const edge = x === cx - half || x === cx + half;
-      const band = (y - top) % 18 > 11;
+      const band = (y - top) % 16 > 9;
       px(g, edge ? 'k' : x <= cx ? (band ? 't' : 'c') : x > cx + half - 4 ? (band ? 'k' : 's') : (band ? 'd' : 'h'), x, y);
     }
   }
   // 회랑 + 난간
-  px(g, 'k', cx - 18, top - 2, 37, 3); px(g, 'h', cx - 18, top - 2, 37, 1);
-  for (let x = cx - 18; x <= cx + 18; x += 3) px(g, 'k', x, top - 9, 1, 7);
-  px(g, 'k', cx - 18, top - 10, 37, 1); px(g, 's', cx - 18, top - 9, 37, 1);
-  // 등불실
-  const ry = top - 26;
-  px(g, 'k', cx - 10, ry, 21, 17);
-  // 지붕
-  for (let r = 0; r < 7; r++) { px(g, 'k', cx - 12 + r, ry - 1 - r, 25 - r * 2, 1); if (r < 6) px(g, r < 2 ? 't' : 'd', cx - 11 + r, ry - 1 - r, 23 - r * 2 - 2, 1); }
-  px(g, 'k', cx, ry - 10, 1, 3);
-  const ap = { x: cx - 30, y: top - 18 };
+  px(g, 'k', cx - 25, top - 1, 51, 2); px(g, 'h', cx - 25, top - 2, 51, 1);
+  for (let x = cx - 25; x <= cx + 25; x += 3) px(g, 'k', x, top - 8, 1, 6);
+  px(g, 'k', cx - 25, top - 9, 51, 1);
+  // 등불실 + 지붕
+  const ry = top - 24;
+  px(g, 'k', cx - 9, ry, 19, 16);
+  for (let r = 0; r < 6; r++) { px(g, 'k', cx - 11 + r, ry - 1 - r, 23 - r * 2, 1); if (r < 5) px(g, r < 2 ? 't' : 'd', cx - 10 + r, ry - 1 - r, 21 - r * 2 - 1, 1); }
+  px(g, 'k', cx, ry - 9, 1, 3);
+  const ap = { x: cx - 23, y: top - 18 };
   return {
     animated: true,
     draw(ctx, t) {
@@ -1726,23 +1740,24 @@ function lighthouseVignette(W, H) {
       const theta = reduceMotion ? -1.2 : t * (Math.PI * 2 / 7);
       const sx = Math.sin(theta), cz = Math.cos(theta);
       const ly = ry + 8;
-      // 빛줄기
-      const len = Math.round(W * 0.75 * Math.pow(Math.abs(sx), 0.7));
-      if (sx < 0 && len > 6) {
+      const len = Math.round(W * 0.8 * Math.pow(Math.abs(sx), 0.7));
+      if (sx < 0 && len > 12) {
         for (let d = 10; d < len; d++) {
           const x = cx - d;
-          const half = 2 + d * 0.11;
+          if (x < 0) break;
+          const half = 2 + d * 0.1;
           const dens = 0.6 * Math.pow(1 - d / len, 0.7);
           for (let yy = Math.floor(ly - half); yy <= Math.ceil(ly + half); yy++) if (dens * (1 - Math.abs(yy - ly) / (half + 1) * 0.6) > bayer(x, yy)) px(ctx, 'h', x, yy);
         }
       }
-      // 렌즈
       const bright = cz > 0.9;
-      px(ctx, bright ? 'c' : 'a', cx - 9, ry + 1, 19, 15);
-      for (let k = 0; k < 4; k++) px(ctx, 'k', cx - 9 + k * 6, ry + 1, 1, 15);
-      px(ctx, 'c', cx - 3, ry + 5, 7, 7);
-      px(ctx, 'a', cx - 1, ry + 7, 3, 3);
-      ctx.drawImage(spriteCanvas('apprenticeIdle0'), ap.x, ap.y);
+      px(ctx, bright ? 'c' : 'a', cx - 8, ry + 1, 17, 14);
+      if (!bright) {
+        for (let k = 0; k < 4; k++) px(ctx, 'k', cx - 8 + k * 5 + 1, ry + 1, 1, 14);
+        px(ctx, 'c', cx - 3, ry + 4, 7, 7);
+        px(ctx, 'a', cx - 1, ry + 6, 3, 3);
+      }
+      ctx.drawImage(spriteCanvas(!reduceMotion && Math.floor(t * FPS) % 8 < 3 ? 'apprenticeIdle1' : 'apprenticeIdle0'), ap.x, ap.y);
     },
   };
 }
