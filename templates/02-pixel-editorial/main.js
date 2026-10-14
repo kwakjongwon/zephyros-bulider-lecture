@@ -20,6 +20,8 @@ const ASSETS = {
   plant: null,  // No.08 물 주는 날 (64×96, 8f)
   items: null,  // No.06 상점 아이템 8종 (97×49, 8f)
   mug: null,    // 04 진행 과정 4단계 썸네일 (24×24, 8f)
+  processStages: null, // 04 진행 과정 1~3단계 정지 썸네일 3장. 예) ['assets/process-1.png', 'assets/process-2.png', 'assets/process-3.png']
+  heroPalette: null,   // 01 팔레트 목록. 대표 그림을 바꾸면 그 그림의 색으로. 예) ['#22231F', '#F5F3ED', ...]
 };
 
 // ════════════════════════════════════════════════════════════════════
@@ -732,35 +734,34 @@ function drawTape(P, f) {
 // ── 장면: No.09 새벽 세 시의 화면 ──────────────────────────────────────
 function drawNight(P, f) {
   const W = P.w, H = P.h, sx = (W - 128) >> 1, S = x => sx + x;
-  P.rect('n', 0, 0, W, 66);
-  for (let x = (S(0) % 6 + 6) % 6; x < W; x += 6) P.dith('k', x, 0, 1, 66, 0);
+  P.rect('n', 0, 0, W, 64);
+  for (let x = (S(0) % 6 + 6) % 6; x < W; x += 6) P.dith('k', x, 0, 1, 64, 0);
 
-  // 벽 메모
-  [[S(88), 22, 'y'], [S(97), 26, 'O'], [S(90), 33, 'y']].forEach(([x, y, c], i) => {
+  // 벽 메모 · 액자
+  [[S(88), 26, 'y'], [S(97), 30, 'O'], [S(90), 37, 'y']].forEach(([x, y, c], i) => {
     const o = new Px(9, 9, 1, 1);
     o.rect(c, 0, 0, 7, 7);
     o.hl(c === 'O' ? 'W' : 'g', 1, 4 + (i % 2), 2); o.hl(c === 'O' ? 'W' : 'g', 1, 3, 4);
     o.outline();
     P.blit(o, x, y);
   });
-  // 액자
   const ph = new Px(16, 14, 1, 1);
   ph.rect('G', 0, 0, 14, 12).rect('B', 1, 1, 12, 10).disc('W', 9, 4, 1.5).rect('s', 1, 8, 12, 3);
   ph.outline();
-  P.blit(ph, S(14), 20);
+  P.blit(ph, S(14), 22);
 
-  // 책상과 화면 빛
-  P.rect('k', 0, 66, W, 6);
+  // 책상 윗면 — 화면 빛이 닿는 곳만 밝게
+  P.rect('k', 0, 64, W, 12);
   const lx = S(58);
-  for (let y = 66; y < 72; y++) for (let x = 0; x < W; x++) {
-    const d = Math.abs(x - lx) / 34 + (y - 66) / 14;
-    if (d < 0.75 || (d < 1 && (x + y) % 2 === 0)) P.set(x, y, 'B');
+  for (let y = 64; y < 76; y++) for (let x = 0; x < W; x++) {
+    const d = ((x - lx) / 44) ** 2 + ((y - 63) / 13) ** 2;
+    if (d < 0.78 || (d < 1 && (x + y) % 2 === 0)) P.set(x, y, 'B');
   }
-  P.hl('G', 0, W - 1, 72);
-  P.rect('K', 0, 73, W, H - 73);
+  P.hl('G', 0, W - 1, 76);
+  P.rect('K', 0, 77, W, H - 77);
 
   // 플로피 디스크 더미
-  [[S(14), 63, 'B'], [S(15), 60, 'O'], [S(13), 57, 'B']].forEach(([x, y, c]) => {
+  [[S(14), 67, 'B'], [S(15), 64, 'O'], [S(13), 61, 'B']].forEach(([x, y, c]) => {
     const o = new Px(16, 5, 1, 1);
     o.rect(c, 0, 0, 14, 3).hl('W', 4, 9, 1);
     o.outline();
@@ -768,14 +769,12 @@ function drawNight(P, f) {
   });
 
   // 컴퓨터
-  const cx0 = S(40), cy0 = 24;
   const pc = new Px(40, 44, 1, 1);
   pc.rect('w', 0, 0, 38, 42);
   pc.set(0, 0, ''); pc.set(37, 0, '');
   pc.rect('v', 34, 1, 4, 41).hl('v', 0, 37, 41);
   pc.rect('G', 4, 4, 30, 24).rect('s', 5, 5, 28, 22);
   const scr = (x, y, c) => pc.set(5 + x, 5 + y, c);
-  // 시계 3:00 (콜론 깜빡임)
   const clockStr = f % 6 < 3 ? '3:00' : '3 00';
   let tx = 14;
   for (const ch of clockStr) { FONT35[ch].forEach((row, j) => { for (let i = 0; i < row.length; i++) if (row[i] === '#') scr(tx + i, 1 + j, 'L'); }); tx += FONT35[ch][0].length + 1; }
@@ -787,23 +786,19 @@ function drawNight(P, f) {
   const n = Math.min(f, typed.length);
   for (let i = 0; i < n; i++) if (typed[i] !== ' ') scr(1 + i, 17, 'L');
   if (f < typed.length || f % 4 < 2) { scr(2 + n, 16, 'L'); scr(2 + n, 17, 'L'); scr(3 + n, 16, 'L'); scr(3 + n, 17, 'L'); }
-  // 턱 부분
   pc.hl('K', 20, 31, 33); pc.rect('G', 6, 33, 3, 2);
   pc.outline();
-  P.blit(pc, cx0, cy0);
+  P.blit(pc, S(40), 28);
 
-  // 키보드 · 마우스
+  // 키보드 · 마우스 · 식은 커피
   const kb = new Px(46, 6, 1, 1);
   kb.rect('w', 0, 0, 44, 4).hl('v', 0, 43, 3);
   for (let x = 2; x < 42; x += 2) { kb.set(x, 1, 'G'); kb.set(x + 1, 2, 'G'); }
   kb.outline();
-  P.blit(kb, S(37), 67);
+  P.blit(kb, S(37), 71);
   const ms = new Px(7, 6, 1, 1); ms.rect('w', 0, 0, 5, 4).set(0, 0, ''); ms.set(4, 0, ''); ms.vl('v', 4, 1, 3); ms.outline();
-  P.blit(ms, S(88), 67);
-
-  // 식은 커피
-  const mug = mugObj(3);
-  P.blit(mug, S(104), 56);
+  P.blit(ms, S(88), 71);
+  P.blit(mugObj(3), S(104), 59);
 }
 
 // ── 장면: No.08 물 주는 날 ─────────────────────────────────────────────
@@ -887,10 +882,10 @@ const ICONS = {
   },
   key(o) {
     o.disc('Y', 4.5, 4.5, 3.6);
-    o.disc('', 4.5, 4.5, 1.2);
-    for (let t = 0; t < 8; t++) { o.set(6 + t, 6 + t, 'Y'); o.set(7 + t, 6 + t, 'Y'); o.set(6 + t, 7 + t, 'o'); }
-    o.set(10, 12, 'Y'); o.set(9, 13, 'Y'); o.set(12, 14, 'Y'); o.set(11, 15, 'Y');
-    o.set(2, 3, 'y'); o.set(3, 2, 'y'); o.set(2, 4, 'y');
+    o.disc('', 4.5, 4.5, 1.3);
+    o.set(2, 3, 'y'); o.set(3, 2, 'y'); o.set(2, 4, 'y'); o.set(4, 2, 'y');
+    for (let t = 0; t < 8; t++) { o.set(6 + t, 6 + t, 'Y'); o.set(7 + t, 6 + t, 'o'); }
+    o.rect('Y', 9, 11, 2, 2); o.rect('Y', 11, 13, 2, 2); o.set(10, 12, 'o'); o.set(12, 14, 'o');
   },
   apple(o) {
     o.disc('O', 7.5, 9, 5.6);
@@ -903,7 +898,7 @@ const ICONS = {
     o.ell('O', 7.5, 7, 6.8, 5.6, (x, y) => y <= 7);
     o.hl('o', 2, 13, 7);
     [[5, 3], [6, 3], [10, 4], [11, 4], [8, 1], [3, 6]].forEach(([x, y]) => o.set(x, y, 'W'));
-    o.rect('w', 5, 8, 6, 6); o.vl('v', 10, 8, 13); o.hl('v', 5, 10, 8);
+    o.rect('W', 5, 8, 6, 6); o.vl('v', 10, 8, 13); o.hl('v', 5, 10, 8);
   },
   gem(o, f) {
     for (let y = 3; y <= 6; y++) o.hl('B', 4 - (y - 3), 11 + (y - 3), y);
@@ -951,7 +946,7 @@ const ART = {
   rain:  { draw: drawRain,  minW: 176, maxW: 240, h: 72,  frames: 8,  fps: 8, pal: 'KknBbyOoWGg' },
   cat:   { draw: drawCat,   minW: 96,  maxW: 120, h: 96,  frames: 8,  fps: 5, pal: 'KknBWwvSsRry' },
   tape:  { draw: drawTape,  minW: 112, maxW: 112, h: 112, frames: 8,  fps: 8, pal: 'OoWwvKkyRG' },
-  night: { draw: drawNight, minW: 128, maxW: 176, h: 90,  frames: 12, fps: 6, pal: 'KknBWwvGsLOy' },
+  night: { draw: drawNight, minW: 128, maxW: 184, h: 90,  frames: 12, fps: 6, pal: 'KknBWwvGsLOy' },
   plant: { draw: drawPlant, minW: 64,  maxW: 64,  h: 96,  frames: 8,  fps: 6, pal: 'vwWKSsLOobBd' },
   items: { draw: drawItems, minW: 97,  maxW: 97,  h: 49,  frames: 8,  fps: 6, pal: 'KWwvYyOoSsBb' },
   mug:   { draw: (P, f) => drawMugStage(P, f, 4), minW: 24, maxW: 24, h: 24, frames: 8, fps: 6, maxK: 4, pal: 'KWwOodG' },
@@ -1167,82 +1162,102 @@ function buildDotNums() {
   document.querySelectorAll('[data-dotnum]').forEach(el => {
     const str = el.dataset.dotnum, cell = Number(el.dataset.cell || 4);
     const cols = str.length * 6 - 1, tile = cell - 1;
+    const dot = Math.max(1, Math.round(tile / 3)), dotOff = Math.floor((tile - dot) / 2);
     let on = '', off = '';
     [...str].forEach((ch, n) => {
       const g = DIGITS57[ch];
       for (let y = 0; y < 7; y++) for (let x = 0; x < 5; x++) {
-        const d = sq((n * 6 + x) * cell, y * cell, tile);
-        if (g[y][x] === '#') on += d; else off += d;
+        if (g[y][x] === '#') on += sq((n * 6 + x) * cell, y * cell, tile);
+        else off += sq((n * 6 + x) * cell + dotOff, y * cell + dotOff, dot);
       }
-      if (n < str.length - 1) for (let y = 0; y < 7; y++) off += sq((n * 6 + 5) * cell, y * cell, tile);
+      if (n < str.length - 1) for (let y = 0; y < 7; y++) off += sq((n * 6 + 5) * cell + dotOff, y * cell + dotOff, dot);
     });
     const W = cols * cell - 1, H = 7 * cell - 1;
     el.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path class="off" d="${off}"/><path class="on" d="${on}"/></svg>`;
   });
 }
 
-/** 01 상세 띠: 프레임 필름, 8배 확대, 팔레트 */
+/** 그림 한 프레임을 원본 크기 canvas 로 */
+function frameCanvas(src, f) {
+  const c = document.createElement('canvas');
+  src.render(c, src.minW, f);
+  return c;
+}
+
+/** 01 상세 띠: 프레임 필름, 8배 확대, 팔레트 (실제 이미지를 넣으면 HERO_CROPS 좌표를 그 그림에 맞게 고치세요) */
 function buildHeroDetail() {
   const src = sourceOf('hero');
-  const film = document.querySelector('[data-filmstrip="hero"]');
   const { frames: fc, loupe: lc } = HERO_CROPS;
-  if (film && !src.img) {
+  const film = document.querySelector('[data-filmstrip="hero"]');
+  if (film) {
     film.innerHTML = '';
     for (let f = 0; f < src.frames; f++) {
-      const P = src.buffer(160, f);
-      const C = new Px(fc.w, fc.h);
-      for (let y = 0; y < fc.h; y++) for (let x = 0; x < fc.w; x++) C.set(x, y, P.get(fc.x + x, fc.y + y));
-      const li = document.createElement('li');
+      const full = frameCanvas(src, f);
       const cv = document.createElement('canvas');
+      cv.width = fc.w; cv.height = fc.h;
       cv.style.width = `${fc.w * 2}px`; cv.style.height = `${fc.h * 2}px`;
-      paint(cv, C);
+      cv.getContext('2d').drawImage(full, fc.x, fc.y, fc.w, fc.h, 0, 0, fc.w, fc.h);
       const label = document.createElement('span');
       label.textContent = String(f + 1).padStart(2, '0');
+      const li = document.createElement('li');
       li.append(cv, label);
       film.appendChild(li);
     }
   }
   const loupe = document.querySelector('[data-loupe="hero"]');
-  if (loupe && !src.img) {
+  if (loupe) {
     const dpr = Math.max(1, Math.round(window.devicePixelRatio || 1));
     const z = 8, size = lc.w * z;
     loupe.width = size * dpr; loupe.height = size * dpr;
     const ctx = loupe.getContext('2d');
-    ctx.scale(dpr, dpr);
-    const P = src.buffer(160, 0);
-    const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-    ctx.fillStyle = bg; ctx.fillRect(0, 0, size, size);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
+    const data = frameCanvas(src, 0).getContext('2d').getImageData(lc.x, lc.y, lc.w, lc.h).data;
     for (let y = 0; y < lc.h; y++) for (let x = 0; x < lc.w; x++) {
-      const c = P.get(lc.x + x, lc.y + y);
-      if (!c) continue;
-      ctx.fillStyle = PAL[c];
+      const i = (y * lc.w + x) * 4;
+      if (!data[i + 3]) continue;
+      ctx.fillStyle = `rgb(${data[i]} ${data[i + 1]} ${data[i + 2]})`;
       ctx.fillRect(x * z, y * z, z - 1, z - 1);
     }
   }
-  const keys = [...ART.hero.pal];
+  const colors = ASSETS.heroPalette || [...ART.hero.pal].map(k => PAL[k]);
+  const names = ASSETS.heroPalette ? [] : [...ART.hero.pal].map(k => PAL_NAMES[k]);
   const pal = document.querySelector('[data-palette="hero"]');
   if (pal) {
     pal.innerHTML = '';
-    keys.forEach(k => {
+    colors.forEach((hex, n) => {
       const li = document.createElement('li');
       const sw = document.createElement('i');
-      sw.style.background = PAL[k];
-      li.append(sw, document.createTextNode(PAL[k]));
-      li.title = PAL_NAMES[k];
+      sw.style.background = hex;
+      li.append(sw, document.createTextNode(hex.toUpperCase()));
+      if (names[n]) li.title = names[n];
       pal.appendChild(li);
     });
   }
-  document.querySelectorAll('[data-swatches]').forEach(el => {
+  document.querySelectorAll('[data-swatches="hero"]').forEach(el => {
     el.innerHTML = '';
-    [...ART[el.dataset.swatches].pal].forEach(k => { const i = document.createElement('i'); i.style.background = PAL[k]; el.appendChild(i); });
+    colors.forEach(hex => { const i = document.createElement('i'); i.style.background = hex; el.appendChild(i); });
   });
 }
 
 /** 04 진행 과정 정지 썸네일 */
 function buildThumbs() {
   document.querySelectorAll('canvas[data-thumb]').forEach(cv => {
+    const n = Number(cv.dataset.thumb);
+    const file = ASSETS.processStages && ASSETS.processStages[n - 1];
+    if (file) {
+      const img = new Image();
+      img.onload = () => {
+        cv.width = img.naturalWidth; cv.height = img.naturalHeight;
+        const ctx = cv.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 0, 0);
+      };
+      img.src = file;
+      return;
+    }
     const P = new Px(24, 24);
-    drawMugStage(P, 0, Number(cv.dataset.thumb));
+    drawMugStage(P, 0, n);
     paint(cv, P);
   });
 }
@@ -1288,6 +1303,7 @@ function initPlates() {
   // ASSETS 에 지정된 파일이 있으면 불러와 다시 그림
   Promise.all(Object.keys(ART).map(k => applyAsset(sourceOf(k)))).then(() => {
     plates.forEach(p => { p.W = 0; p.layout(); });
+    if (sourceOf('hero').img) buildHeroDetail();
   });
 }
 

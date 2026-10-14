@@ -1,24 +1,24 @@
 /* ==========================================================================
    MONUN STUDIO — 픽셀 에디토리얼 템플릿
-   --------------------------------------------------------------------------
-   색 역할 (의뢰서 4색 + 대비 보정용 파생 2색)
-     --bg          #F5F3ED  배경
-     --text        #22231F  본문 · 굵은 구분선 · 진한 면        (배경 대비 14.25:1)
-     --line        #D8D6CF  가는 구분선 · 꺼진 도트 (장식 전용, 글자에 쓰지 않음)
-     --accent      #D94D2B  강조: 도트 숫자, 픽셀 화살표, 밑줄, 작은 사각 표시 등 그래픽
-     --muted       파생: --text 를 --bg 쪽으로 섞은 보조 글자색      (배경 대비 5.47:1)
-     --accent-ink  파생: --accent 를 약 12% 어둡게 한 색               (배경 대비 4.68:1)
-
-   대비 결정 (WCAG 2.1 AA 실측)
-     #D94D2B 위/아래 #F5F3ED = 3.75:1, #22231F = 3.80:1 → 작은 글자(4.5:1)는 통과하지 못함.
-     그래서 --accent 는 그래픽(비텍스트 3:1 기준)과 큰 글자에만 쓰고,
-     작은 주황 라벨·버튼 바탕·주황 글자는 --accent-ink 를 씁니다.
-     (--accent-ink 바탕 + --bg 글자 = 4.68:1, --bg 바탕 + --accent-ink 글자 = 4.68:1 → 통과)
-     입력창 테두리처럼 알아봐야 하는 선은 --line(1.31:1) 대신 --text / --muted 를 씁니다.
+   색은 모두 :root 의 역할 토큰으로만 씁니다. 아래 :root 주석에 대비 결정이 있습니다.
    ========================================================================== */
 
 :root {
-  /* color roles */
+  /* ── 색 역할: 의뢰서 4색 + 대비 보정용 파생 2색 ──────────────────────────
+     --bg / --text / --line / --accent 는 의뢰서 지정색 그대로입니다.
+     --muted      = --text 를 --bg 쪽으로 섞은 보조 글자색   (--bg 위 5.47:1)
+     --accent-ink = --accent 를 약 12% 어둡게 한 색           (--bg 위 4.68:1)
+
+     대비 결정 (WCAG 2.1 AA 실측)
+     · --accent 와 --bg 사이 3.75:1, --accent 와 --text 사이 3.80:1
+       → 작은 글자 기준 4.5:1 을 넘지 못합니다. 주황 바탕에 어두운 글자도 통과하지 못합니다.
+     · 그래서 --accent 는 그래픽(비텍스트 3:1 기준)에만 씁니다:
+       도트 숫자, 픽셀 화살표, 밑줄, 작은 사각 표시, 재생 아이콘, 워드마크 마침표.
+     · 주황 글자 · 작은 주황 라벨 · 버튼 바탕은 --accent-ink 를 씁니다.
+       (--accent-ink 바탕 + --bg 글자 4.68:1, --bg 바탕 + --accent-ink 글자 4.68:1 → 통과)
+     · --line(--bg 위 1.31:1)은 장식용 가는 선과 꺼진 도트에만 씁니다.
+       입력창 밑줄 · 칩 테두리처럼 알아봐야 하는 선은 --text / --muted 를 씁니다.
+     · --text 와 --bg 사이 14.25:1. */
   --bg: #F5F3ED;
   --text: #22231F;
   --line: #D8D6CF;
@@ -36,7 +36,7 @@
   --fs-body: 16px;
   --fs-h2: clamp(20px, 0.9rem + 0.7vw, 26px);
   --fs-h3: clamp(20px, 0.95rem + 0.55vw, 26px);
-  --fs-lede: clamp(21px, 0.85rem + 1.35vw, 34px);
+  --fs-lede: clamp(21px, 0.85rem + 1.2vw, 32px);
   --fs-display: clamp(30px, 0.9rem + 3.1vw, 62px);
 
   /* spacing scale (4px base) */
@@ -288,7 +288,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 
 /* ---------- hero ---------- */
-.hero { padding-top: var(--s-5); }
+.hero { padding-top: var(--s-4); }
 
 .meta-strip {
   display: grid;
@@ -310,7 +310,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .meta-strip li:last-child { text-align: right; }
 
 .wordmark {
-  margin: clamp(32px, 5vw, 64px) 0 clamp(28px, 3.6vw, 48px);
+  margin: clamp(28px, 3.6vw, 48px) 0 clamp(24px, 2.8vw, 40px);
   line-height: 0;
 }
 .wordmark svg { shape-rendering: crispEdges; max-width: 100%; height: auto; }
@@ -358,7 +358,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ---------- sections ---------- */
 .section { padding-top: var(--section-pad); }
-.section--featured { padding-top: clamp(56px, 6vw, 88px); }
+.section--featured { padding-top: clamp(40px, 3.8vw, 56px); }
+.section--featured .section-head { margin-bottom: clamp(24px, 2.4vw, 32px); }
 .section--contact { padding-bottom: var(--section-pad); }
 
 .section-head {
@@ -435,7 +436,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .plate[aria-pressed="true"] .plate__badge { background: var(--accent-ink); }
 .plate[aria-pressed="true"] .plate__badge .px-icon { color: var(--bg); }
 
-.plate__badge--mini { height: 24px; padding: 0 5px; }
+.plate__badge--mini { top: 0; bottom: auto; height: 24px; padding: 0 5px; }
+.plate--thumb { background: transparent; }
 
 /* ---------- 01 featured ---------- */
 .feature {
@@ -482,7 +484,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   gap: 2px;
   margin-top: var(--s-2);
 }
-.swatches i { display: block; width: 12px; height: 12px; }
+.swatches i { display: block; width: 12px; height: 12px; box-shadow: inset 0 0 0 1px var(--line); }
 
 .spec__hint {
   display: flex;
@@ -544,12 +546,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-size: var(--fs-label);
   line-height: 16px;
 }
-.palette i { width: 16px; height: 16px; flex: none; }
+.palette i { width: 16px; height: 16px; flex: none; box-shadow: inset 0 0 0 1px var(--line); }
 
 /* ---------- 02 works ---------- */
 .works-intro {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-template-rows: auto 1fr;
   column-gap: var(--gap);
   row-gap: var(--s-5);
   align-items: start;
@@ -727,7 +730,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-weight: 600;
   line-height: 1.38;
   letter-spacing: -0.025em;
-  max-width: 24em;
+  max-width: 30em;
   margin-bottom: clamp(40px, 5vw, 72px);
 }
 .steps {
@@ -1048,7 +1051,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   :root { --fs-display: clamp(30px, 7.6vw, 40px); }
   .site-header .btn--small { display: none; }
 
-  .meta-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .meta-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 0; }
   .meta-strip li:nth-child(2) { text-align: right; }
   .meta-strip li:nth-child(3) { border-top: 1px solid var(--line); padding-top: var(--s-2); }
   .meta-strip li:nth-child(4) { border-top: 1px solid var(--line); padding-top: var(--s-2); }
@@ -1061,8 +1064,12 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
   .spec { grid-template-columns: 1fr; }
   .spec__top { flex-direction: row; align-items: center; }
-  .spec__list { grid-template-columns: 1fr; }
+  .spec__list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--s-4); border-top: 1px solid var(--line); }
+  .spec__list > div { grid-template-columns: 1fr; gap: 0; border-top: 0; border-bottom: 1px solid var(--line); }
   .spec__list > div:last-child { border-bottom: 1px solid var(--line); }
+  .spec__list dt { line-height: 18px; }
+  .plate__badge { height: 26px; padding: 0 var(--s-2); }
+  .plate__state { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .spec__hint { grid-column: auto; }
 
   .filmstrip { grid-template-columns: repeat(4, max-content); row-gap: var(--s-3); }
