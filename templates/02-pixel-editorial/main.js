@@ -205,27 +205,27 @@ const WORDMARK = {
 };
 
 // ── 작은 픽셀 맵 ─────────────────────────────────────────────────────
-const NOTE_A = ['.#..', '.##.', '.#.#', '.#..', '##..', '##..'];
-const NOTE_B = ['.#####', '.#...#', '.#...#', '.#...#', '##..##', '##..##'];
+const NOTE_A = ['..#..', '..##.', '..#.#', '..#..', '###..', '###..'];
+const NOTE_B = ['..######', '..#....#', '..#....#', '..#....#', '###..###', '###..###'];
 const KNOB = ['.KKK.', 'KKWKK', 'KKKKK', 'KKKKK', '.KKK.'];
-const PERSON = [ // 우산 아래 사람 (외곽선은 자동)
+const PERSON = [ // 우산 아래 사람, 정류장 쪽을 봄 (외곽선은 자동)
   '...kkk...',
   '..kkkkk..',
-  '..kkkkk..',
-  '...kkk...',
-  '.GGGGGGG.',
-  'GGGGwGGGg',
-  'GGGGwGGgg',
-  'GGGGGGGgg',
+  '..kkkkW..',
+  '...kkW...',
+  '..GGGGG..',
+  '.GGGGWGg.',
+  '.GGGWWGg.',
   '.GGGGGGg.',
   '.GGGGGGg.',
   '.GGGGGGg.',
-  '.GGGGGGg.',
-  '.GGGGGGg.',
+  '..GGGGg..',
+  '..GGGGg..',
+  '..GGgGg..',
+  '...K.K...',
+  '...K.K...',
+  '...K.K...',
   '..KK.KK..',
-  '..KK.KK..',
-  '..KK.KK..',
-  '.KKK.KKK.',
 ];
 const HEART_BIG = [
   '.OOOO...OOOO.',
@@ -380,7 +380,7 @@ function drawHero(P, f) {
   radio.rect('o', 29, 4, 13, 9).rect('W', 30, 5, 11, 7);
   for (let i = 0; i < 5; i++) radio.set(31 + i * 2, 5, 'K');
   radio.set(31, 6, 'K'); radio.set(35, 6, 'K'); radio.set(39, 6, 'K');
-  radio.vl('o', 36, 5, 11);
+  radio.vl('o', 34, 5, 11);
   radio.spr(KNOB, 30, 15).spr(KNOB, 37, 15);
   radio.hl('o', 30, 41, 22);
   radio.outline();
@@ -413,10 +413,10 @@ function drawHero(P, f) {
   // 그림자 — 햇빛 위에 물체 모양으로, 책상 위에 짧게
   P.shadow(radio, bx, by, 6, 2, 'y', 'w');
   P.shadow(mug, sx + 117, 55, 5, 2, 'y', 'w');
-  P.rect('R', bx + bw + 1, 64, 7, 3);
-  P.dith('R', bx + bw + 8, 64, 3, 3);
-  P.rect('R', sx + 131, 64, 5, 3);
-  P.rect('R', sx + 46, 64, 4, 3);
+  P.rect('R', bx + 3, 67, bw + 4, 1); P.dith('R', bx + bw + 7, 67, 3, 1, 1);
+  P.rect('R', sx + 30, 67, 18, 1);
+  P.rect('R', sx + 119, 67, 13, 1);
+  P.rect('R', sx + 133, 67, 25, 1);
 
   // 화분 — 잎은 화분 뒤에서 솟음
   const SW = [0, 0, 1, 1, 1, 0, 0, -1];
@@ -444,12 +444,8 @@ function drawHero(P, f) {
     const p = (f + ph) % 8;
     if (p > 6.5) return;
     const y = by - 12 - Math.round(p * 2.6);
-    const x = bx + 2 + i * 7 - Math.round(p * 1.2) + Math.round(Math.sin(p) * 1);
+    const x = bx + 1 + i * 8 - Math.round(p * 1.2) + Math.round(Math.sin(p) * 1);
     P.spr(spr, x, y, { '#': 'K' });
-  });
-  [[sx + 92, 12], [sx + 104, 20], [sx + 84, 33], [sx + 112, 9], [sx + 99, 45]].forEach(([x, y], i) => {
-    const o = (f + i * 2) % 8;
-    P.set(x + (o >> 2), y + Math.round(Math.sin((o / 8) * TAU) * 1.5), 'W');
   });
 }
 
@@ -457,20 +453,23 @@ function drawHero(P, f) {
 function drawRain(P, f) {
   const W = P.w, H = P.h, sx = (W - 176) >> 1, cx = W >> 1;
 
+  // 하늘: 위는 밤, 아래는 도시 불빛에 옅어진 청회색
   P.rect('n', 0, 0, W, 48);
-  P.dith('B', 0, 18, W, 4, 0);
-  P.rect('B', 0, 22, W, 26);
-  P.dith('n', 0, 22, W, 2, 1);
+  P.dith('B', 0, 16, W, 1, 0);
+  P.dith('B', 0, 17, W, 1, 1);
+  P.rect('B', 0, 18, W, 30);
+  P.dith('n', 0, 18, W, 1, 0);
 
-  // 건물: 먼 층 · 가까운 층
-  for (const layer of [{ c: 'n', base: 0, minH: 26, varH: 16, seed: 11 }, { c: 'k', base: 0, minH: 12, varH: 22, seed: 47 }]) {
+  // 건물: 먼 층(밤색 실루엣) · 가까운 층(창문 불빛)
+  const layers = [{ c: 'n', minH: 16, varH: 14, seed: 11 }, { c: 'k', minH: 8, varH: 18, seed: 47 }];
+  for (const layer of layers) {
     let x = -cx - 12, i = 0;
     while (x < cx + 12) {
       const r1 = hash(layer.seed + i * 3), r2 = hash(layer.seed + i * 3 + 1), r3 = hash(layer.seed + i * 3 + 2);
       const w = 8 + Math.floor(r1 * 14), h = layer.minH + Math.floor(r2 * layer.varH);
       const X = cx + x, top = 48 - h;
       P.rect(layer.c, X, top, w, h);
-      if (r3 > 0.6) P.rect(layer.c, X + 2, top - 3, 2, 3);
+      if (r3 > 0.62) P.rect(layer.c, X + 2, top - 3, 2, 3);
       if (layer.c === 'k') {
         for (let wy = top + 3; wy < 46; wy += 4) for (let wx = X + 2; wx < X + w - 2; wx += 3) {
           const hv = hash(wx * 131 + wy * 17);
@@ -478,7 +477,7 @@ function drawRain(P, f) {
           if ((hv < 0.24) !== blink) P.rect('y', wx, wy, 1, 2);
         }
       } else {
-        for (let wy = top + 4; wy < 46; wy += 5) for (let wx = X + 2; wx < X + w - 1; wx += 4) if (hash(wx * 7 + wy * 3) < 0.12) P.set(wx, wy, 'B');
+        for (let wy = top + 4; wy < 46; wy += 5) for (let wx = X + 2; wx < X + w - 1; wx += 4) if (hash(wx * 7 + wy * 3) < 0.14) P.set(wx, wy, 'B');
       }
       x += w + (r3 < 0.25 ? 2 : 0);
       i++;
@@ -491,10 +490,11 @@ function drawRain(P, f) {
   P.rect('k', 0, 54, W, 1);
   P.rect('n', 0, 55, W, H - 55);
 
-  // 정류장
+  // 정류장: 뒤 유리(불 켜진 창만 비침), 기둥, 지붕, 벤치, 광고판
   const S = x => sx + x;
-  P.dith('B', S(94), 24, 56, 23, 0);
-  P.line('b', S(98), 44, S(110), 26); P.line('b', S(101), 44, S(113), 26);
+  for (let y = 24; y <= 46; y++) for (let x = S(94); x <= S(149); x++) if (P.get(x, y) !== 'y') P.set(x, y, 'B');
+  P.line('b', S(98), 44, S(112), 26); P.line('b', S(101), 44, S(115), 26); P.line('b', S(118), 40, S(124), 32);
+  P.hl('g', S(94), S(149), 47);
   P.rect('G', S(92), 22, 2, 31);
   P.rect('G', S(150), 22, 2, 31);
   P.rect('G', S(88), 19, 67, 2);
@@ -503,25 +503,39 @@ function drawRain(P, f) {
   P.rect('g', S(100), 43, 26, 2);
   P.vl('K', S(102), 45, 52); P.vl('K', S(123), 45, 52);
   const box = new Px(16, 24, 1, 1);
-  box.rect('y', 0, 0, 14, 22).disc('O', 6.5, 6, 3);
+  box.rect('y', 0, 0, 14, 22).disc('B', 6.5, 6, 3).disc('y', 7.5, 5, 1.6);
   [12, 14, 16].forEach((y, i) => box.hl('g', 2, 11 - i * 2, y));
   box.outline();
   P.blit(box, S(134), 25);
-  P.vl('G', S(80), 18, 52);
-  const sign = new Px(11, 9, 1, 1);
-  sign.rect('W', 0, 0, 9, 7).rect('B', 1, 1, 7, 2).hl('K', 2, 6, 4).set(2, 5, 'K'); sign.set(6, 5, 'K');
+  // 정류장 표지
+  P.vl('G', S(80), 20, 52);
+  const sign = new Px(11, 11, 5, 5);
+  sign.disc('W', 0, 0, 3.9).hl('B', -3, 3, -1).hl('B', -3, 3, 0).hl('B', -3, 3, 1);
   sign.outline();
-  P.blit(sign, S(76), 11);
+  P.blit(sign, S(80), 16);
 
-  // 젖은 도로의 반사
-  for (let y = 56; y < 68; y++) for (let x = S(135); x < S(148); x++) if ((y + f) % 2 === 0 && (x + y) % 3 === 0) P.set(x, y, 'y');
-  for (let y = 56; y < 62; y++) for (let x = S(50); x < S(66); x++) if ((y + f) % 2 === 0 && (x + y) % 3 === 0) P.set(x, y, 'o');
+  // 젖은 도로에 번진 불빛 (가로 물결 줄)
+  const reflect = (x0, x1, y0, y1, c, seed) => {
+    for (let y = y0; y <= y1; y += 2) {
+      const span = x1 - x0, shrink = Math.floor((y - y0) / 3);
+      for (let x = x0 + shrink; x <= x1 - shrink; x++) {
+        const v = hash(seed + x * 13 + y * 7 + ((f >> 1) % 2) * 101);
+        if (v < 0.55 - (y - y0) * 0.03) P.set(x, y, c);
+      }
+      if (span < 0) break;
+    }
+  };
+  reflect(S(135), S(147), 56, 69, 'y', 3);
+  reflect(S(50), S(66), 56, 63, 'o', 9);
+  reflect(S(92), S(93), 56, 61, 'G', 5); reflect(S(150), S(151), 56, 61, 'G', 6);
 
-  // 웅덩이와 물결
-  [[S(26), 63, 10, 1.5, 0], [S(112), 67, 12, 1.5, 4]].forEach(([x, y, rx, ry, ph]) => {
-    P.ell('B', x, y, rx, ry);
-    const r = ((f + ph) % 8) / 2 + 1;
-    for (let a = 0; a < TAU; a += 0.15) P.set(x + Math.cos(a) * r * 2, y + Math.sin(a) * r * 0.5, 'b');
+  // 웅덩이와 퍼지는 물결
+  [[S(24), 64, 11, 0], [S(112), 68, 13, 4]].forEach(([x, y, rx, ph]) => {
+    P.ell('B', x, y, rx, 2.2);
+    P.hl('b', x - rx + 4, x - 2, y - 1);
+    const r = ((f + ph) % 8) / 8;
+    const rr = 2 + r * (rx - 3);
+    for (let a = 0; a < TAU; a += 0.08) P.set(x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.22, r < 0.85 ? 'b' : 'B');
   });
 
   // 우산 쓴 사람
@@ -533,7 +547,7 @@ function drawRain(P, f) {
   [3, 9, 15].forEach(x => um.line('o', 9, 1, x, 5));
   um.set(9, 0, 'K'); um.set(9, -1, 'K');
   um.spr(PERSON, 5, 7);
-  um.vl('K', 9, 7, 12);
+  um.vl('K', 9, 7, 13);
   um.outline();
   P.blit(um, ux, uy);
 
@@ -548,57 +562,86 @@ function drawRain(P, f) {
 }
 
 // ── 장면: No.11 창가의 고양이 ──────────────────────────────────────────
+const CAT = [ // 앉아 있는 뒷모습, 22×28 (꼬리는 따로 그림)
+  '...#.........#........',
+  '...##.......##........',
+  '...###.....###........',
+  '...####...####........',
+  '...###########........',
+  '..#############.......',
+  '..#############.......',
+  '..#############.......',
+  '..#############.......',
+  '...###########........',
+  '....#########.........',
+  '.....#######..........',
+  '....#########.........',
+  '...###########........',
+  '..#############.......',
+  '..#############.......',
+  '.###############......',
+  '.###############......',
+  '.################.....',
+  '#################.....',
+  '#################.....',
+  '##################....',
+  '##################....',
+  '##################....',
+  '##################....',
+  '#################.....',
+  '.################.....',
+  '..##############......',
+];
 function drawCat(P, f) {
   const W = P.w, H = P.h, cx = W >> 1;
   P.rect('S', 0, 0, W, H);
-  P.dith('s', 0, 82, W, 4, 0);
+  P.dith('s', 0, 84, W, 2, 0);
   P.rect('s', 0, 86, W, H - 86);
 
-  // 창 (위쪽 작은 창 + 큰 유리)
+  // 창 (위쪽 작은 창 세 칸 + 큰 유리)
   const gx0 = cx - 27, gx1 = cx + 26, gy0 = 10, gy1 = 66;
-  const win = new Px(gx1 - gx0 + 9, gy1 - gy0 + 8, 4, 4);
   const ww = gx1 - gx0 + 1, wh = gy1 - gy0 + 1;
+  const win = new Px(ww + 8, wh + 8, 4, 4);
   win.rect('W', -3, -3, ww + 6, wh + 4);
   win.rect('n', 0, 0, ww, wh);
-  win.dith('B', 0, 44, ww, 4, 0);
-  win.rect('B', 0, 48, ww, wh - 48);
+  win.dith('B', 0, 43, ww, 1, 0);
+  win.rect('B', 0, 44, ww, wh - 44);
+  // 먼 지붕들
+  [[0, 7, 49], [7, 6, 46], [13, 9, 50], [22, 5, 47], [27, 10, 49], [37, 6, 45], [43, 11, 48]].forEach(([x, w, top], i) => {
+    win.rect('k', x, top, w, wh - top);
+    if (i % 2 === 0) win.set(x + 2, top + 3, 'y');
+    if (i === 3) win.rect('k', x + 1, top - 3, 2, 3);
+  });
+  // 달
+  const mx = 34, my = 31, inPane = (x, y) => y >= 14;
+  win.disc('W', mx, my, 11.4, inPane);
+  win.disc('w', mx + 3, my - 4, 2.4, inPane);
+  win.disc('w', mx + 5, my + 4, 1.6, inPane);
+  win.disc('w', mx - 2, my + 6, 1.2, inPane);
+  // 별 (반짝임)
+  [[6, 4], [25, 6], [45, 3], [8, 23], [4, 36], [50, 24]].forEach(([x, y], i) => win.set(x, y, (f + i) % 4 !== 0 ? 'W' : 'B'));
+  if (f % 4 < 2) { win.set(16, 19, 'B'); win.set(18, 19, 'B'); win.set(17, 18, 'B'); win.set(17, 20, 'B'); }
+  win.set(17, 19, 'W');
+  // 창살
   win.rect('W', 0, 11, ww, 2);
   win.hl('w', 0, ww - 1, 13);
   win.vl('W', Math.floor(ww / 3), 0, 10); win.vl('W', Math.floor(ww * 2 / 3), 0, 10);
-  // 지붕들
-  [[0, 6, 50], [8, 9, 47], [19, 7, 49], [28, 10, 46], [40, 8, 50], [47, 7, 48]].forEach(([x, w, top]) => {
-    win.rect('k', x, top, w, wh - top);
-    if ((x * 7) % 3 === 0) win.set(x + 2, top + 3, 'y');
-  });
-  // 별
-  [[6, 4], [24, 6], [44, 3], [9, 22], [3, 34], [48, 27]].forEach(([x, y], i) => {
-    const on = (f + i) % 4 !== 0;
-    win.set(x, y, on ? 'W' : 'B');
-  });
-  if (f % 4 < 2) { win.set(15, 19, 'B'); win.set(17, 19, 'B'); win.set(16, 18, 'B'); win.set(16, 20, 'B'); }
-  win.set(16, 19, 'W');
-  // 달
-  const mx = 33, my = 30;
-  win.disc('W', mx, my, 11.5, (x, y) => y >= 14);
-  win.disc('w', mx - 4, my - 3, 2.2, (x, y) => y >= 14);
-  win.disc('w', mx + 4, my + 3, 3, (x, y) => y >= 14);
-  win.disc('w', mx + 5, my - 6, 1.2, (x, y) => y >= 14);
-  win.each((x, y, c) => { if ((c === 'W' || c === 'w') && x >= 0 && y >= 14 && (x - mx) ** 2 + (y - my) ** 2 > 100 && x > mx) win.set(x, y, 'v'); });
+  win.vl('w', ww - 1, 14, wh - 1);
   win.outline();
   P.blit(win, gx0, gy0);
 
-  // 커튼 봉 · 커튼
+  // 커튼 봉 · 커튼 (왼쪽만, 묶어 둠)
   const rod = new Px(ww + 22, 6, 1, 1);
   rod.rect('R', 0, 1, ww + 20, 2).rect('r', 0, 0, 3, 4).rect('r', ww + 17, 0, 3, 4);
   rod.outline();
   P.blit(rod, gx0 - 10, 4);
-  const cur = new Px(20, 72, 2, 1);
-  for (let y = 0; y < 66; y++) {
-    const wdt = y < 40 ? 14 - Math.floor(y / 40 * 7) : 7 + Math.floor((y - 40) / 26 * 5);
-    for (let x = 0; x < wdt; x++) cur.set(x, y, (x % 4 === 2 && wdt > 6) ? 'v' : 'w');
+  const cur = new Px(20, 64, 2, 1);
+  for (let y = 0; y < 59; y++) {
+    const wdt = y < 38 ? 14 - Math.floor((y / 38) * 7) : 7 + Math.floor(((y - 38) / 21) * 5);
+    for (let x = 0; x < wdt; x++) cur.set(x, y, x % 4 === 2 && wdt > 6 ? 'v' : 'w');
     cur.set(wdt - 1, y, 'v');
   }
-  cur.rect('R', 0, 40, 8, 2);
+  cur.rect('R', 0, 38, 8, 2);
   cur.outline();
   P.blit(cur, gx0 - 8, 7);
 
@@ -609,7 +652,7 @@ function drawCat(P, f) {
   P.blit(sill, gx0 - 7, 67);
   P.dith('s', gx0 - 6, 74, ww + 12, 2, 1);
 
-  // 화분
+  // 작은 화분
   const pot = new Px(11, 10, 1, 1);
   pot.rect('W', 0, 0, 9, 8).set(0, 7, ''); pot.set(8, 7, '');
   pot.hl('k', 1, 7, 0); pot.vl('v', 7, 1, 7); pot.vl('v', 6, 1, 7);
@@ -620,30 +663,23 @@ function drawCat(P, f) {
   leaf(P, ppx + 5, 60, -0.4, 8, 2.6, 'S', 's', 'L');
   P.blit(pot, ppx, 59);
 
-  // 고양이 (뒷모습, 달빛 테두리)
-  const ccx = cx - 6, cby = 66;
-  const cat = new Px(44, 52, 20, 40);
-  cat.ell('K', 0, -9, 10, 9.5);
-  cat.ell('K', -1, -18, 7, 8);
-  cat.disc('K', -1, -27, 6.3);
+  // 고양이 — 먹색 실루엣, 달 쪽 가장자리에만 빛
+  const cat = new Px(32, 44, 2, 2);
   const twitch = f === 5 || f === 6;
-  cat.spr(['#...', '##..', '###.', '####'], -7, -36, { '#': 'K' });
-  cat.spr(twitch ? ['....', '...#', '..##', '####'] : ['...#', '..##', '.###', '####'], 2, -36, { '#': 'K' });
-  // 꼬리: 창턱 앞으로 늘어뜨림
+  cat.spr(CAT, 0, 0, { '#': 'K' });
+  if (twitch) { cat.set(13, 0, ''); cat.set(12, 1, ''); cat.set(14, 2, 'K'); }
+  // 꼬리: 창턱 앞으로 늘어뜨린 채 끝만 흔들림
   const sway = [0, 1, 2, 2, 1, 0, -1, -1][f % 8];
-  const p0 = [8, -3], p1 = [15, -2], p2 = [13 + sway, 12];
-  for (let t = 0; t <= 1; t += 0.04) {
-    const x = (1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * p1[0] + t * t * p2[0];
-    const y = (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * p1[1] + t * t * p2[1];
-    cat.disc('K', x, y, 1.1);
-  }
-  cat.disc('K', p2[0] - 1 - sway, p2[1] + 1, 1.1);
-  // 달 쪽(오른쪽 위) 테두리 빛
+  const tail = [[17, 23], [18, 23], [19, 24], [20, 25], [21, 26], [21, 27], [21, 28], [21, 29], [21, 30], [21, 31]];
+  tail.forEach(([x, y]) => cat.hl('K', x - 1, x + 1, y));
+  const tip = [[21 + Math.round(sway / 2), 32], [21 + sway, 33], [22 + sway, 34], [23 + sway, 34]];
+  tip.forEach(([x, y]) => cat.hl('K', x - 1, x + 1, y));
+  cat.hl('K', 23 + sway, 25 + sway, 33);
   const rim = [];
-  cat.each((x, y) => { if (y < -12 && (!cat.get(x + 1, y) || !cat.get(x, y - 1)) && x > -3) rim.push([x, y]); });
+  cat.each((x, y) => { if (y < 19 && x > 6 && (!cat.get(x + 1, y) || (!cat.get(x, y - 1) && x > 9))) rim.push([x, y]); });
   rim.forEach(([x, y]) => cat.set(x, y, 'B'));
   cat.outline();
-  P.blit(cat, ccx, cby);
+  P.blit(cat, cx - 12, 40);
 }
 
 // ── 장면: No.10 B면 (앨범 커버) ───────────────────────────────────────

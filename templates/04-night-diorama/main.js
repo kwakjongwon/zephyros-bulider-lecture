@@ -157,20 +157,22 @@ const SPRITES = {
 
   // 등대 앞 작은 배 30×13 (뱃머리 왼쪽)
   boat: [
-    '.....................k........',
-    '.....................k........',
-    '.....................k..kkkkk.',
-    '.....................k..khhhk.',
-    '.....................k..khaak.',
-    '.....................k..khhhk.',
-    'kk...................k..khhhk.',
-    'kckkkkkkkkkkkkkkkkkkkkkkkkkkkk',
-    '.kcccccccccccccccccccccccccck.',
-    '..ktttttttttttttttttttttttttk.',
-    '..kdtttttttttttttttttttttttdk.',
-    '...kdddddddddddddddddddddddk..',
-    '....kkkkkkkkkkkkkkkkkkkkkkk...',
-  ],
+    '......................k...........',
+    '.....................kak..........',
+    '......................h...........',
+    '......................h...kkkkkkk.',
+    '......................h...kccccck.',
+    '......................h...khhhhhk.',
+    '......................h...khaahsk.',
+    '......................h...khaahsk.',
+    'kk....................h...khhhhsk.',
+    'kckkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk',
+    '.kccccccccccccccccccccccccccccccck',
+    '..ktttttttttttttttttttttttttttttk.',
+    '...kttttttttttttttttttttttttttdk..',
+    '....kddddddddddddddddddddddddddk...',
+    '.....kkkkkkkkkkkkkkkkkkkkkkkkkk....',
+  ].map((r) => r.slice(0, 34)),
 
   // 가로등 5×18
   lamp: [
@@ -623,11 +625,13 @@ class HarborScene {
       far: makeLayer(W + m(F.far), H),
       village: makeLayer(W + m(F.village), H),
       near: makeLayer(W + m(F.near), H),
+      fore: L.fore ? makeLayer(W + m(F.fore), H) : null,
     };
     this.buildSky(this.layers.sky);
     this.buildFar(this.layers.far);
     this.buildVillage(this.layers.village);
     this.buildNear(this.layers.near);
+    if (L.fore) this.buildFore(this.layers.fore);
     this.buildWater();
     // 창문 켜지는 순서 (앞줄부터 섞어서)
     const r = rng((L.seed || 7) + 99);
@@ -660,10 +664,12 @@ class HarborScene {
     const hz = L.horizon;
     // 하늘: 글자 뒤는 단색, 달과 마을 쪽으로 갈수록 수평선의 밝은 띠가 높아짐 (곡선 띠 + 2px 체크 디더)
     const sp0 = L.spanLeft ?? 12, sp1 = L.spanRight ?? 64;
-    const gx0 = L.glowX0 ?? 0, gx1 = L.glowX1 ?? w;
+    const gx0 = L.glowX0 ?? 0;
+    const spanAt = (x) => lerp(sp0, sp1, Math.exp(-Math.pow((x - L.domeX) / L.domeW, 2)) * smooth(gx0, gx0 + w * 0.1, x));
+    this.spanAt = spanAt;
     const BANDS = [[0.28, 'k'], [0.33, 'ks'], [0.56, 's'], [0.61, 'sh'], [2, 'h']];
     for (let x = 0; x < w; x++) {
-      const sp = lerp(sp0, sp1, smooth(gx0, gx1, x));
+      const sp = spanAt(x);
       const y0 = Math.max(0, Math.floor(hz - sp));
       px(g, 'k', x, 0, 1, y0);
       for (let y = y0; y < hz; y++) {
@@ -695,8 +701,7 @@ class HarborScene {
     for (let i = 0; i < n * 4 && stars.length < n; i++) {
       const x = Math.floor(R() * w), y = Math.floor(top + R() * (bottom - top));
       if (this.inText(x, y, 3)) continue;
-      const sp = lerp(sp0, sp1, smooth(gx0, gx1, x));
-      if (y > hz - sp * 0.7) continue;
+      if (y > hz - spanAt(x) * 0.7) continue;
       if (L.moon && Math.hypot(x - L.moon.x, y - L.moon.y) < L.moon.r + 6) continue;
       if (stars.some((st) => Math.abs(st.x - x) + Math.abs(st.y - y) < 11)) continue;
       stars.push({ x, y, big: R() < 0.16 });
@@ -730,6 +735,7 @@ class HarborScene {
       const top = hz - hs[x];
       if (hs[x] <= 0) continue;
       px(g, 's', x, top, 1, hz - top);
+      px(g, 'h', x, top, 1, 1);
     }
     // 먼 섬과 작은 불빛
     if (L.island) {
@@ -920,6 +926,33 @@ class HarborScene {
     }
   }
 
+  /** 가장 가까운 층: 화면 오른쪽 아래의 굵은 계류 말뚝과 밧줄 */
+  buildFore(Ly) {
+    const { g, h } = Ly;
+    const { L } = this;
+    const { xs, top } = L.fore;
+    xs.forEach((x, i) => {
+      const t0 = top + (i % 2) * 5;
+      px(g, 'k', x - 1, t0 - 1, 8, h - t0 + 1);
+      px(g, 's', x, t0, 1, h - t0);
+      px(g, 'h', x, t0, 6, 1);
+      px(g, 's', x + 1, t0 + 1, 4, 1);
+      for (let yy = t0 + 5; yy < h; yy += 6) px(g, 'k', x + 2, yy, 3, 1);
+      // 쇠고리 밴드
+      px(g, 'k', x - 1, t0 + 3, 8, 1); px(g, 'h', x, t0 + 3, 1, 1);
+    });
+    for (let i = 0; i < xs.length - 1; i++) {
+      const x0 = xs[i] + 6, x1 = xs[i + 1] - 1;
+      const y0 = top + (i % 2) * 5 + 4, y1 = top + ((i + 1) % 2) * 5 + 4;
+      for (let x = x0; x <= x1; x++) {
+        const f = (x - x0) / Math.max(1, x1 - x0);
+        const yy = Math.round(lerp(y0, y1, f) + Math.sin(f * Math.PI) * 4);
+        px(g, 'k', x, yy, 1, 2);
+        if (x % 3 === 0) px(g, 's', x, yy, 1, 1);
+      }
+    }
+  }
+
   buildWater() {
     const { L, H } = this;
     // 수면 줄무늬 (가로 줄 단위라 시차 이동에도 무늬가 깨지지 않음)
@@ -1054,37 +1087,30 @@ class HarborScene {
       const ix = this.islandLight.x - oFar;
       for (let k = 1; k < 6; k += 2) px(ctx, k < 3 ? 'a' : 'h', ix + (reduceMotion ? 0 : Math.round(Math.sin(t * 2 + k))), hz + k, 1, 1);
     }
+    ctx.drawImage(layers.near.c, -oNear, 0);
     // 가까운 층
-    // 배 (선착장보다 앞, 물결 따라 1px 오르내림)
+    // 밤배: 스크롤하면 선착장 쪽으로 들어옴, 물결 따라 1px 오르내림
+    let boatX = 0, boatY = 0;
     if (L.boat) {
       const bob = reduceMotion ? 0 : (Math.sin(t * 1.6) > 0.2 ? 1 : 0);
-      const bx = L.boat.x - oNear, by = L.boat.water - 10 + bob;
-      // 반영
-      for (let k = 0; k < 5; k++) {
-        const yy = L.boat.water + 2 + k;
+      boatX = Math.round(L.boat.x + (reduceMotion ? 0 : p * (L.boat.travel || 0))) - Math.round(pan * (L.boat.f ?? 1));
+      boatY = L.boat.water - 12 + bob;
+      const wl = L.boat.water;
+      for (let k = 0; k < 6; k++) {
+        const yy = wl + 1 + k;
         if (yy >= H) break;
         const wob = reduceMotion ? 0 : Math.round(Math.sin(t * 2 + k * 1.3) * 1);
-        dither(ctx, k < 2 ? 'd' : 's', bx + 3 + wob + k, yy, 24 - k * 2, 1, 0.55 - k * 0.08);
+        dither(ctx, k < 2 ? 'd' : 's', boatX + 4 + wob + k, yy, 26 - k * 2, 1, 0.6 - k * 0.08);
       }
-      // 반영: 선실 창
-      px(ctx, 'a', bx + 26 + (reduceMotion ? 0 : Math.round(Math.sin(t * 2.4))), L.boat.water + 4, 2, 1);
-    }
-    ctx.drawImage(layers.near.c, -oNear, 0);
-    if (L.boat) {
-      const bob = reduceMotion ? 0 : (Math.sin(t * 1.6) > 0.2 ? 1 : 0);
-      const bx = L.boat.x - oNear, by = L.boat.water - 10 + bob;
+      const wob = reduceMotion ? 0 : Math.round(Math.sin(t * 2.4));
+      px(ctx, 'a', boatX + 28 + wob, wl + 4, 2, 1);
+      px(ctx, 'a', boatX + 22 - wob, wl + 7, 1, 1);
+      // 물살 (뒤로 남는 잔물결)
+      for (let k = 0; k < 4; k++) if (!reduceMotion && (frame + k) % 4 < 3) px(ctx, 'h', boatX + 34 + k * 4 + ((frame >> 1) % 2), wl + (k % 2), 2, 1);
       const bs = spriteCanvas('boat');
-      const vis = L.boat.water - by + 1;
-      ctx.drawImage(bs, 0, 0, bs.width, vis, bx, by, bs.width, vis);
-      dither(ctx, 'h', bx + 3, L.boat.water + 1, 24, 1, 0.5);
-      // 계류 밧줄
-      const px0 = bx + 1, py0 = by + 7, px1 = L.pier.x0 + 3 - oNear, py1 = L.pier.y + 2;
-      const steps = Math.max(2, Math.abs(px1 - px0));
-      for (let i = 0; i <= steps; i += 1) {
-        const f = i / steps;
-        const yy = Math.round(lerp(py0, py1, f) + Math.sin(f * Math.PI) * 2);
-        px(ctx, 'k', Math.round(lerp(px0, px1, f)), yy);
-      }
+      const vis = wl - boatY + 1;
+      ctx.drawImage(bs, 0, 0, bs.width, vis, boatX, boatY, bs.width, vis);
+      dither(ctx, 'h', boatX + 3, wl + 1, 28, 1, 0.5);
     }
     // 가로등 반영
     if (this.lampPos) {
@@ -1119,6 +1145,7 @@ class HarborScene {
       px(ctx, 'a', cx + 9 + wob, L.pier.y + 16, 1, 1);
       px(ctx, 'h', cx + 9 - wob, L.pier.y + 18, 1, 1);
     }
+    if (layers.fore) ctx.drawImage(layers.fore.c, -this.off(F.fore, pan), 0);
   }
 
   sheetFrame(name) {
@@ -1142,17 +1169,17 @@ function layoutLandscape(W, H, text) {
   const shoreX = Math.round(W * 0.5);
   const cliffX = Math.round(W * 0.80);
   const cliffTop = horizon - 44;
-  const pierY = horizon + 15;
+  const pierY = horizon + 19;
   const pierX0 = Math.round(W * 0.26);
   const quayX0 = Math.round(W * 0.70);
-  const moon = { x: Math.round(W * 0.63), y: Math.round(H * 0.17), r: 8 };
+  const moon = { x: Math.round(W * 0.57), y: Math.round(H * 0.17), r: 8 };
   const textRight = text ? text.right : Math.round(W * 0.45);
   return {
     seed: 7,
     horizon,
     textZone: text ? { x0: 0, y0: 0, x1: text.right + 2, y1: text.bottom + 2 } : null,
     starTop: text ? text.header + 2 : 3,
-    spanLeft: 12, spanRight: 98, glowX0: textRight + 2, glowX1: moon.x + 20,
+    spanLeft: 12, spanRight: 96, glowX0: textRight + 2, domeX: Math.round(W * 0.74), domeW: Math.round(W * 0.27),
     moon,
     farHeight: 24,
     farEnv: (x) => 0.2 + 0.8 * smooth(W * 0.3, W * 0.66, x),
@@ -1169,10 +1196,11 @@ function layoutLandscape(W, H, text) {
     quay: { x0: quayX0 },
     lamp: { x: pierX0 + 3 },
     crates: { x: quayX0 + 10 },
-    boat: { x: Math.round(W * 0.47), water: pierY + 14 },
+    boat: { x: Math.round(W * 0.03), water: pierY + 28, travel: 26, f: 1.2 },
     char: { x0: pierX0 + 14, walk: 30 },
+    fore: { xs: [Math.round(W * 0.88), Math.round(W * 0.97), Math.round(W * 1.06)], top: pierY + 16 },
     pan: 36,
-    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1 },
+    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1, fore: 1.35 },
   };
 }
 /** 세로 화면 구도: 위쪽 하늘에 글, 아래에 마을·등대·잔교를 다시 배치 */
@@ -1181,7 +1209,7 @@ function layoutPortrait(W, H, text) {
   const horizon = clamp(textBottom + 70, Math.round(H * 0.6), H - 60);
   const cliffX = Math.round(W * 0.70);
   const cliffTop = horizon - 36;
-  const pierY = horizon + 14;
+  const pierY = horizon + 17;
   const pierX0 = Math.round(W * 0.2);
   const quayX0 = Math.round(W * 0.72);
   return {
@@ -1189,7 +1217,7 @@ function layoutPortrait(W, H, text) {
     horizon,
     textZone: text ? { x0: 0, y0: 0, x1: W, y1: text.bottom + 1 } : null,
     starTop: text ? text.header + 2 : 3,
-    spanLeft: 12, spanRight: 70, glowX0: Math.round(W * 0.1), glowX1: Math.round(W * 0.9),
+    spanLeft: 12, spanRight: 72, glowX0: 0, domeX: Math.round(W * 0.66), domeW: Math.round(W * 0.42),
     moon: text?.moon || { x: Math.round(W * 0.8), y: Math.round(H * 0.15), r: 6 },
     farHeight: 18,
     farEnv: (x) => 0.3 + 0.7 * smooth(0, W * 0.6, x),
@@ -1206,10 +1234,11 @@ function layoutPortrait(W, H, text) {
     quay: { x0: quayX0 },
     lamp: { x: pierX0 + 3 },
     crates: { x: quayX0 + 5 },
-    boat: { x: Math.round(W * 0.34), water: pierY + 15 },
+    boat: { x: 2, water: pierY + 30, travel: 12, f: 1.2 },
     char: { x0: pierX0 + 8, walk: 14 },
+    fore: { xs: [Math.round(W * 0.9), Math.round(W * 1.02)], top: pierY + 22 },
     pan: 14,
-    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1 },
+    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1, fore: 1.35 },
   };
 }
 
