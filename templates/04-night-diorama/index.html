@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>밤항구 NIGHT HARBOR — 편지와 불빛을 배달하는 픽셀 어드벤처</title>
+  <meta name="description" content="등대지기 견습생이 되어 밤마다 작은 항구 마을 바람곶에 편지와 불빛을 배달하는 아늑한 픽셀 어드벤처, 밤항구. 2027년 봄 PC·콘솔 출시 예정.">
+  <meta name="theme-color" content="#111D2B">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%23111D2B'/%3E%3Crect x='7' y='1' width='2' height='1' fill='%232F7F7A'/%3E%3Crect x='6' y='2' width='4' height='3' fill='%23E2B66C'/%3E%3Crect x='5' y='5' width='6' height='1' fill='%2320364A'/%3E%3Crect x='6' y='6' width='4' height='8' fill='%23F2EBDD'/%3E%3Crect x='6' y='9' width='4' height='2' fill='%232F7F7A'/%3E%3Crect x='3' y='14' width='10' height='2' fill='%2320364A'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <header class="site-header" data-header>
+    <div class="container header__inner">
+      <a class="logo" href="#top" aria-label="밤항구 처음으로">
+        <canvas class="logo__mark px" width="12" height="16" data-sprite="logo" aria-hidden="true"></canvas>
+        <span class="logo__ko">밤항구</span>
+        <span class="logo__en" aria-hidden="true">NIGHT HARBOR</span>
+      </a>
+      <nav class="nav" aria-label="주요 메뉴">
+        <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
+          <span class="nav__toggle-bars" aria-hidden="true"></span>
+          <span class="nav__toggle-label">메뉴</span>
+        </button>
+        <ul class="nav__list" id="site-nav">
+          <li><a href="#world">세계</a></li>
+          <li><a href="#experience">핵심 경험</a></li>
+          <li><a href="#characters">등장인물</a></li>
+          <li><a href="#media">영상</a></li>
+          <li><a href="#release">출시 안내</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--primary btn--sm header__cta" href="#release">위시리스트</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ───── HERO: 스크롤하며 들어가는 밤의 항구 ───── -->
+    <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
+      <div class="hero__stage" data-hero-stage>
+        <canvas class="hero__canvas px" data-hero-canvas role="img"
+          aria-label="밤의 항구 마을 풍경. 언덕을 따라 지붕이 낮은 집들이 층층이 놓여 있고, 오른쪽 절벽 위 등대가 천천히 빛을 돌린다. 앞쪽 선착장에는 등불을 든 견습생과 묶여 있는 작은 배, 가로등이 있고 물 위로 창문 불빛이 비친다."></canvas>
+        <div class="hero__hud" aria-hidden="true">
+          <div class="hud">
+            <span class="hud__time" data-hud-time>PM 09:00</span>
+            <span class="hud__row"><span class="hud__label">켜진 창</span> <span class="hud__count" data-hud-count>00/00</span></span>
+            <span class="hud__bar"><span data-hud-bar></span></span>
+          </div>
+          <span class="hud__hint" data-hud-hint>스크롤하면 밤이 깊어집니다 <span class="hud__arrow">↓</span></span>
+        </div>
+      </div>
+
+      <div class="hero__content">
+        <div class="container">
+          <div class="hero__text" data-hero-text>
+            <p class="eyebrow">NIGHT HARBOR · 2027 봄 출시 예정</p>
+            <h1 class="hero__title" id="hero-title">밤항구</h1>
+            <p class="hero__lead">등대지기 견습생이 되어, 잠든 항구 마을에 편지와 불빛을 배달하는 아늑한 픽셀 어드벤처.</p>
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="#release">위시리스트에 추가</a>
+              <a class="btn btn--ghost" href="#media" data-trailer-open>
+                <span class="btn__play" aria-hidden="true"></span>트레일러 보기
+              </a>
+            </div>
+            <p class="hero__meta"><span>PC · 콘솔</span><span>1인 플레이</span><span>한국어 음성·자막</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── 01 세계 소개 ───── -->
+    <section class="section section--world" id="world" aria-labelledby="world-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="chapter"><span class="chapter__no">01</span><span class="chapter__name">세계</span><span class="chapter__time">PM 09:30</span></p>
+          <h2 id="world-title">밤이 되어야 깨어나는 작은 항구, 바람곶</h2>
+        </header>
+        <div class="world">
+          <div class="world__story">
+            <p class="lead">바람곶은 낮에는 조용하고, 해가 져야 바빠지는 마을입니다. 고깃배가 돌아오고, 우체국 창에 불이 들어오고, 언덕 끝 등대가 첫 바퀴를 돕니다.</p>
+            <p>당신은 늙은 등대지기에게 일을 배우러 온 견습생입니다. 하룻밤에 한 번, 편지 가방을 메고 마을을 돌며 편지를 전하고 꺼진 등불을 다시 밝힙니다. 편지를 받은 집은 창문에 불을 켜 답장을 대신하고, 일곱 밤이 지나면 마을 전체가 하나의 불빛으로 이어집니다.</p>
+            <dl class="facts">
+              <div><dt>가구</dt><dd><span class="num">14</span>채</dd></div>
+              <div><dt>이야기</dt><dd><span class="num">7</span>밤</dd></div>
+              <div><dt>플레이</dt><dd><span class="num">6–8</span>시간</dd></div>
+            </dl>
+          </div>
+          <figure class="map panel" data-map>
+            <div class="map__frame">
+              <canvas class="map__canvas px" data-vignette="map" role="img" aria-label="바람곶 마을 지도. 왼쪽 아래 선착장에서 우체국을 지나 언덕길을 올라 오른쪽 위 등대까지 배달 길이 점선으로 이어진다."></canvas>
+              <span class="map__pin" style="--x:83%;--y:18%" data-pin="1" aria-hidden="true">1</span>
+              <span class="map__pin" style="--x:37%;--y:52%" data-pin="2" aria-hidden="true">2</span>
+              <span class="map__pin" style="--x:60%;--y:34%" data-pin="3" aria-hidden="true">3</span>
+              <span class="map__pin" style="--x:18%;--y:80%" data-pin="4" aria-hidden="true">4</span>
+            </div>
+            <figcaption>
+              <p class="map__title">바람곶 안내도 <span>점선은 첫날 밤 배달 길</span></p>
+              <ol class="map__legend">
+                <li><button type="button" data-legend="1"><span class="map__no">1</span><strong>등대</strong><span>언덕 끝. 매일 밤 첫 불을 켜는 곳</span></button></li>
+                <li><button type="button" data-legend="2"><span class="map__no">2</span><strong>우체국</strong><span>편지 가방과 고양이가 기다리는 곳</span></button></li>
+                <li><button type="button" data-legend="3"><span class="map__no">3</span><strong>언덕길</strong><span>집 아홉 채가 이어진 돌계단</span></button></li>
+                <li><button type="button" data-legend="4"><span class="map__no">4</span><strong>선착장</strong><span>밤배가 들어오고 편지가 내리는 곳</span></button></li>
+              </ol>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <div class="roofline" aria-hidden="true"><canvas class="roofline__canvas px" data-vignette="roofline"></canvas></div>
+
+    <!-- ───── 02 핵심 경험 ───── -->
+    <section class="section section--surface" id="experience" aria-labelledby="exp-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="chapter"><span class="chapter__no">02</span><span class="chapter__name">핵심 경험</span><span class="chapter__time">PM 10:10</span></p>
+          <h2 id="exp-title">하룻밤은 세 가지 일로 채워집니다</h2>
+          <p class="section__intro">전투도, 시간 제한도 없습니다. 걷고, 전하고, 밝히는 일이 이 게임의 전부입니다.</p>
+        </header>
+
+        <ol class="exp">
+          <li class="exp__item">
+            <div class="exp__head">
+              <canvas class="px exp__icon" width="16" height="16" data-sprite="iconLetter" aria-hidden="true"></canvas>
+              <h3><span class="exp__no">A</span>배달하기</h3>
+            </div>
+            <p>우체국에서 받은 편지를 주소대로 전합니다. 골목은 밤마다 조금씩 달라지고, 받는 사람이 늘 집에 있는 것도 아닙니다.</p>
+            <div class="mock mock--list" aria-label="게임 화면 예시: 오늘 밤 배달 목록" role="group">
+              <p class="mock__title"><span>오늘 밤 배달</span><span class="mock__num">2/3</span></p>
+              <ul>
+                <li class="is-done"><span class="mock__check" aria-hidden="true"></span><span class="mock__to">언덕 3번지 · 순이 할머니</span><span class="mock__state">전달 완료</span></li>
+                <li class="is-now"><span class="mock__check" aria-hidden="true"></span><span class="mock__to">선착장 · 어부 달수</span><span class="mock__state">42걸음</span></li>
+                <li><span class="mock__check" aria-hidden="true"></span><span class="mock__to">주소 없음 · 발신인 불명</span><span class="mock__state">???</span></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="exp__item">
+            <div class="exp__head">
+              <canvas class="px exp__icon" width="16" height="16" data-sprite="iconLamp" aria-hidden="true"></canvas>
+              <h3><span class="exp__no">B</span>불빛 잇기</h3>
+            </div>
+            <p>꺼진 가로등을 이어 등대까지 길을 만드세요. 하나를 켜면 맞닿은 등불도 함께 바뀝니다.</p>
+            <div class="mock mock--puzzle" role="group" aria-labelledby="puzzle-title">
+              <p class="mock__title"><span id="puzzle-title">직접 켜 보기</span><span class="mock__num" data-puzzle-count>0/9</span></p>
+              <div class="puzzle" data-puzzle></div>
+              <p class="puzzle__status" data-puzzle-status aria-live="polite">등불을 눌러 아홉 개를 모두 켜 보세요.</p>
+              <button class="link-btn" type="button" data-puzzle-reset>처음부터</button>
+            </div>
+          </li>
+
+          <li class="exp__item">
+            <div class="exp__head">
+              <canvas class="px exp__icon" width="16" height="16" data-sprite="iconTalk" aria-hidden="true"></canvas>
+              <h3><span class="exp__no">C</span>마을 사람들과 대화</h3>
+            </div>
+            <p>편지를 건네면 이야기가 시작됩니다. 고른 대답에 따라 다음 날 밤 받게 될 부탁이 달라집니다.</p>
+            <div class="mock mock--dialog" role="group" aria-label="게임 화면 예시: 대화 상자">
+              <div class="dialog-box">
+                <canvas class="px dialog-box__face" width="16" height="16" data-sprite="faceFisher" aria-hidden="true"></canvas>
+                <div>
+                  <p class="dialog-box__name">어부 달수</p>
+                  <p class="dialog-box__line" data-talk-line aria-live="polite">오늘은 물이 잔잔하구먼. 먼바다에서 온 편지도 한 통 있다네.</p>
+                </div>
+              </div>
+              <div class="choices" data-talk-choices>
+                <button type="button" data-reply="0">제가 전해 드릴게요</button>
+                <button type="button" data-reply="1">누구한테 온 편지예요?</button>
+              </div>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ───── 03 등장 요소 ───── -->
+    <section class="section" id="characters" aria-labelledby="chara-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="chapter"><span class="chapter__no">03</span><span class="chapter__name">등장인물</span><span class="chapter__time">PM 11:20</span></p>
+          <h2 id="chara-title">바람곶에서 만나게 될 얼굴들</h2>
+        </header>
+
+        <div class="cast" data-tabs>
+          <div class="cast__tabs" role="tablist" aria-label="등장인물 선택">
+            <button class="cast__tab" role="tab" id="tab-nuri" aria-controls="panel-nuri" aria-selected="true" tabindex="0">
+              <canvas class="px" width="32" height="32" data-sprite="portraitApprentice" aria-hidden="true"></canvas>
+              <span><strong>누리</strong><small>견습생</small></span>
+            </button>
+            <button class="cast__tab" role="tab" id="tab-boreum" aria-controls="panel-boreum" aria-selected="false" tabindex="-1">
+              <canvas class="px" width="32" height="32" data-sprite="portraitKeeper" aria-hidden="true"></canvas>
+              <span><strong>보름</strong><small>늙은 등대지기</small></span>
+            </button>
+            <button class="cast__tab" role="tab" id="tab-upyo" aria-controls="panel-upyo" aria-selected="false" tabindex="-1">
+              <canvas class="px" width="32" height="32" data-sprite="portraitCat" aria-hidden="true"></canvas>
+              <span><strong>우표</strong><small>우체국 고양이</small></span>
+            </button>
+            <button class="cast__tab" role="tab" id="tab-dalsu" aria-controls="panel-dalsu" aria-selected="false" tabindex="-1">
+              <canvas class="px" width="32" height="32" data-sprite="portraitFisher" aria-hidden="true"></canvas>
+              <span><strong>달수</strong><small>어부</small></span>
+            </button>
+          </div>
+
+          <div class="cast__panel panel" role="tabpanel" id="panel-nuri" aria-labelledby="tab-nuri" tabindex="0">
+            <canvas class="px cast__portrait" width="32" height="32" data-sprite="portraitApprentice" role="img" aria-label="누리의 초상. 청록 모자를 쓰고 등불을 든 아이."></canvas>
+            <div class="cast__info">
+              <p class="cast__role">견습생 · 플레이어</p>
+              <h3>누리</h3>
+              <p>등대지기가 되고 싶어 바람곶에 온 열네 살. 길눈은 어둡지만, 한 번 걸은 골목은 잊지 않습니다.</p>
+              <dl class="cast__meta"><div><dt>처음 만나는 곳</dt><dd>선착장</dd></div><div><dt>좋아하는 것</dt><dd>우표 모으기, 따뜻한 보리차</dd></div></dl>
+              <p class="cast__quote">“오늘은 편지가 세 통이에요. 금방 다녀올게요!”</p>
+            </div>
+          </div>
+          <div class="cast__panel panel" role="tabpanel" id="panel-boreum" aria-labelledby="tab-boreum" tabindex="0" hidden>
+            <canvas class="px cast__portrait" width="32" height="32" data-sprite="portraitKeeper" role="img" aria-label="보름의 초상. 흰 수염에 모자를 쓴 노인."></canvas>
+            <div class="cast__info">
+              <p class="cast__role">늙은 등대지기 · 스승</p>
+              <h3>보름</h3>
+              <p>사십 년째 같은 시각에 등대에 불을 켭니다. 말수는 적지만, 바람곶의 지도는 누구보다 정확하게 머릿속에 있습니다.</p>
+              <dl class="cast__meta"><div><dt>처음 만나는 곳</dt><dd>등대 계단</dd></div><div><dt>좋아하는 것</dt><dd>조용한 파도, 오래된 라디오</dd></div></dl>
+              <p class="cast__quote">“불은 크게 밝힐 필요 없다. 꺼지지만 않으면 돼.”</p>
+            </div>
+          </div>
+          <div class="cast__panel panel" role="tabpanel" id="panel-upyo" aria-labelledby="tab-upyo" tabindex="0" hidden>
+            <canvas class="px cast__portrait" width="32" height="32" data-sprite="portraitCat" role="img" aria-label="우표의 초상. 노란 눈의 검은 고양이."></canvas>
+            <div class="cast__info">
+              <p class="cast__role">우체국 고양이 · 길잡이</p>
+              <h3>우표</h3>
+              <p>우체국 카운터의 진짜 주인. 주소가 지워진 편지가 생기면 어디선가 나타나 꼬리로 길을 알려 줍니다.</p>
+              <dl class="cast__meta"><div><dt>처음 만나는 곳</dt><dd>우체국 카운터</dd></div><div><dt>좋아하는 것</dt><dd>편지 봉투 냄새, 난로 앞자리</dd></div></dl>
+              <p class="cast__quote">“냐아.” (편지 냄새를 맡더니 언덕 쪽으로 걸어간다.)</p>
+            </div>
+          </div>
+          <div class="cast__panel panel" role="tabpanel" id="panel-dalsu" aria-labelledby="tab-dalsu" tabindex="0" hidden>
+            <canvas class="px cast__portrait" width="32" height="32" data-sprite="portraitFisher" role="img" aria-label="달수의 초상. 털모자를 쓰고 수염이 난 어부."></canvas>
+            <div class="cast__info">
+              <p class="cast__role">어부 · 바다 건너 소식</p>
+              <h3>달수</h3>
+              <p>마을에 남은 마지막 밤배 어부. 바다 건너에서 온 편지를 가장 먼저 받아 와 선착장 상자에 넣어 둡니다.</p>
+              <dl class="cast__meta"><div><dt>처음 만나는 곳</dt><dd>선착장 끝</dd></div><div><dt>좋아하는 것</dt><dd>잔잔한 물때, 매운 생선국</dd></div></dl>
+              <p class="cast__quote">“물때가 좋다. 먼바다 소식도 같이 실어 왔지.”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── 04 영상·스크린샷 ───── -->
+    <section class="section section--surface" id="media" aria-labelledby="media-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="chapter"><span class="chapter__no">04</span><span class="chapter__name">영상·스크린샷</span><span class="chapter__time">AM 01:40</span></p>
+          <h2 id="media-title">바람곶의 밤을 먼저 걸어 보세요</h2>
+        </header>
+
+        <figure class="trailer">
+          <button class="trailer__btn" type="button" data-trailer-open aria-haspopup="dialog">
+            <canvas class="trailer__canvas px" data-vignette="trailer" aria-hidden="true"></canvas>
+            <span class="trailer__play" aria-hidden="true"><canvas class="px" width="16" height="16" data-sprite="play"></canvas></span>
+            <span class="visually-hidden">트레일러 재생</span>
+          </button>
+          <figcaption><strong>공식 트레일러</strong><span>1분 42초 · 2026년 12월 공개 예정</span></figcaption>
+        </figure>
+
+        <ul class="shots">
+          <li>
+            <figure class="shot">
+              <div class="shot__screen">
+                <canvas class="px" data-vignette="postoffice" role="img" aria-label="스크린샷: 우체국 안. 등불 아래 카운터 위에 고양이가 앉아 있고 선반에 편지가 꽂혀 있다."></canvas>
+                <div class="shot__hud shot__hud--toast"><span class="hud-chip">새 편지 3통</span></div>
+              </div>
+              <figcaption><strong>우체국</strong> 오늘 밤 전할 편지를 고릅니다.</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="shot">
+              <div class="shot__screen">
+                <canvas class="px" data-vignette="alley" role="img" aria-label="스크린샷: 언덕길. 돌계단 옆 집들의 창에 불이 켜져 있고 견습생이 등불을 들고 계단을 오른다."></canvas>
+                <div class="shot__hud shot__hud--loc"><span class="hud-chip">언덕 3번지 · PM 10:24</span></div>
+              </div>
+              <figcaption><strong>언덕길</strong> 주소를 따라 돌계단을 오릅니다.</figcaption>
+            </figure>
+          </li>
+          <li>
+            <figure class="shot">
+              <div class="shot__screen">
+                <canvas class="px" data-vignette="lighthouse" role="img" aria-label="스크린샷: 등대 꼭대기. 등불실 안에서 불빛이 바다 쪽으로 길게 뻗는다."></canvas>
+                <div class="shot__hud shot__hud--talk"><span class="hud-say"><b>보름</b> 마지막 편지는 언제나 등대로 온단다.</span></div>
+              </div>
+              <figcaption><strong>등대</strong> 마지막 편지는 언제나 등대로 갑니다.</figcaption>
+            </figure>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ───── 05 출시·다운로드 안내 ───── -->
+    <section class="section section--release" id="release" aria-labelledby="release-title">
+      <div class="container">
+        <header class="section__head">
+          <p class="chapter"><span class="chapter__no">05</span><span class="chapter__name">출시 안내</span><span class="chapter__time">AM 05:50</span></p>
+          <h2 id="release-title">2027년 봄, 바람곶에 첫 불이 켜집니다</h2>
+        </header>
+
+        <div class="release">
+          <div class="release__main">
+            <div class="release__date panel">
+              <p class="release__when"><span class="num">2027</span> 봄</p>
+              <p>출시 예정. 정확한 날짜는 뉴스레터 구독자에게 가장 먼저 알려 드립니다.</p>
+            </div>
+
+            <ul class="platforms">
+              <li class="platform panel">
+                <div>
+                  <p class="platform__name">PC</p>
+                  <p class="platform__state">위시리스트 열림 · 체험판 2027년 1월</p>
+                </div>
+                <a class="btn btn--primary" href="#subscribe" data-wishlist>위시리스트에 추가</a>
+              </li>
+              <li class="platform panel">
+                <div>
+                  <p class="platform__name">콘솔</p>
+                  <p class="platform__state">출시 알림 신청 받는 중</p>
+                </div>
+                <a class="btn btn--ghost" href="#subscribe">출시 알림 받기</a>
+              </li>
+            </ul>
+
+            <form class="subscribe panel" id="subscribe" data-subscribe novalidate>
+              <h3>개발 소식 받기</h3>
+              <p class="subscribe__desc">한 달에 한 번, 새로 그린 장면과 출시 일정을 보내 드립니다.</p>
+              <div class="subscribe__row">
+                <label class="visually-hidden" for="sub-email">이메일 주소</label>
+                <input id="sub-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="이메일 주소" required aria-describedby="sub-msg">
+                <button class="btn btn--primary" type="submit">구독하기</button>
+              </div>
+              <label class="check"><input type="checkbox" name="agree" required> <span>소식 메일 수신에 동의합니다. 언제든 메일 하단에서 해지할 수 있습니다.</span></label>
+              <p class="subscribe__msg" id="sub-msg" data-sub-msg aria-live="polite"></p>
+            </form>
+          </div>
+
+          <div class="release__side">
+            <div class="spec panel">
+              <h3>지원 언어</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th scope="col">언어</th><th scope="col">화면</th><th scope="col">자막</th><th scope="col">음성</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">한국어</th><td><span class="yes">지원</span></td><td><span class="yes">지원</span></td><td><span class="yes">지원</span></td></tr>
+                    <tr><th scope="row">영어</th><td><span class="yes">지원</span></td><td><span class="yes">지원</span></td><td>–</td></tr>
+                    <tr><th scope="row">일본어</th><td><span class="yes">지원</span></td><td><span class="yes">지원</span></td><td>–</td></tr>
+                    <tr><th scope="row">중국어(간체)</th><td colspan="3">출시 후 업데이트</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="spec panel">
+              <h3>PC 시스템 사양</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th scope="col">항목</th><th scope="col">최소</th><th scope="col">권장</th></tr></thead>
+                  <tbody>
+                    <tr><th scope="row">운영체제</th><td>64비트 Windows 10</td><td>64비트 Windows 11</td></tr>
+                    <tr><th scope="row">프로세서</th><td>듀얼코어 2.4GHz</td><td>쿼드코어 3.0GHz</td></tr>
+                    <tr><th scope="row">메모리</th><td>4GB</td><td>8GB</td></tr>
+                    <tr><th scope="row">그래픽</th><td>내장 그래픽</td><td>VRAM 2GB 이상</td></tr>
+                    <tr><th scope="row">저장 공간</th><td colspan="2">2GB</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="spec__note">개발 중인 사양으로, 출시 전에 바뀔 수 있습니다.</p>
+            </div>
+
+            <div class="faq">
+              <h3>자주 묻는 질문</h3>
+              <details>
+                <summary>가격은 얼마인가요?</summary>
+                <p>출시 한 달 전에 공개합니다. 출시 첫 주에는 위시리스트에 담아 둔 분께 할인을 드릴 예정입니다(예시 문구).</p>
+              </details>
+              <details>
+                <summary>게임패드로 할 수 있나요?</summary>
+                <p>네. 키보드·마우스와 게임패드를 모두 지원하고, 버튼 배치는 설정에서 바꿀 수 있습니다.</p>
+              </details>
+              <details>
+                <summary>체험판이 있나요?</summary>
+                <p>2027년 1월 온라인 체험판 행사에서 첫 두 밤을 플레이할 수 있습니다. 진행 상황은 정식판으로 이어집니다.</p>
+              </details>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="finale" aria-hidden="true"><canvas class="finale__canvas px" data-vignette="finale"></canvas></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <p class="logo logo--footer"><canvas class="logo__mark px" width="12" height="16" data-sprite="logo" aria-hidden="true"></canvas><span class="logo__ko">밤항구</span><span class="logo__en">NIGHT HARBOR</span></p>
+        <p class="footer__studio">작은등불 스튜디오 (가상의 개발사)</p>
+      </div>
+      <ul class="footer__links">
+        <li><a href="#release">보도 자료</a></li>
+        <li><a href="mailto:hello@example.com">hello@example.com</a></li>
+        <li><a href="#top">개인정보 처리방침</a></li>
+        <li><a href="../">템플릿 목록</a></li>
+      </ul>
+      <p class="footer__note">© 2026 작은등불 스튜디오. 이 페이지는 홈페이지 템플릿 예시이며, 게임과 개발사·인물은 모두 가상입니다.</p>
+    </div>
+  </footer>
+
+  <dialog class="modal" data-trailer-dialog aria-labelledby="modal-title">
+    <div class="modal__inner">
+      <div class="modal__head">
+        <h2 id="modal-title" class="modal__title">공식 트레일러</h2>
+        <button class="modal__close" type="button" data-modal-close aria-label="닫기">닫기</button>
+      </div>
+      <div class="modal__body" data-modal-body>
+        <p class="modal__empty"><span class="modal__badge">영상 미연결</span>트레일러는 2026년 12월에 공개됩니다. 영상이 준비되면 이 자리에서 바로 재생됩니다.</p>
+      </div>
+      <a class="btn btn--primary" href="#subscribe" data-modal-close-link>공개 알림 받기</a>
+    </div>
+  </dialog>
+</body>
+</html>

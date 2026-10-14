@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>모눈 스튜디오 — 픽셀 아트와 루프 애니메이션</title>
+  <meta name="description" content="모눈 스튜디오는 게임·브랜드·음반에 들어갈 픽셀 그림과 짧은 루프 애니메이션을 만드는 서울의 1인 작업실입니다. 작업 목록, 제작 철학, 진행 과정과 문의 양식을 확인하세요.">
+  <meta name="theme-color" content="#F5F3ED">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' shape-rendering='crispEdges'%3E%3Crect width='10' height='10' fill='%23F5F3ED'/%3E%3Cpath fill='%2322231F' d='M1 1h2v2H1zM4 1h2v2H4zM7 1h2v2H7zM1 4h2v2H1zM4 4h2v2H4zM7 4h2v2H7zM1 7h2v2H1zM4 7h2v2H4z'/%3E%3Cpath fill='%23D94D2B' d='M7 7h2v2H7z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <!-- 픽셀 아이콘 (7×7 격자). <use href="#i-arrow-r"> 처럼 불러 씁니다. -->
+  <svg class="sprite-defs" aria-hidden="true" focusable="false">
+    <symbol id="i-arrow-r" viewBox="0 0 7 7"><path d="M3 0h1v1h-1zM4 1h1v1h-1zM5 2h1v1h-1zM0 3h7v1h-7zM5 4h1v1h-1zM4 5h1v1h-1zM3 6h1v1h-1z"/></symbol>
+    <symbol id="i-arrow-ur" viewBox="0 0 7 7"><path d="M2 0h5v1h-5zM5 1h2v1h-2zM4 2h1v1h-1zM6 2h1v1h-1zM3 3h1v1h-1zM6 3h1v1h-1zM2 4h1v1h-1zM6 4h1v1h-1zM1 5h1v1h-1zM0 6h1v1h-1z"/></symbol>
+    <symbol id="i-arrow-d" viewBox="0 0 7 7"><path d="M3 0h1v1h-1zM3 1h1v1h-1zM3 2h1v1h-1zM0 3h1v1h-1zM3 3h1v1h-1zM6 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM5 4h1v1h-1zM2 5h3v1h-3zM3 6h1v1h-1z"/></symbol>
+    <symbol id="i-arrow-u" viewBox="0 0 7 7"><path d="M3 0h1v1h-1zM2 1h3v1h-3zM1 2h1v1h-1zM3 2h1v1h-1zM5 2h1v1h-1zM0 3h1v1h-1zM3 3h1v1h-1zM6 3h1v1h-1zM3 4h1v1h-1zM3 5h1v1h-1zM3 6h1v1h-1z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 7 7"><path d="M1 0h1v1h-1zM1 1h2v1h-2zM1 2h3v1h-3zM1 3h4v1h-4zM1 4h3v1h-3zM1 5h2v1h-2zM1 6h1v1h-1z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 7 7"><path d="M1 1h5v5h-5z"/></symbol>
+    <symbol id="i-next" viewBox="0 0 7 7"><path d="M0 0h1v1h-1zM4 0h2v1h-2zM0 1h2v1h-2zM4 1h2v1h-2zM0 2h3v1h-3zM4 2h2v1h-2zM0 3h6v1h-6zM0 4h3v1h-3zM4 4h2v1h-2zM0 5h2v1h-2zM4 5h2v1h-2zM0 6h1v1h-1zM4 6h2v1h-2z"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 7 7"><path d="M0 1h7v1h-7zM0 3h7v1h-7zM0 5h7v1h-7z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 7 7"><path d="M0 0h1v1h-1zM6 0h1v1h-1zM1 1h1v1h-1zM5 1h1v1h-1zM2 2h1v1h-1zM4 2h1v1h-1zM3 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM1 5h1v1h-1zM5 5h1v1h-1zM0 6h1v1h-1zM6 6h1v1h-1z"/></symbol>
+    <symbol id="i-check" viewBox="0 0 7 7"><path d="M6 1h1v1h-1zM5 2h1v1h-1zM0 3h1v1h-1zM4 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM2 5h1v1h-1z"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 8 8"><path d="M0 0h2v2h-2zM3 0h2v2h-2zM6 0h2v2h-2zM0 3h2v2h-2zM3 3h2v2h-2zM6 3h2v2h-2zM0 6h2v2h-2zM3 6h2v2h-2z"/><path class="logo-dot" d="M6 6h2v2h-2z"/></symbol>
+  </svg>
+
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="brand" href="#top" aria-label="모눈 스튜디오 처음으로">
+        <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
+        <span class="brand__name">MONUN STUDIO</span>
+      </a>
+      <nav class="site-nav" id="site-nav" aria-label="주요 메뉴">
+        <ul class="site-nav__list">
+          <li><a href="#featured"><span class="site-nav__no">01</span>대표 작업</a></li>
+          <li><a href="#works"><span class="site-nav__no">02</span>작업 목록</a></li>
+          <li><a href="#philosophy"><span class="site-nav__no">03</span>제작 철학</a></li>
+          <li><a href="#process"><span class="site-nav__no">04</span>진행 과정</a></li>
+          <li><a href="#contact"><span class="site-nav__no">05</span>문의</a></li>
+        </ul>
+      </nav>
+      <div class="site-header__actions">
+        <a class="btn btn--small" href="#contact">작업 의뢰<svg class="px-icon" aria-hidden="true"><use href="#i-arrow-r"/></svg></a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          <svg class="px-icon" aria-hidden="true"><use href="#i-menu"/></svg>
+          <span class="nav-toggle__label">메뉴</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ── 첫 화면 ── -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="wrap">
+        <ul class="meta-strip" aria-label="스튜디오 정보">
+          <li>MONUN STUDIO — 모눈 스튜디오</li>
+          <li>PIXEL ART &amp; LOOP</li>
+          <li>SEOUL, MANGWON</li>
+          <li>CATALOG 2026</li>
+        </ul>
+
+        <h1 class="wordmark" id="hero-title">
+          <span class="visually-hidden">모눈 스튜디오 MONUN STUDIO</span>
+          <!-- main.js 가 이 자리에 격자 글자(SVG)를 그립니다. 스크립트가 없으면 아래 글자가 보입니다. -->
+          <span class="wordmark__fallback" aria-hidden="true">MONUN</span>
+        </h1>
+
+        <div class="hero__row">
+          <p class="hero__lede">게임과 브랜드, 음반에 들어갈 픽셀 그림과 짧은 루프 애니메이션을 한 칸씩 찍어 만듭니다.</p>
+          <div class="hero__actions">
+            <div class="hero__buttons">
+              <a class="btn" href="#contact">작업 의뢰하기<svg class="px-icon" aria-hidden="true"><use href="#i-arrow-r"/></svg></a>
+              <a class="link-arrow" href="#works">작업 목록 보기<svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a>
+            </div>
+            <p class="hero__note"><span class="dot" aria-hidden="true"></span>2026년 12월 작업 예약 중 · 영업일 2일 안에 답장</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 01 대표 작업 ── -->
+    <section class="section section--featured" id="featured" aria-labelledby="featured-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="dotnum" data-dotnum="01" aria-hidden="true">01</span>
+          <h2 class="section-head__title" id="featured-title">대표 작업</h2>
+          <p class="section-head__aside">No.07 — 2026</p>
+        </div>
+
+        <div class="feature">
+          <div class="feature__media media" data-media>
+            <button class="plate" type="button" data-art="hero" aria-pressed="false" aria-label="오후 네 시의 라디오, 루프 재생" aria-describedby="hero-art-desc">
+              <canvas class="plate__canvas" width="160" height="90" aria-hidden="true"></canvas>
+              <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+            </button>
+            <p class="visually-hidden" id="hero-art-desc">햇빛이 비스듬히 드는 오후의 책상. 주황색 라디오 옆에 화분과 김이 오르는 머그잔, 책 세 권이 놓여 있고 벽에는 네 시를 가리키는 시계가 걸려 있습니다.</p>
+          </div>
+
+          <aside class="spec" aria-label="작품 정보">
+            <div class="spec__top">
+              <span class="tag tag--accent">대표작</span>
+              <span class="dotnum dotnum--lg" data-dotnum="07" data-cell="6" aria-hidden="true">07</span>
+            </div>
+            <dl class="spec__list">
+              <div><dt>작품명</dt><dd>오후 네 시의 라디오</dd></div>
+              <div><dt>분류</dt><dd>루프 일러스트</dd></div>
+              <div><dt>연도</dt><dd>2026</dd></div>
+              <div><dt>크기</dt><dd class="num">160 × 90 px</dd></div>
+              <div><dt>프레임</dt><dd>8장 · 초당 6장</dd></div>
+              <div><dt>팔레트</dt><dd>12색 <span class="swatches" data-swatches="hero" aria-hidden="true"></span></dd></div>
+            </dl>
+            <p class="spec__hint"><svg class="px-icon" aria-hidden="true"><use href="#i-play"/></svg>그림을 누르면 김이 오르고 라디오에서 음악이 흘러나옵니다.</p>
+          </aside>
+        </div>
+
+        <div class="detail-band">
+          <figure class="detail detail--frames">
+            <figcaption class="label">FRAMES <span class="num">01—08</span></figcaption>
+            <ol class="filmstrip" data-filmstrip="hero" role="img" aria-label="머그잔 위로 김이 오르는 여덟 장의 프레임"></ol>
+            <p class="detail__text">머그잔의 김은 8장으로 한 바퀴를 돕니다. 마지막 장이 첫 장으로 끊김 없이 이어집니다.</p>
+          </figure>
+          <figure class="detail detail--loupe">
+            <figcaption class="label">ZOOM <span class="num">×8</span></figcaption>
+            <canvas class="loupe" data-loupe="hero" width="128" height="128" role="img" aria-label="라디오 다이얼과 손잡이 부분을 8배로 확대한 모습"></canvas>
+            <p class="detail__text">다이얼 눈금은 한 칸 간격입니다. 원본 크기에서도 읽히도록 바늘만 진하게 칠했습니다.</p>
+          </figure>
+          <figure class="detail detail--palette">
+            <figcaption class="label">PALETTE <span class="num">12</span></figcaption>
+            <ul class="palette" data-palette="hero" aria-label="오후 네 시의 라디오에 쓴 12가지 색"></ul>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 02 작업 목록 ── -->
+    <section class="section section--works" id="works" aria-labelledby="works-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="dotnum" data-dotnum="02" aria-hidden="true">02</span>
+          <h2 class="section-head__title" id="works-title">작업 목록</h2>
+          <p class="section-head__aside">06 WORKS · 2024—2026</p>
+        </div>
+
+        <div class="works-intro">
+          <p class="works-intro__statement">그림을 누르면<br>움직입니다.</p>
+          <p class="works-intro__text">모든 작업은 원본 픽셀을 정수배로만 키워 보여줍니다. 흐릿한 확대는 없습니다. 목록에서 제목을 고르면 해당 작업으로 이동해 바로 재생합니다.</p>
+          <ol class="index" aria-label="작업 색인">
+            <li><a href="#work-12" data-select="rain"><span class="index__no">12</span><span class="index__title">비 오는 정류장</span><span class="index__cat">게임 배경</span><span class="index__year">2026</span><svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a></li>
+            <li><a href="#work-11" data-select="cat"><span class="index__no">11</span><span class="index__title">창가의 고양이</span><span class="index__cat">브랜드 일러스트</span><span class="index__year">2025</span><svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a></li>
+            <li><a href="#work-10" data-select="tape"><span class="index__no">10</span><span class="index__title">B면</span><span class="index__cat">앨범 커버</span><span class="index__year">2025</span><svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a></li>
+            <li><a href="#work-09" data-select="night"><span class="index__no">09</span><span class="index__title">새벽 세 시의 화면</span><span class="index__cat">루프 애니메이션</span><span class="index__year">2025</span><svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a></li>
+            <li><a href="#work-08" data-select="plant"><span class="index__no">08</span><span class="index__title">물 주는 날</span><span class="index__cat">굿즈 일러스트</span><span class="index__year">2024</span><svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a></li>
+            <li><a href="#work-06" data-select="items"><span class="index__no">06</span><span class="index__title">상점 아이템 8종</span><span class="index__cat">게임 아이콘</span><span class="index__year">2024</span><svg class="px-icon" aria-hidden="true"><use href="#i-arrow-d"/></svg></a></li>
+          </ol>
+        </div>
+
+        <div class="works">
+          <!-- 12 — 가로로 넓게 -->
+          <article class="work work--wide" id="work-12" aria-labelledby="work-12-title">
+            <div class="work__media media" data-media>
+              <button class="plate" type="button" data-art="rain" aria-pressed="false" aria-label="비 오는 정류장, 루프 재생" aria-describedby="work-12-desc">
+                <canvas class="plate__canvas" width="176" height="72" aria-hidden="true"></canvas>
+                <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+              </button>
+            </div>
+            <div class="work__cap">
+              <p class="work__meta"><span class="num">No.12</span><span>게임 배경</span><span class="num">2026</span></p>
+              <h3 class="work__title" id="work-12-title">비 오는 정류장</h3>
+              <p class="work__note" id="work-12-desc">버스를 기다리는 게임의 첫 장면. 비 오는 밤, 우산 하나만 주황으로 남겼습니다.</p>
+              <p class="work__spec num">176 × 72 px · 8f · 11색</p>
+            </div>
+          </article>
+
+          <!-- 11 + 10 — 엇갈린 두 장 -->
+          <div class="work-pair">
+            <article class="work work--half" id="work-11" aria-labelledby="work-11-title">
+              <div class="work__media media" data-media>
+                <button class="plate" type="button" data-art="cat" aria-pressed="false" aria-label="창가의 고양이, 루프 재생" aria-describedby="work-11-desc">
+                  <canvas class="plate__canvas" width="96" height="96" aria-hidden="true"></canvas>
+                  <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+                </button>
+              </div>
+              <div class="work__cap">
+                <p class="work__meta"><span class="num">No.11</span><span>브랜드 일러스트</span><span class="num">2025</span></p>
+                <h3 class="work__title" id="work-11-title">창가의 고양이</h3>
+                <p class="work__note" id="work-11-desc">동네 카페 야간 메뉴판에 들어간 그림. 보름달 앞에서 꼬리만 천천히 흔들립니다.</p>
+                <p class="work__spec num">96 × 96 px · 8f · 12색</p>
+              </div>
+            </article>
+
+            <article class="work work--offset" id="work-10" aria-labelledby="work-10-title">
+              <div class="work__media media" data-media>
+                <button class="plate" type="button" data-art="tape" aria-pressed="false" aria-label="B면 앨범 커버, 루프 재생" aria-describedby="work-10-desc">
+                  <canvas class="plate__canvas" width="112" height="112" aria-hidden="true"></canvas>
+                  <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+                </button>
+              </div>
+              <div class="work__cap">
+                <p class="work__meta"><span class="num">No.10</span><span>앨범 커버</span><span class="num">2025</span></p>
+                <h3 class="work__title" id="work-10-title">B면</h3>
+                <p class="work__note" id="work-10-desc">카세트로만 낸 EP의 표지. 릴이 도는 영상 표지도 함께 만들었습니다.</p>
+                <p class="work__spec num">112 × 112 px · 8f · 10색</p>
+              </div>
+            </article>
+          </div>
+
+          <!-- 09 — 큰 설명 + 넓은 그림 -->
+          <article class="work work--text-left" id="work-09" aria-labelledby="work-09-title">
+            <div class="work__cap work__cap--large">
+              <p class="work__meta"><span class="num">No.09</span><span>루프 애니메이션</span><span class="num">2025</span></p>
+              <h3 class="work__title" id="work-09-title">새벽 세 시의 화면</h3>
+              <p class="work__note" id="work-09-desc">개발 일지 영상의 대기 화면. 커서가 깜빡이는 동안 코드가 한 줄씩 쓰입니다.</p>
+              <p class="work__spec num">128 × 90 px · 12f · 12색</p>
+            </div>
+            <div class="work__media media" data-media>
+              <button class="plate" type="button" data-art="night" aria-pressed="false" aria-label="새벽 세 시의 화면, 루프 재생" aria-describedby="work-09-desc">
+                <canvas class="plate__canvas" width="128" height="90" aria-hidden="true"></canvas>
+                <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+              </button>
+            </div>
+          </article>
+
+          <!-- 06 + 08 — 아이콘 시트와 세로 그림 -->
+          <div class="work-pair work-pair--reverse">
+            <article class="work work--sheet" id="work-06" aria-labelledby="work-06-title">
+              <div class="work__media media" data-media>
+                <button class="plate" type="button" data-art="items" aria-pressed="false" aria-label="상점 아이템 8종, 루프 재생" aria-describedby="work-06-desc">
+                  <canvas class="plate__canvas" width="97" height="49" aria-hidden="true"></canvas>
+                  <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+                </button>
+              </div>
+              <div class="work__cap">
+                <p class="work__meta"><span class="num">No.06</span><span>게임 아이콘</span><span class="num">2024</span></p>
+                <h3 class="work__title" id="work-06-title">상점 아이템 8종</h3>
+                <p class="work__note" id="work-06-desc">모바일 게임 상점 아이콘. 16픽셀 안에서도 재질이 구분되도록 명암을 세 단계로 나눴습니다.</p>
+                <p class="work__spec num">16 × 16 px × 8 · 8f · 12색</p>
+              </div>
+            </article>
+
+            <article class="work work--tall" id="work-08" aria-labelledby="work-08-title">
+              <div class="work__media media" data-media>
+                <button class="plate" type="button" data-art="plant" aria-pressed="false" aria-label="물 주는 날, 루프 재생" aria-describedby="work-08-desc">
+                  <canvas class="plate__canvas" width="64" height="96" aria-hidden="true"></canvas>
+                  <span class="plate__badge" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg><span class="plate__state">재생</span><span class="plate__count"></span></span>
+                </button>
+              </div>
+              <div class="work__cap">
+                <p class="work__meta"><span class="num">No.08</span><span>굿즈 일러스트</span><span class="num">2024</span></p>
+                <h3 class="work__title" id="work-08-title">물 주는 날</h3>
+                <p class="work__note" id="work-08-desc">식물 가게 스티커 세트 중 한 장. 물방울은 여덟 칸 간격으로 떨어집니다.</p>
+                <p class="work__spec num">64 × 96 px · 8f · 12색</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 03 제작 철학 ── -->
+    <section class="section section--philosophy" id="philosophy" aria-labelledby="philosophy-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="dotnum" data-dotnum="03" aria-hidden="true">03</span>
+          <h2 class="section-head__title" id="philosophy-title">제작 철학</h2>
+          <p class="section-head__aside">THREE RULES</p>
+        </div>
+
+        <ol class="principles">
+          <li class="principle">
+            <span class="principle__no num" aria-hidden="true">P—01</span>
+            <h3 class="principle__title">색은 적게,<br>결정은 분명하게.</h3>
+            <p class="principle__note">한 작품에 12색을 넘기지 않습니다. 색이 줄면 형태가 또렷해지고, 작은 화면에서도 무엇을 그렸는지 바로 읽힙니다.</p>
+          </li>
+          <li class="principle">
+            <span class="principle__no num" aria-hidden="true">P—02</span>
+            <h3 class="principle__title">한 칸의 차이를<br>끝까지 봅니다.</h3>
+            <p class="principle__note">눈 하나, 그림자 한 칸이 표정을 바꿉니다. 원본 크기와 8배 확대 화면을 번갈아 보며 마지막 픽셀까지 고칩니다.</p>
+          </li>
+          <li class="principle">
+            <span class="principle__no num" aria-hidden="true">P—03</span>
+            <h3 class="principle__title">움직임은 짧게,<br>다시 보고 싶게.</h3>
+            <p class="principle__note">루프는 1–2초 안에 끝냅니다. 처음과 끝이 만나는 장면을 먼저 정하고, 그 사이를 채웁니다.</p>
+          </li>
+        </ol>
+
+        <div class="maker">
+          <p class="label maker__label">만든 사람</p>
+          <div class="maker__body">
+            <p class="maker__text"><strong>윤도담</strong> — 게임 회사에서 7년 동안 배경을 그렸고, 2019년부터 망원동 작업실에서 혼자 일합니다. 좋아하는 것은 오후 네 시의 빛, 카세트의 B면, 두 가지 색으로 찍은 인쇄물입니다.</p>
+            <dl class="stats">
+              <div><dt>완료한 작업</dt><dd class="num">86</dd></div>
+              <div><dt>작품당 평균 색 수</dt><dd class="num">11</dd></div>
+              <div><dt>다시 맡겨 준 곳</dt><dd class="num">64%</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 04 진행 과정 ── -->
+    <section class="section section--process" id="process" aria-labelledby="process-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="dotnum" data-dotnum="04" aria-hidden="true">04</span>
+          <h2 class="section-head__title" id="process-title">진행 과정</h2>
+          <p class="section-head__aside">2—3 WEEKS</p>
+        </div>
+
+        <p class="process-intro">보통 2–3주가 걸립니다. 단계마다 확인을 받은 뒤 다음으로 넘어갑니다.</p>
+
+        <ol class="steps">
+          <li class="step">
+            <div class="step__thumb"><canvas class="thumb" data-thumb="1" width="24" height="24" role="img" aria-label="머그잔의 연필 스케치"></canvas></div>
+            <p class="step__meta"><span class="num">STEP 01</span><span class="tag">1–2일</span></p>
+            <h3 class="step__title">스케치</h3>
+            <p class="step__text">구도와 실루엣만 담은 러프를 세 가지 안으로 보내드립니다.</p>
+          </li>
+          <li class="step">
+            <div class="step__thumb"><canvas class="thumb" data-thumb="2" width="24" height="24" role="img" aria-label="명암 없이 기본색만 칠한 머그잔"></canvas></div>
+            <p class="step__meta"><span class="num">STEP 02</span><span class="tag">1일</span></p>
+            <h3 class="step__title">팔레트</h3>
+            <p class="step__text">브랜드 색에서 8–12색을 골라 색표를 확정합니다.</p>
+          </li>
+          <li class="step">
+            <div class="step__thumb"><canvas class="thumb" data-thumb="3" width="24" height="24" role="img" aria-label="외곽선과 명암을 넣어 완성한 머그잔"></canvas></div>
+            <p class="step__meta"><span class="num">STEP 03</span><span class="tag">3–5일</span></p>
+            <h3 class="step__title">도트</h3>
+            <p class="step__text">외곽선과 명암을 정리하고 원본 크기로 한 번 더 검수합니다.</p>
+          </li>
+          <li class="step">
+            <div class="step__thumb media" data-media>
+              <button class="plate plate--thumb" type="button" data-art="mug" aria-pressed="false" aria-label="김이 오르는 머그잔, 루프 재생">
+                <canvas class="plate__canvas" width="24" height="24" aria-hidden="true"></canvas>
+                <span class="plate__badge plate__badge--mini" aria-hidden="true"><svg class="px-icon"><use href="#i-play"/></svg></span>
+              </button>
+            </div>
+            <p class="step__meta"><span class="num">STEP 04</span><span class="tag">2–3일</span></p>
+            <h3 class="step__title">애니메이션 · 납품</h3>
+            <p class="step__text">루프를 붙인 뒤 PNG, GIF, 스프라이트 시트로 넘겨드립니다.</p>
+          </li>
+        </ol>
+
+        <div class="pricing">
+          <p class="label pricing__label">시작 가격 <span class="pricing__vat">부가세 별도</span></p>
+          <dl class="pricing__list">
+            <div><dt>단일 일러스트</dt><dd class="pricing__desc">160 × 90 px 기준, 정지 이미지</dd><dd class="pricing__price">80만 원부터</dd></div>
+            <div><dt>루프 애니메이션</dt><dd class="pricing__desc">8–12프레임, GIF·MP4 포함</dd><dd class="pricing__price">140만 원부터</dd></div>
+            <div><dt>게임 에셋 세트</dt><dd class="pricing__desc">아이콘·타일·캐릭터 묶음</dd><dd class="pricing__price">견적 문의</dd></div>
+          </dl>
+          <p class="pricing__foot">수정은 단계마다 두 번까지 포함됩니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 05 문의 ── -->
+    <section class="section section--contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="dotnum" data-dotnum="05" aria-hidden="true">05</span>
+          <h2 class="section-head__title" id="contact-title">문의</h2>
+          <p class="section-head__aside">CONTACT</p>
+        </div>
+
+        <div class="contact">
+          <div class="contact__info">
+            <p class="contact__statement">작은 그림 한 장도<br>괜찮습니다.</p>
+            <p class="contact__text">용도와 크기, 일정을 알려주시면 영업일 2일 안에 가능 여부와 견적을 보내드립니다.</p>
+            <p class="avail">
+              <span class="avail__key">AVAILABLE</span>
+              <span class="avail__value">2026년 12월부터 작업 가능</span>
+            </p>
+            <dl class="contact__list">
+              <div><dt>이메일</dt><dd><a class="link-arrow" href="mailto:hello@monun.studio">hello@monun.studio<svg class="px-icon" aria-hidden="true"><use href="#i-arrow-ur"/></svg></a></dd></div>
+              <div><dt>작업실</dt><dd>서울 마포구 망원동 · 방문 상담은 예약제</dd></div>
+              <div><dt>답장</dt><dd>평일 10시–18시, 영업일 2일 안</dd></div>
+            </dl>
+          </div>
+
+          <form class="form" action="#" method="post" novalidate>
+            <div class="form__row form__row--two">
+              <div class="field">
+                <label for="f-name">이름 <span class="field__req">필수</span></label>
+                <input id="f-name" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="field">
+                <label for="f-email">이메일 <span class="field__req">필수</span></label>
+                <input id="f-email" name="email" type="email" autocomplete="email" required>
+              </div>
+            </div>
+
+            <fieldset class="field field--chips">
+              <legend>프로젝트 종류</legend>
+              <div class="chips">
+                <label class="chip"><input type="radio" name="type" value="game" checked><span>게임 아트</span></label>
+                <label class="chip"><input type="radio" name="type" value="brand"><span>브랜드 일러스트</span></label>
+                <label class="chip"><input type="radio" name="type" value="album"><span>앨범 커버</span></label>
+                <label class="chip"><input type="radio" name="type" value="loop"><span>루프 애니메이션</span></label>
+                <label class="chip"><input type="radio" name="type" value="etc"><span>기타</span></label>
+              </div>
+            </fieldset>
+
+            <div class="form__row form__row--two">
+              <div class="field">
+                <label for="f-budget">예산 범위</label>
+                <div class="select"><select id="f-budget" name="budget">
+                  <option value="">선택해 주세요</option>
+                  <option>100만 원 미만</option>
+                  <option>100–300만 원</option>
+                  <option>300–500만 원</option>
+                  <option>500만 원 이상</option>
+                  <option>아직 정하지 않음</option>
+                </select></div>
+              </div>
+              <div class="field">
+                <label for="f-when">희망 시작 시기</label>
+                <div class="select"><select id="f-when" name="when">
+                  <option value="">선택해 주세요</option>
+                  <option>2026년 12월</option>
+                  <option>2027년 1월</option>
+                  <option>2027년 2월 이후</option>
+                  <option>일정 협의</option>
+                </select></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-msg">내용 <span class="field__req">필수</span></label>
+              <textarea id="f-msg" name="message" rows="5" required placeholder="용도, 크기, 애니메이션 여부, 참고 이미지 링크를 적어주세요."></textarea>
+            </div>
+
+            <div class="form__foot">
+              <button class="btn btn--large" type="submit">문의 보내기<svg class="px-icon" aria-hidden="true"><use href="#i-arrow-r"/></svg></button>
+              <p class="form__status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__inner">
+      <a class="brand" href="#top" aria-label="모눈 스튜디오 처음으로">
+        <svg class="brand__mark" aria-hidden="true"><use href="#i-logo"/></svg>
+        <span class="brand__name">MONUN STUDIO</span>
+      </a>
+      <p class="site-footer__copy">© 2026 모눈 스튜디오 · 서울 마포구 망원동</p>
+      <ul class="site-footer__links">
+        <li><a class="link-arrow" href="#top">맨 위로<svg class="px-icon" aria-hidden="true"><use href="#i-arrow-u"/></svg></a></li>
+        <li><a href="../">템플릿 목록</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

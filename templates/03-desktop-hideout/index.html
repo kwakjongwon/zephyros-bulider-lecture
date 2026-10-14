@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>HIDEOUT.FM — 음악과 기록이 모이는 작은 작업실</title>
+  <meta name="description" content="한 사람이 운영하는 작은 라디오이자 작업 노트. 작업할 때 듣는 음악 채널 4개, 매주 쌓이는 작업 기록, 포모도로 타이머와 방명록이 있는 데스크톱 작업실입니다.">
+  <meta name="theme-color" content="#E7ECE7">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Cpath fill='%2326372E' d='M3 1h10v1h-10zM2 2h1v1h-1zM13 2h1v1h-1zM1 3h1v1h-1zM3 3h2v1h-2zM11 3h2v1h-2zM14 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM5 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM0 5h1v1h-1zM3 5h1v1h-1zM6 5h4v1h-4zM12 5h1v1h-1zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM5 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM0 8h1v1h-1zM5 8h1v1h-1zM10 8h1v1h-1zM15 8h1v1h-1zM1 9h2v1h-2zM7 9h2v1h-2zM13 9h2v1h-2zM2 10h1v1h-1zM14 10h1v1h-1zM3 11h2v1h-2zM11 11h3v1h-3zM15 11h1v1h-1zM3 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM3 13h1v1h-1zM6 13h1v1h-1zM9 13h1v1h-1zM13 13h2v1h-2zM3 14h11v1h-11z'/%3E%3Cpath fill='%23FAFBF7' d='M4 5h2v1h-2zM10 5h2v1h-2zM3 6h10v1h-10zM3 7h2v1h-2zM6 7h4v1h-4zM11 7h2v1h-2zM3 8h2v1h-2zM6 8h4v1h-4zM11 8h2v1h-2zM3 9h4v1h-4zM9 9h4v1h-4zM3 10h10v1h-10zM5 11h6v1h-6zM4 12h2v1h-2zM7 12h2v1h-2zM10 12h2v1h-2zM4 13h2v1h-2zM7 13h2v1h-2zM10 13h2v1h-2z'/%3E%3Cpath fill='%23C8CFC9' d='M4 4h1v1h-1zM11 4h1v1h-1zM13 10h1v1h-1zM12 12h1v1h-1zM12 13h1v1h-1z'/%3E%3Cpath fill='%23385AC8' d='M3 2h10v1h-10zM2 3h1v1h-1zM13 3h1v1h-1zM2 4h1v1h-1zM13 4h1v1h-1zM1 5h2v1h-2zM13 5h2v1h-2zM1 6h2v1h-2zM13 6h2v1h-2zM1 7h2v1h-2zM13 7h2v1h-2zM1 8h2v1h-2zM13 8h2v1h-2z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <!-- 픽셀 글리프 (9×9 / 7×7 격자, 정수 배율로만 표시) -->
+  <svg class="glyphs" aria-hidden="true" focusable="false">
+    <symbol id="g-close" viewBox="0 0 7 7"><path d="M1 1h1v1H1zM5 1h1v1H5zM2 2h1v1H2zM4 2h1v1H4zM3 3h1v1H3zM2 4h1v1H2zM4 4h1v1H4zM1 5h1v1H1zM5 5h1v1H5z"/></symbol>
+    <symbol id="g-shade" viewBox="0 0 7 7"><path d="M1 2h5v1H1zM1 4h5v1H1z"/></symbol>
+    <symbol id="g-chev" viewBox="0 0 7 7"><path d="M1 2h1v1H1zM5 2h1v1H5zM2 3h1v1H2zM4 3h1v1H4zM3 4h1v1H3z"/></symbol>
+    <symbol id="g-play" viewBox="0 0 9 9"><path d="M2 0h1v9H2zM3 1h1v7H3zM4 2h1v5H4zM5 3h1v3H5zM6 4h1v1H6z"/></symbol>
+    <symbol id="g-pause" viewBox="0 0 9 9"><path d="M2 1h2v7H2zM5 1h2v7H5z"/></symbol>
+    <symbol id="g-next" viewBox="0 0 9 9"><path d="M1 1h1v7H1zM2 2h1v5H2zM3 3h1v3H3zM4 4h1v1H4zM6 1h2v7H6z"/></symbol>
+    <symbol id="g-prev" viewBox="0 0 9 9"><path d="M1 1h2v7H1zM7 1h1v7H7zM6 2h1v5H6zM5 3h1v3H5zM4 4h1v1H4z"/></symbol>
+    <symbol id="g-left" viewBox="0 0 9 9"><path d="M1 4h7v1H1zM2 3h1v3H2zM3 2h1v5H3z"/></symbol>
+    <symbol id="g-right" viewBox="0 0 9 9"><path d="M1 4h7v1H1zM6 3h1v3H6zM5 2h1v5H5z"/></symbol>
+  </svg>
+
+  <a class="skip" href="#win-intro">본문 바로가기</a>
+
+  <header class="menubar">
+    <a class="logo" href="./" aria-label="HIDEOUT.FM 처음으로">
+      <span class="logo__mark" aria-hidden="true"></span>HIDEOUT.FM
+    </a>
+    <nav class="menu" aria-label="주 메뉴">
+      <ul>
+        <li><a href="#win-intro" data-open="intro">소개</a></li>
+        <li><a href="#win-posts" data-open="posts">기록</a></li>
+        <li><a href="#win-music" data-open="music">음악·도구</a></li>
+        <li><a href="#win-guest" data-open="guest">방명록</a></li>
+      </ul>
+    </nav>
+    <div class="menubar__status">
+      <button class="now" type="button" data-open="player" hidden>
+        <canvas class="eq" data-eq="tiny" aria-hidden="true"></canvas>
+        <span class="now__label">재생 중 · <span data-now-ch>새벽 작업</span></span>
+      </button>
+      <span class="menubar__date" data-date>10월 14일 수</span>
+      <time class="clock" data-clock datetime="10:42"><span data-hh>10</span><span class="clock__colon">:</span><span data-mm>42</span></time>
+    </div>
+  </header>
+
+  <main class="desktop" id="desktop">
+    <nav class="icons" aria-label="바탕화면 아이콘">
+      <ul>
+        <li><button class="icon" type="button" data-open="posts" data-sprite="folder"><canvas width="16" height="16" aria-hidden="true"></canvas><span class="icon__label">기록</span></button></li>
+        <li><button class="icon" type="button" data-open="music" data-tab="ch" data-sprite="speaker"><canvas width="16" height="16" aria-hidden="true"></canvas><span class="icon__label">음악</span></button></li>
+        <li><button class="icon" type="button" data-open="music" data-tab="tool" data-sprite="clock"><canvas width="16" height="16" aria-hidden="true"></canvas><span class="icon__label">도구</span></button></li>
+        <li><button class="icon" type="button" data-open="guest" data-sprite="letter"><canvas width="16" height="16" aria-hidden="true"></canvas><span class="icon__label">방명록</span></button></li>
+      </ul>
+    </nav>
+
+    <div class="mascot" id="mascot">
+      <p class="mascot__say" id="mascot-say" role="status"></p>
+      <button class="mascot__btn" type="button" aria-label="작업실 고양이 모모에게 말 걸기">
+        <canvas width="16" height="16" data-sprite="cat" aria-hidden="true"></canvas>
+      </button>
+    </div>
+
+    <!-- ── 소개 창 ── -->
+    <section class="win win--intro" id="win-intro" data-win="intro" data-state="open" role="region" aria-labelledby="t-intro" tabindex="-1">
+      <div class="win__bar">
+        <button class="win__btn win__close" type="button" data-action="close" aria-label="소개 창 닫기"><svg aria-hidden="true"><use href="#g-close"/></svg></button>
+        <p class="win__title" id="t-intro"><span>소개</span></p>
+        <button class="win__btn win__shade" type="button" data-action="shade" aria-label="소개 창 접기" aria-expanded="true" aria-controls="b-intro"><svg class="i-shade" aria-hidden="true"><use href="#g-shade"/></svg><svg class="i-chev" aria-hidden="true"><use href="#g-chev"/></svg></button>
+      </div>
+      <p class="win__summary">작은 작업실과 운영자 소개</p>
+      <div class="win__body" id="b-intro">
+        <p class="eyebrow">HIDEOUT.FM · 개인 라디오와 작업 노트</p>
+        <h1>음악과 기록이 모이는<br>작은 작업실</h1>
+        <p class="lead">한 사람이 운영하는 작은 라디오이자 작업 노트예요. 작업할 때 듣던 음악을 네 개의 채널로 묶어 틀어 두고, 만들면서 배운 것을 짧게 기록합니다. 잠깐 들렀다가 오래 머물러도 괜찮아요.</p>
+        <div class="cta">
+          <button class="btn btn--primary" type="button" data-cta="listen" aria-pressed="false">
+            <svg class="i-play" aria-hidden="true"><use href="#g-play"/></svg><svg class="i-pause" aria-hidden="true"><use href="#g-pause"/></svg>
+            <span data-cta-label>채널 듣기</span>
+          </button>
+          <a class="btn" href="#win-posts" data-open="posts">기록 읽기</a>
+        </div>
+        <dl class="stats">
+          <div><dt>채널</dt><dd>4</dd></div>
+          <div><dt>기록</dt><dd>126</dd></div>
+          <div><dt>방명록</dt><dd data-gb-total>312</dd></div>
+        </dl>
+        <p class="intro__by"><strong>운영 · 솔</strong> 매주 목요일 밤 10시, 새 기록과 곡을 올려요.</p>
+      </div>
+    </section>
+
+    <!-- ── 최신 기록 창 ── -->
+    <section class="win win--posts" id="win-posts" data-win="posts" data-state="open" role="region" aria-labelledby="t-posts" tabindex="-1">
+      <div class="win__bar">
+        <button class="win__btn win__close" type="button" data-action="close" aria-label="최신 기록 창 닫기"><svg aria-hidden="true"><use href="#g-close"/></svg></button>
+        <h2 class="win__title" id="t-posts"><span>최신 기록</span></h2>
+        <button class="win__btn win__shade" type="button" data-action="shade" aria-label="최신 기록 창 접기" aria-expanded="true" aria-controls="b-posts"><svg class="i-shade" aria-hidden="true"><use href="#g-shade"/></svg><svg class="i-chev" aria-hidden="true"><use href="#g-chev"/></svg></button>
+      </div>
+      <p class="win__summary">이번 주까지 올라온 작업 기록 5편</p>
+      <div class="win__body" id="b-posts">
+        <div class="posts" data-view="list">
+          <div class="posts__list">
+            <p class="win__meta"><span>기록 126편 중 최근 5편</span><span class="mono">UPDATED 10.09</span></p>
+            <ol class="post-list">
+              <li><button class="post-item" type="button" data-post="p1">
+                <span class="post-item__meta"><time datetime="2026-10-09">2026.10.09</time><span class="tag">작업 노트</span></span>
+                <span class="post-item__title">새벽 작업용 플레이리스트를 다시 고른 이유</span>
+                <span class="post-item__excerpt">템포보다 중요한 건 가사 없이 이어지는 시간이었어요. 40곡을 다시 듣고 12곡만 남겼습니다.</span>
+              </button></li>
+              <li><button class="post-item" type="button" data-post="p2">
+                <span class="post-item__meta"><time datetime="2026-10-02">2026.10.02</time><span class="tag">도구</span></span>
+                <span class="post-item__title">25분이 짧았던 사람을 위한 50분 타이머</span>
+                <span class="post-item__excerpt">흐름을 타기 시작하면 울리던 알람이 아쉬워서, 작업실 타이머에 50분 모드를 넣었어요.</span>
+              </button></li>
+              <li><button class="post-item" type="button" data-post="p3">
+                <span class="post-item__meta"><time datetime="2026-09-25">2026.09.25</time><span class="tag">일상</span></span>
+                <span class="post-item__title">창문을 반쯤 열고 녹음한 빗소리</span>
+                <span class="post-item__excerpt">비 오는 오후 채널의 빗소리는 이 작업실 창가에서 직접 녹음했어요.</span>
+              </button></li>
+              <li><button class="post-item" type="button" data-post="p4">
+                <span class="post-item__meta"><time datetime="2026-09-18">2026.09.18</time><span class="tag">만들기</span></span>
+                <span class="post-item__title">16×16 칸 안에 고양이를 그리는 법</span>
+                <span class="post-item__excerpt">작업실 마스코트 모모는 256칸짜리 격자에서 태어났어요. 귀 두 칸이 가장 어려웠습니다.</span>
+              </button></li>
+              <li><button class="post-item" type="button" data-post="p5">
+                <span class="post-item__meta"><time datetime="2026-09-11">2026.09.11</time><span class="tag">공지</span></span>
+                <span class="post-item__title">방명록 300번째 손님께</span>
+                <span class="post-item__excerpt">300번째 글을 남겨 주신 ‘밤산책’ 님께 작업실 스티커를 보내 드렸어요.</span>
+              </button></li>
+            </ol>
+          </div>
+
+          <nav class="post-nav" aria-label="기록 이동" hidden>
+            <button class="btn btn--sm btn--ghost" type="button" data-post-back><svg aria-hidden="true"><use href="#g-left"/></svg>목록</button>
+            <span class="post-nav__pos mono" data-post-pos>1 / 5</span>
+            <span class="post-nav__step">
+              <button class="btn btn--sm btn--ghost btn--icon" type="button" data-post-step="-1" aria-label="이전 기록"><svg aria-hidden="true"><use href="#g-left"/></svg></button>
+              <button class="btn btn--sm btn--ghost btn--icon" type="button" data-post-step="1" aria-label="다음 기록"><svg aria-hidden="true"><use href="#g-right"/></svg></button>
+            </span>
+          </nav>
+
+          <article class="post" id="post-p1" hidden aria-labelledby="pt-p1">
+            <p class="post__meta"><time datetime="2026-10-09">2026.10.09</time><span class="tag">작업 노트</span><span>4분</span></p>
+            <h3 class="post__title" id="pt-p1" tabindex="-1">새벽 작업용 플레이리스트를 다시 고른 이유</h3>
+            <p>새벽 작업 채널을 연 지 1년이 지났어요. 처음엔 느린 곡이면 다 괜찮다고 생각했는데, 실제로 틀어 두고 일해 보니 집중이 끊기는 지점이 따로 있더라고요.</p>
+            <p>그래서 기준을 바꿨습니다. 템포 대신 ‘가사 없이 이어지는 시간’과 ‘갑자기 커지는 소리가 있는지’를 봤어요. 40곡을 다시 들으며 곡마다 메모를 남겼고, 그중 12곡만 남겼습니다.</p>
+            <p>이번 주부터 새벽 작업 채널은 6곡씩 두 묶음으로 번갈아 나와요. 키보드 소리와 섞였을 때 어떤지 방명록에 알려 주시면 다음 정리에 반영할게요.</p>
+            <div class="post__link"><span>이 기록과 어울리는 채널</span><button class="btn btn--sm" type="button" data-play-channel="dawn"><svg aria-hidden="true"><use href="#g-play"/></svg>새벽 작업 듣기</button></div>
+          </article>
+
+          <article class="post" id="post-p2" hidden aria-labelledby="pt-p2">
+            <p class="post__meta"><time datetime="2026-10-02">2026.10.02</time><span class="tag">도구</span><span>3분</span></p>
+            <h3 class="post__title" id="pt-p2" tabindex="-1">25분이 짧았던 사람을 위한 50분 타이머</h3>
+            <p>포모도로는 25분 집중, 5분 휴식이 기본이죠. 저는 이상하게 20분쯤부터 손이 풀리기 시작해서, 알람이 울릴 때마다 아쉬웠어요.</p>
+            <p>한 달 동안 50분 집중, 10분 휴식으로 바꿔 봤더니 하루에 끝내는 일의 양은 비슷했지만 ‘한 문단만 더’ 하며 쉬는 시간을 놓치는 일이 줄었어요. 쉬는 시간이 길어진 덕분에 오후에도 덜 지쳤고요.</p>
+            <p>음악·도구 창의 타이머에서 50분, 25분, 휴식 10분을 고를 수 있어요. ‘집중 50분’ 채널을 같이 틀면 마지막 곡이 끝날 즈음 타이머도 끝나도록 길이를 맞춰 두었습니다.</p>
+            <div class="post__link"><span>바로 써 보기</span><button class="btn btn--sm" type="button" data-open="music" data-tab="tool">타이머 열기</button></div>
+          </article>
+
+          <article class="post" id="post-p3" hidden aria-labelledby="pt-p3">
+            <p class="post__meta"><time datetime="2026-09-25">2026.09.25</time><span class="tag">일상</span><span>2분</span></p>
+            <h3 class="post__title" id="pt-p3" tabindex="-1">창문을 반쯤 열고 녹음한 빗소리</h3>
+            <p>장마가 끝나 갈 무렵, 녹음기를 창틀에 올려 두고 세 시간을 그대로 두었어요. 처마에서 떨어지는 굵은 물방울과 멀리 지나가는 버스 소리가 같이 담겼습니다.</p>
+            <p>그중 소리가 고른 40분을 골라 피아노 곡 아래에 아주 낮게 깔았어요. 빗소리가 음악보다 앞에 나오지 않게 맞추는 데 가장 오래 걸렸어요.</p>
+            <p>비 오는 오후 채널은 오히려 맑은 날 더 많이 재생된다고 해요. 창문을 닫고 들어 보세요.</p>
+            <div class="post__link"><span>이 기록과 어울리는 채널</span><button class="btn btn--sm" type="button" data-play-channel="rain"><svg aria-hidden="true"><use href="#g-play"/></svg>비 오는 오후 듣기</button></div>
+          </article>
+
+          <article class="post" id="post-p4" hidden aria-labelledby="pt-p4">
+            <p class="post__meta"><time datetime="2026-09-18">2026.09.18</time><span class="tag">만들기</span><span>5분</span></p>
+            <h3 class="post__title" id="pt-p4" tabindex="-1">16×16 칸 안에 고양이를 그리는 법</h3>
+            <p>모모는 가로세로 16칸, 모두 256칸 안에 그렸어요. 색은 이 작업실의 네 가지 색과 옅은 회녹색 하나만 썼습니다.</p>
+            <p>작은 격자에서는 점 하나가 표정을 바꿔요. 눈을 두 칸 높이로 세우면 또렷해 보이고, 한 칸으로 눕히면 졸린 얼굴이 됩니다. 귀는 한 칸씩 옮겨 가며 열두 번쯤 다시 그렸어요.</p>
+            <p>헤드폰은 마지막에 씌웠어요. 귀를 가리지 않게 머리띠를 위로 올렸더니 비로소 ‘음악 듣는 고양이’처럼 보이더라고요.</p>
+            <div class="post__link"><span>바탕화면에 모모가 있어요</span><button class="btn btn--sm" type="button" data-poke>모모 불러 보기</button></div>
+          </article>
+
+          <article class="post" id="post-p5" hidden aria-labelledby="pt-p5">
+            <p class="post__meta"><time datetime="2026-09-11">2026.09.11</time><span class="tag">공지</span><span>1분</span></p>
+            <h3 class="post__title" id="pt-p5" tabindex="-1">방명록 300번째 손님께</h3>
+            <p>작업실을 연 지 2년 반 만에 방명록이 300개를 넘었어요. 300번째 글은 산책 채널을 들으며 퇴근한다는 ‘밤산책’ 님이 남겨 주셨어요.</p>
+            <p>약속대로 모모 스티커와 손글씨 엽서를 보내 드렸습니다. 앞으로도 50번째 글마다 작은 선물을 준비할게요. 다음은 350번째예요.</p>
+            <div class="post__link"><span>350번째 손님이 되어 주세요</span><button class="btn btn--sm" type="button" data-open="guest">방명록 쓰기</button></div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 음악·도구 창 (처음엔 닫혀 있음) ── -->
+    <section class="win win--music" id="win-music" data-win="music" data-state="closed" role="region" aria-labelledby="t-music" tabindex="-1">
+      <div class="win__bar">
+        <button class="win__btn win__close" type="button" data-action="close" aria-label="음악·도구 창 닫기"><svg aria-hidden="true"><use href="#g-close"/></svg></button>
+        <h2 class="win__title" id="t-music"><span>음악·도구</span></h2>
+        <button class="win__btn win__shade" type="button" data-action="shade" aria-label="음악·도구 창 펼치기" aria-expanded="false" aria-controls="b-music"><svg class="i-shade" aria-hidden="true"><use href="#g-shade"/></svg><svg class="i-chev" aria-hidden="true"><use href="#g-chev"/></svg></button>
+      </div>
+      <p class="win__summary">채널 4개와 포모도로 타이머·메모</p>
+      <div class="win__body" id="b-music">
+        <div class="tabs" role="tablist" aria-label="음악·도구">
+          <button class="tab" type="button" role="tab" id="tab-ch" aria-selected="true" aria-controls="panel-ch">채널</button>
+          <button class="tab" type="button" role="tab" id="tab-tool" aria-selected="false" aria-controls="panel-tool" tabindex="-1">도구</button>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="panel-ch" aria-labelledby="tab-ch">
+          <div class="channels">
+            <ul class="ch-list" data-ch-list aria-label="채널 목록"></ul>
+            <div class="ch-detail" data-ch-detail>
+              <div class="ch-detail__head">
+                <p class="mono ch-detail__no" data-chd-no>CH.01</p>
+                <h3 class="ch-detail__name" data-chd-name>새벽 작업</h3>
+                <p class="ch-detail__desc" data-chd-desc></p>
+                <button class="btn btn--primary btn--sm" type="button" data-chd-play><svg aria-hidden="true"><use href="#g-play"/></svg><span>채널 처음부터 듣기</span></button>
+              </div>
+              <ol class="tracks" data-chd-tracks></ol>
+            </div>
+          </div>
+          <p class="fine">곡 제목과 아티스트 이름은 예시입니다. 실제 음원은 assets/README.md 안내에 따라 연결하세요.</p>
+        </div>
+
+        <div class="tabpanel" role="tabpanel" id="panel-tool" aria-labelledby="tab-tool" hidden>
+          <div class="tools">
+            <section class="tool pomo" aria-labelledby="h-pomo">
+              <h3 class="tool__title" id="h-pomo">포모도로 타이머</h3>
+              <div class="seg" role="group" aria-label="타이머 길이">
+                <button type="button" aria-pressed="true" data-min="50">집중 50</button>
+                <button type="button" aria-pressed="false" data-min="25">집중 25</button>
+                <button type="button" aria-pressed="false" data-min="10">휴식 10</button>
+              </div>
+              <p class="pomo__time mono" data-pomo-time>50:00</p>
+              <div class="pomo__dots" data-pomo-dots aria-hidden="true"></div>
+              <div class="pomo__ctrl">
+                <button class="btn btn--primary" type="button" data-pomo-toggle>시작</button>
+                <button class="btn" type="button" data-pomo-reset>처음으로</button>
+              </div>
+              <label class="check"><input type="checkbox" data-pomo-music checked> 시작할 때 ‘집중 50분’ 채널도 함께 틀기</label>
+              <p class="pomo__status" data-pomo-status role="status"></p>
+            </section>
+            <section class="tool memo" aria-labelledby="h-memo">
+              <h3 class="tool__title" id="h-memo">오늘의 메모</h3>
+              <label class="field__label" for="memo">오늘 끝낼 일 한 줄</label>
+              <textarea id="memo" rows="4" maxlength="200" placeholder="예) 기록 초안 1편 마무리하기"></textarea>
+              <p class="fine" data-memo-status>이 브라우저에만 저장돼요.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 방명록 창 (처음엔 닫혀 있음) ── -->
+    <section class="win win--guest" id="win-guest" data-win="guest" data-state="closed" role="region" aria-labelledby="t-guest" tabindex="-1">
+      <div class="win__bar">
+        <button class="win__btn win__close" type="button" data-action="close" aria-label="방명록 창 닫기"><svg aria-hidden="true"><use href="#g-close"/></svg></button>
+        <h2 class="win__title" id="t-guest"><span>방명록</span></h2>
+        <button class="win__btn win__shade" type="button" data-action="shade" aria-label="방명록 창 펼치기" aria-expanded="false" aria-controls="b-guest"><svg class="i-shade" aria-hidden="true"><use href="#g-shade"/></svg><svg class="i-chev" aria-hidden="true"><use href="#g-chev"/></svg></button>
+      </div>
+      <p class="win__summary">한 줄 남기기와 작업실 멤버 안내</p>
+      <div class="win__body" id="b-guest">
+        <form class="gb-form" data-gb-form novalidate>
+          <h3 class="gb__h">한 줄 남기기</h3>
+          <div class="field">
+            <label class="field__label" for="gb-name">이름 <span class="fine">(선택)</span></label>
+            <input id="gb-name" name="name" type="text" maxlength="12" autocomplete="nickname" placeholder="익명의 손님">
+          </div>
+          <div class="field">
+            <label class="field__label" for="gb-msg">남길 말</label>
+            <textarea id="gb-msg" name="msg" rows="3" maxlength="120" required aria-describedby="gb-count" placeholder="오늘 들은 채널이나 읽은 기록 이야기를 남겨 주세요"></textarea>
+          </div>
+          <div class="gb-form__foot">
+            <span class="mono gb-count" id="gb-count" data-gb-count>0/120</span>
+            <button class="btn btn--primary" type="submit">남기기</button>
+          </div>
+          <p class="gb-status" data-gb-status role="status"></p>
+        </form>
+
+        <div class="gb-list-wrap">
+          <h3 class="gb__h">최근 방명록 <span class="tag">예시</span></h3>
+          <ul class="gb-list" data-gb-list>
+            <li class="gb-entry"><p class="gb-entry__head"><span class="gb-entry__name">망원동 주민</span><time class="mono" datetime="2026-10-12">10.12</time></p><p class="gb-entry__msg">비 오는 오후 채널 틀어 놓고 밀린 보고서를 다 썼어요. 빗소리 크기가 딱 좋아요.</p></li>
+            <li class="gb-entry"><p class="gb-entry__head"><span class="gb-entry__name">새벽코더</span><time class="mono" datetime="2026-10-10">10.10</time></p><p class="gb-entry__msg">50분 타이머 덕분에 오늘 처음으로 오전에 할 일을 다 끝냈어요.</p></li>
+            <li class="gb-entry"><p class="gb-entry__head"><span class="gb-entry__name">연필</span><time class="mono" datetime="2026-10-07">10.07</time></p><p class="gb-entry__msg">고양이 그리는 글 보고 저도 16칸짜리 강아지를 그려 봤어요. 귀가 정말 어렵네요.</p></li>
+            <li class="gb-entry"><p class="gb-entry__head"><span class="gb-entry__name">지나가던 디자이너</span><time class="mono" datetime="2026-10-03">10.03</time></p><p class="gb-entry__msg">창 디자인이 차분해서 작업할 때 옆에 계속 켜 두게 돼요.</p></li>
+            <li class="gb-entry"><p class="gb-entry__head"><span class="gb-entry__name">밤산책</span><time class="mono" datetime="2026-09-11">09.11</time></p><p class="gb-entry__msg">산책 채널 들으면서 퇴근하면 하루가 정리되는 느낌이에요. 제가 300번째라니!</p></li>
+          </ul>
+        </div>
+
+        <details class="member">
+          <summary><span class="member__name">작업실 멤버</span><span class="mono member__price">월 3,000원</span></summary>
+          <ul class="member__perks">
+            <li>채널 전곡을 광고 없이 끝까지 듣기</li>
+            <li>한 달에 한 번 신청곡 받기</li>
+            <li>기록에 쓴 작업 파일 내려받기</li>
+          </ul>
+          <p class="fine">다음 모집은 11월 1일, 선착순 100명이에요. 가격과 혜택은 예시입니다.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ── 플레이어 ── -->
+    <section class="win win--player" id="win-player" data-win="player" data-state="open" aria-labelledby="t-player" tabindex="-1">
+      <div class="win__bar">
+        <span class="win__btn win__btn--blank" aria-hidden="true"></span>
+        <h2 class="win__title" id="t-player"><span>지금 재생</span></h2>
+        <button class="win__btn win__shade" type="button" data-action="shade" aria-label="플레이어 접기" aria-expanded="true" aria-controls="b-player"><svg class="i-shade" aria-hidden="true"><use href="#g-shade"/></svg><svg class="i-chev" aria-hidden="true"><use href="#g-chev"/></svg></button>
+      </div>
+      <div class="win__body player" id="b-player">
+        <div class="player__line" aria-hidden="true"><span data-pl-line></span></div>
+        <div class="player__screen">
+          <canvas class="eq eq--big" data-eq="big" role="img" aria-label="도트 이퀄라이저"></canvas>
+          <canvas class="eq eq--mini" data-eq="mini" aria-hidden="true"></canvas>
+          <div class="player__info">
+            <p class="player__ch"><span class="mono" data-pl-no>CH.01</span> <span data-pl-ch>새벽 작업</span><span class="player__demo-tag mono" title="데모 모드 · 음원 미연결">DEMO</span></p>
+            <p class="player__title" data-pl-title>형광등 아래서</p>
+            <p class="player__artist" data-pl-artist>느린우편</p>
+          </div>
+        </div>
+        <div class="player__ctrl">
+          <button class="pbtn" type="button" data-pl-prev aria-label="이전 곡"><svg aria-hidden="true"><use href="#g-prev"/></svg></button>
+          <button class="pbtn pbtn--main" type="button" data-pl-toggle aria-label="재생"><svg class="i-play" aria-hidden="true"><use href="#g-play"/></svg><svg class="i-pause" aria-hidden="true"><use href="#g-pause"/></svg></button>
+          <button class="pbtn" type="button" data-pl-next aria-label="다음 곡"><svg aria-hidden="true"><use href="#g-next"/></svg></button>
+        </div>
+        <div class="player__progress">
+          <span class="mono" data-pl-cur>00:00</span>
+          <input class="seek" type="range" min="0" max="232" step="1" value="0" data-pl-seek aria-label="재생 위치" aria-valuetext="0분 0초">
+          <span class="mono" data-pl-dur>03:52</span>
+        </div>
+        <p class="player__demo" data-pl-demo>데모 모드 · 음원 미연결</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="statusbar">
+    <p class="statusbar__brand"><span class="mono">© 2026 HIDEOUT.FM</span> 작은 작업실</p>
+    <p class="statusbar__note">글·곡·방명록·가격은 모두 예시 콘텐츠예요.</p>
+    <a class="statusbar__link" href="../">템플릿 목록</a>
+  </footer>
+</body>
+</html>
