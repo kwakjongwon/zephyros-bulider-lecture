@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DOTLINE 도트라인 — 회의를 듣고 정리하는 AI</title>
+  <meta name="description" content="도트라인은 회의를 들으며 요약하고, 할 일을 뽑고, 문서 초안까지 만드는 AI 업무 정리 도구입니다. 작은 팀과 혼자 일하는 기획자·개발자를 위해 만들었습니다.">
+  <meta name="theme-color" content="#111214">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111214'/%3E%3Ccircle cx='6' cy='6' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='11' cy='6' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='16' cy='6' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='21' cy='6' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='6' cy='11' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='26' cy='11' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='6' cy='16' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23F05243'/%3E%3Ccircle cx='26' cy='16' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='6' cy='21' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='26' cy='21' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='6' cy='26' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='11' cy='26' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='16' cy='26' r='2.2' fill='%23F2F2EC'/%3E%3Ccircle cx='21' cy='26' r='2.2' fill='%23F2F2EC'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght,ROND@100..900,0..100&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로가기</a>
+
+  <!-- ── HEADER ── -->
+  <header class="site-header">
+    <div class="wrap site-header__inner">
+      <a class="brand" href="#top" aria-label="DOTLINE 도트라인 홈">
+        <span class="brand__mark" data-dots="logo" aria-hidden="true"></span>
+        <span class="brand__word dt">DOTLINE</span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="menu-toggle__icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="menu-toggle__label">메뉴</span>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="주요 메뉴">
+        <ul class="site-nav__list">
+          <li><a href="#product">제품 화면</a></li>
+          <li><a href="#features">기능</a></li>
+          <li><a href="#cases">사용 사례</a></li>
+          <li><a href="#pricing">가격</a></li>
+        </ul>
+      </nav>
+      <a class="btn btn--primary btn--sm site-header__cta" href="#start">시작하기</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <!-- ── HERO ── -->
+    <section id="top" class="hero" aria-labelledby="hero-title">
+      <div class="wrap hero__grid">
+        <div class="hero__copy">
+          <p class="chip chip--rec" aria-hidden="true">
+            <span class="chip__dot"></span><span class="dt">REC</span><span class="dt" data-rec-timer>00:42</span>
+          </p>
+          <h1 id="hero-title" class="hero__title">회의는 듣기만,<br>정리는 도트라인이.</h1>
+          <p class="hero__lede">회의를 들으며 요약하고, 할 일을 뽑고, 문서 초안까지 만듭니다. 작은 팀과 혼자 일하는 기획자·개발자를 위한 AI 업무 정리 도구입니다.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#start">무료로 시작하기</a>
+            <a class="btn btn--ghost" href="#product">실제 화면 보기</a>
+          </div>
+          <ul class="hero__meta">
+            <li>카드 등록 없이 시작</li>
+            <li>매달 300분 무료</li>
+            <li>한국어·영어 지원</li>
+          </ul>
+        </div>
+
+        <div class="hero__visual">
+          <figure class="glyph">
+            <div class="glyph__frame">
+              <canvas class="glyph__canvas" data-matrix="hero" role="img"
+                aria-label="도트로 그린 얼굴이 음성 파형, 할 일 목록, 문서 모양으로 천천히 바뀌는 도트라인 상징 그래픽"></canvas>
+              <span class="glyph__corner glyph__corner--tl dt" aria-hidden="true">DL-01</span>
+              <span class="glyph__corner glyph__corner--tr dt" aria-hidden="true">25×25</span>
+            </div>
+            <figcaption class="glyph__meta" aria-hidden="true">
+              <span class="dt glyph__count">MODE <b data-hero-index>01</b>/04</span>
+              <span class="glyph__steps" data-hero-steps><i class="is-on"></i><i></i><i></i><i></i></span>
+              <span class="dt glyph__name" data-hero-name>LISTEN</span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 01 VALUE ── -->
+    <section id="value" class="section" aria-labelledby="value-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-head__index"><span class="dt">01</span><span class="dt sec-head__label">VALUE</span></p>
+          <div class="sec-head__body">
+            <h2 id="value-title">회의록은 이제 쓰지 않아도 됩니다.</h2>
+            <p class="sec-head__lede">도트라인은 회의를 듣고, 남겨야 할 것만 고릅니다. 결정, 할 일, 그리고 다음 문서.</p>
+          </div>
+        </div>
+
+        <ul class="values">
+          <li class="value">
+            <h3 class="value__title">녹음 버튼 하나면 됩니다</h3>
+            <p class="value__text">화상 회의든 회의실이든 녹음만 켜 두세요. 말한 사람과 시간은 자동으로 기록됩니다.</p>
+            <p class="readout"><span class="readout__num dt">38<small>SEC</small></span><span class="readout__label">42분 회의가 요약되기까지</span></p>
+          </li>
+          <li class="value">
+            <h3 class="value__title">결정과 할 일만 남깁니다</h3>
+            <p class="value__text">잡담과 반복은 걸러 내고, 누가 무엇을 언제까지 하는지만 정리합니다.</p>
+            <p class="readout"><span class="readout__num dt">92<small class="sep">%</small></span><span class="readout__label">수정 없이 확정된 할 일 비율</span></p>
+          </li>
+          <li class="value">
+            <h3 class="value__title">바로 보낼 수 있는 문서</h3>
+            <p class="value__text">회의록, 주간 보고, 기획 초안을 팀이 쓰던 양식 그대로 채웁니다.</p>
+            <p class="readout"><span class="readout__num dt">4<small>HRS</small></span><span class="readout__label">한 사람이 매주 아끼는 시간</span></p>
+          </li>
+        </ul>
+        <p class="footnote">수치는 템플릿용 예시입니다. 실제 서비스 데이터로 바꿔 주세요.</p>
+      </div>
+    </section>
+
+    <!-- ── 02 PRODUCT ── -->
+    <section id="product" class="section section--product" aria-labelledby="product-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-head__index"><span class="dt">02</span><span class="dt sec-head__label">PRODUCT</span></p>
+          <div class="sec-head__body">
+            <h2 id="product-title">회의가 끝나면, 이 화면이 남습니다.</h2>
+            <p class="sec-head__lede">요약과 녹취록, 할 일이 한 화면에 이어져 있습니다. 요약 문장을 누르면 그 순간의 원문으로 이동합니다.</p>
+          </div>
+        </div>
+
+        <figure class="app" data-product-shot aria-label="도트라인 앱 화면 예시: 주간 제품 회의의 요약, 녹취록, 추출된 할 일">
+          <div class="app__bar">
+            <span class="app__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="app__crumbs">제품팀 <span aria-hidden="true">/</span> 회의 <span aria-hidden="true">/</span> <b>주간 제품 회의</b></span>
+            <span class="app__search">검색 <kbd class="dt">/</kbd></span>
+          </div>
+
+          <div class="app__body">
+            <div class="app__side">
+              <div class="ws">
+                <span class="ws__avatar" data-dots="team" aria-hidden="true"></span>
+                <span class="ws__name">제품팀</span>
+                <span class="ws__count">4명</span>
+              </div>
+              <ul class="side-nav">
+                <li><span class="side-nav__icon" aria-hidden="true"></span>홈</li>
+                <li class="is-active"><span class="side-nav__icon" aria-hidden="true"></span>회의</li>
+                <li><span class="side-nav__icon" aria-hidden="true"></span>할 일<span class="side-nav__badge dt">12</span></li>
+                <li><span class="side-nav__icon" aria-hidden="true"></span>문서</li>
+              </ul>
+              <p class="side-label">최근 회의</p>
+              <ul class="side-list">
+                <li class="is-active">주간 제품 회의<span class="dt">10.14</span></li>
+                <li>고객 인터뷰 · 이수민 님<span class="dt">10.13</span></li>
+                <li>디자인 리뷰 · 온보딩<span class="dt">10.10</span></li>
+                <li>1:1 · 정하은<span class="dt">10.08</span></li>
+              </ul>
+              <div class="usage">
+                <p class="usage__head"><span>이번 달 사용량</span><span class="dt">212/300</span></p>
+                <span class="usage__bar" data-dotbar="21/30" aria-hidden="true"></span>
+              </div>
+            </div>
+
+            <div class="app__main">
+              <div class="meeting-head">
+                <div>
+                  <p class="meeting-head__title">주간 제품 회의 <span class="pill"><i aria-hidden="true"></i>요약 완료</span></p>
+                  <p class="meeting-head__meta">10월 14일 화요일 · 10:00–10:42 · 참석 4명</p>
+                </div>
+                <div class="meeting-head__tools">
+                  <span class="people" aria-hidden="true"><i>서</i><i>준</i><i>하</i><i>민</i></span>
+                  <span class="mini-btn">공유</span>
+                  <span class="mini-btn mini-btn--solid">내보내기</span>
+                </div>
+              </div>
+
+              <div class="app-tabs" aria-hidden="true">
+                <span class="is-active">요약</span><span>녹취록</span><span>할 일 <b class="dt">6</b></span>
+              </div>
+
+              <div class="app-grid">
+                <div class="card card--summary">
+                  <p class="card__head"><span class="marker dt" aria-hidden="true">A</span>AI 요약 <span class="card__aside dt">42:10 <span class="arr">→</span> 05</span></p>
+                  <ol class="sum-list">
+                    <li class="is-active"><span>10월 출시 범위는 결제 개선과 온보딩 두 가지로 확정했습니다.</span><time class="dt">04:12</time></li>
+                    <li><span>알림 설정 개편은 사용자 인터뷰 뒤 11월로 미룹니다.</span><time class="dt">12:30</time></li>
+                    <li><span>결제 실패율이 3.1%라 오류 문구부터 고칩니다.</span><time class="dt">18:05</time></li>
+                    <li><span>베타 테스터 20명을 이번 주 안에 모집합니다.</span><time class="dt">26:44</time></li>
+                    <li><span>다음 회의 전까지 온보딩 시안 두 개를 비교합니다.</span><time class="dt">38:20</time></li>
+                  </ol>
+                </div>
+
+                <div class="card card--transcript">
+                  <p class="card__head">녹취록 <span class="card__aside dt">04:02—04:31</span></p>
+                  <ul class="transcript">
+                    <li><time class="dt">04:02</time><b>김서연</b><span>이번 달에 다 넣기는 어려울 것 같아요.</span></li>
+                    <li class="is-active"><time class="dt">04:12</time><b>박준호</b><span>그럼 결제랑 온보딩, 이 두 개만 10월에 가죠.</span></li>
+                    <li><time class="dt">04:20</time><b>정하은</b><span>좋아요. 알림은 인터뷰 보고 다시 얘기해요.</span></li>
+                    <li><time class="dt">04:31</time><b>이민재</b><span>결제 오류 문구는 제가 금요일까지 정리할게요.</span></li>
+                  </ul>
+                </div>
+
+                <div class="card card--tasks">
+                  <p class="card__head"><span class="marker dt" aria-hidden="true">B</span>추출된 할 일 <span class="card__aside">6개 중 4개 표시</span></p>
+                  <ul class="task-table">
+                    <li class="is-done"><span class="cbox" aria-hidden="true"></span><span class="task-table__title">결제 오류 문구 정리</span><span class="owner"><i aria-hidden="true">민</i>이민재</span><span class="due dt">10.17</span><span class="src dt">04:31</span></li>
+                    <li><span class="cbox" aria-hidden="true"></span><span class="task-table__title">베타 테스터 20명 모집 공고</span><span class="owner"><i aria-hidden="true">하</i>정하은</span><span class="due dt">10.16</span><span class="src dt">26:44</span></li>
+                    <li><span class="cbox" aria-hidden="true"></span><span class="task-table__title">온보딩 시안 A/B 비교표</span><span class="owner"><i aria-hidden="true">서</i>김서연</span><span class="due dt">10.20</span><span class="src dt">38:20</span></li>
+                    <li class="is-flag"><span class="cbox" aria-hidden="true"></span><span class="task-table__title">알림 설정 인터뷰 질문지</span><span class="owner owner--none">담당자 지정</span><span class="due dt">10.24</span><span class="src dt">12:30</span></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="player">
+                <span class="player__play" aria-hidden="true"></span>
+                <span class="player__wave" data-dotwave aria-hidden="true"></span>
+                <span class="player__time dt">04:12 / 42:10</span>
+                <span class="marker dt" aria-hidden="true">C</span>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <ol class="callouts">
+          <li><span class="marker dt" aria-hidden="true">A</span><div><h3>근거가 붙은 요약</h3><p>요약 문장마다 원문 타임스탬프가 연결됩니다. 누가 그렇게 말했는지 바로 확인하세요.</p></div></li>
+          <li><span class="marker dt" aria-hidden="true">B</span><div><h3>담당자와 마감일까지</h3><p>“금요일까지 할게요” 같은 말에서 할 일, 담당자, 날짜를 함께 뽑습니다.</p></div></li>
+          <li><span class="marker dt" aria-hidden="true">C</span><div><h3>다시 듣기는 필요한 곳만</h3><p>파형을 눌러 그 구간만 들어 보세요. 녹음 전체를 다시 들을 필요가 없습니다.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── 03 FEATURES ── -->
+    <section id="features" class="section" aria-labelledby="features-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-head__index"><span class="dt">03</span><span class="dt sec-head__label">FEATURES</span></p>
+          <div class="sec-head__body">
+            <h2 id="features-title">세 가지 일을 대신합니다.</h2>
+            <p class="sec-head__lede">듣고, 고르고, 씁니다. 기능을 골라 실제 결과물을 확인해 보세요.</p>
+          </div>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="주요 기능">
+          <button class="tab" type="button" role="tab" id="tab-summary" aria-controls="panel-summary" aria-selected="true" data-feature="summary">
+            <span class="tab__index dt">01</span>
+            <span class="tab__title">회의 요약</span>
+            <span class="tab__desc">42분 회의를 다섯 줄로</span>
+          </button>
+          <button class="tab" type="button" role="tab" id="tab-tasks" aria-controls="panel-tasks" aria-selected="false" tabindex="-1" data-feature="tasks">
+            <span class="tab__index dt">02</span>
+            <span class="tab__title">할 일 추출</span>
+            <span class="tab__desc">담당자와 마감일까지</span>
+          </button>
+          <button class="tab" type="button" role="tab" id="tab-draft" aria-controls="panel-draft" aria-selected="false" tabindex="-1" data-feature="draft">
+            <span class="tab__index dt">03</span>
+            <span class="tab__title">문서 초안</span>
+            <span class="tab__desc">팀 양식 그대로</span>
+          </button>
+        </div>
+
+        <div class="stage">
+          <div class="stage__visual">
+            <p class="stage__label" aria-hidden="true"><span class="dt">FX <b data-fx-index>01</b> <span data-fx-name>SUMMARY</span></span><span class="dt">31×13</span></p>
+            <canvas class="stage__canvas" data-matrix="feature" role="img" aria-label="음성 파형이 다섯 줄 요약으로 바뀌는 도트 그림"></canvas>
+            <div class="io" aria-hidden="true">
+              <p><span class="dt io__k">INPUT</span><span class="dt io__v" data-io-in>AUDIO 42:10</span></p>
+              <p><span class="dt io__k">OUTPUT</span><span class="dt io__v" data-io-out>05 LINES</span></p>
+            </div>
+          </div>
+
+          <div class="stage__panels">
+            <div class="panel" role="tabpanel" id="panel-summary" aria-labelledby="tab-summary" tabindex="0">
+              <h3 class="panel__title">긴 회의를 다섯 줄로 줄입니다.</h3>
+              <p class="panel__text">결정된 것, 문제로 남은 것, 질문을 나눠 정리합니다. 모든 문장에 원문 타임스탬프가 붙습니다.</p>
+              <div class="ex ex--summary">
+                <p class="ex__head"><span>요약 · 고객 인터뷰 — 이수민 님</span><span class="dt">42:10 <span class="arr">→</span> 05</span></p>
+                <ul class="ex-sum">
+                  <li><span class="tag">결정</span><span>가격 페이지에서 연 결제 할인을 먼저 보여 줍니다.</span><time class="dt">07:15</time></li>
+                  <li><span class="tag">문제</span><span>팀원 초대 메일이 받은편지함에서 자주 묻힙니다.</span><time class="dt">15:02</time></li>
+                  <li><span class="tag">문제</span><span>모바일에서 녹음 버튼을 찾기 어렵다고 합니다.</span><time class="dt">21:48</time></li>
+                  <li><span class="tag">질문</span><span>외부 게스트도 요약을 볼 수 있나요?</span><time class="dt">33:10</time></li>
+                  <li><span class="tag tag--accent">다음</span><span>초대 메일 제목 세 가지를 다음 주에 시험합니다.</span><time class="dt">40:05</time></li>
+                </ul>
+                <p class="ex__foot"><span>원문 근거 5개 연결됨</span><a class="link" href="#product">근거 보기</a></p>
+              </div>
+            </div>
+
+            <div class="panel" role="tabpanel" id="panel-tasks" aria-labelledby="tab-tasks" tabindex="0" hidden>
+              <h3 class="panel__title">말로 한 약속을 할 일로 바꿉니다.</h3>
+              <p class="panel__text">“제가 금요일까지 볼게요” 같은 말을 찾아 담당자와 마감일을 채웁니다. 확정하면 팀 할 일 목록으로 바로 들어갑니다.</p>
+              <div class="ex ex--tasks">
+                <p class="ex__head"><span>할 일 6개를 찾았습니다</span><span class="mini-btn mini-btn--solid">모두 확정</span></p>
+                <ul class="ex-tasks">
+                  <li class="is-done"><span class="cbox" aria-hidden="true"></span><span class="ex-tasks__body"><b>결제 오류 문구 정리</b><q>제가 금요일까지 정리할게요</q></span><span class="owner"><i aria-hidden="true">민</i>이민재</span><span class="due dt">10.17</span></li>
+                  <li><span class="cbox" aria-hidden="true"></span><span class="ex-tasks__body"><b>베타 테스터 20명 모집</b><q>공고는 내일 올릴게요</q></span><span class="owner"><i aria-hidden="true">하</i>정하은</span><span class="due dt">10.16</span></li>
+                  <li><span class="cbox" aria-hidden="true"></span><span class="ex-tasks__body"><b>온보딩 시안 두 개 비교</b><q>다음 회의 전에 보여 드릴게요</q></span><span class="owner"><i aria-hidden="true">서</i>김서연</span><span class="due dt">10.20</span></li>
+                  <li class="is-flag"><span class="cbox" aria-hidden="true"></span><span class="ex-tasks__body"><b>알림 인터뷰 질문지</b><q>누가 맡을지 정해야 해요</q></span><span class="owner owner--none">담당자 지정</span><span class="due dt">10.24</span></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="panel" role="tabpanel" id="panel-draft" aria-labelledby="tab-draft" tabindex="0" hidden>
+              <h3 class="panel__title">다음 문서의 첫 장을 써 둡니다.</h3>
+              <p class="panel__text">회의 내용으로 주간 보고, 회의록, 기획 초안을 만듭니다. 팀 양식을 한 번 등록하면 그대로 채웁니다.</p>
+              <div class="ex ex--doc">
+                <p class="ex__head"><span>양식 · 주간 보고</span><span class="ex__tools"><span class="mini-btn">마크다운 복사</span><span class="mini-btn mini-btn--solid">PDF 내보내기</span></span></p>
+                <div class="doc">
+                  <p class="doc__title">10월 2주차 제품팀 주간 보고</p>
+                  <p class="doc__meta">초안 · 회의 3건에서 생성 · 10월 14일</p>
+                  <p class="doc__h">1. 이번 주 결정</p>
+                  <ul><li>10월 출시 범위는 결제 개선과 온보딩으로 확정</li></ul>
+                  <p class="doc__h">2. 진행 상황</p>
+                  <ul><li>결제 오류 문구 수정 — 이민재, 금요일 완료 예정</li></ul>
+                  <p class="doc__h">3. 다음 주 할 일</p>
+                  <ul><li>베타 테스터 20명 모집, 온보딩 시안 비교</li></ul>
+                  <p class="doc__h">4. 리스크</p>
+                  <ul><li>알림 개편 일정은 인터뷰 결과에 따라 밀릴 수 있음<span class="caret" aria-hidden="true"></span></li></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 04 USE CASES ── -->
+    <section id="cases" class="section" aria-labelledby="cases-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-head__index"><span class="dt">04</span><span class="dt sec-head__label">USE CASES</span></p>
+          <div class="sec-head__body">
+            <h2 id="cases-title">이런 자리에서 쓰고 있습니다.</h2>
+            <p class="sec-head__lede">매주 반복되는 회의부터 한 번뿐인 인터뷰까지. 기록이 남아야 하는 곳이면 어디든.</p>
+          </div>
+        </div>
+
+        <ul class="cases">
+          <li class="case">
+            <span class="case__icon" data-dots="weekly" aria-hidden="true"></span>
+            <h3 class="case__title">스타트업 주간 회의</h3>
+            <p class="case__text">월요일 회의가 끝나면 할 일이 담당자에게 바로 배정됩니다.</p>
+            <p class="case__result"><span class="dt">10<small>MIN</small></span><span>주간 회의록 정리, 3시간에서 10분으로</span></p>
+          </li>
+          <li class="case">
+            <span class="case__icon" data-dots="interview" aria-hidden="true"></span>
+            <h3 class="case__title">고객 인터뷰</h3>
+            <p class="case__text">인터뷰마다 반복되는 불편을 찾아 같은 태그로 묶습니다.</p>
+            <p class="case__result"><span class="dt">24</span><span>인터뷰 24건을 하루 만에 정리</span></p>
+          </li>
+          <li class="case">
+            <span class="case__icon" data-dots="lecture" aria-hidden="true"></span>
+            <h3 class="case__title">강의·세미나 정리</h3>
+            <p class="case__text">90분 강의를 소단원과 핵심 개념으로 나눠 복습 노트를 만듭니다.</p>
+            <p class="case__result"><span class="dt">07</span><span>90분 강의를 소단원 노트 7개로</span></p>
+          </li>
+          <li class="case">
+            <span class="case__icon" data-dots="oneonone" aria-hidden="true"></span>
+            <h3 class="case__title">1:1 미팅</h3>
+            <p class="case__text">지난번에 약속한 일을 다음 미팅 하루 전에 다시 알려 줍니다.</p>
+            <p class="case__result"><span class="dt">D-1</span><span>약속한 후속 조치를 하루 전에 알림</span></p>
+          </li>
+        </ul>
+        <p class="footnote">사례와 수치는 템플릿용 예시입니다.</p>
+      </div>
+    </section>
+
+    <!-- ── 05 PRICING ── -->
+    <section id="pricing" class="section" aria-labelledby="pricing-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="sec-head__index"><span class="dt">05</span><span class="dt sec-head__label">PRICING</span></p>
+          <div class="sec-head__body">
+            <h2 id="pricing-title">혼자 시작하고, 팀이 되면 넓히세요.</h2>
+            <p class="sec-head__lede">모든 플랜에서 요약, 할 일 추출, 문서 초안을 씁니다. 차이는 녹음 시간과 협업 범위입니다.</p>
+          </div>
+        </div>
+
+        <div class="plans">
+          <article class="plan" aria-labelledby="plan-free">
+            <header class="plan__head">
+              <h3 id="plan-free" class="plan__name">무료 <span class="dt">FREE</span></h3>
+              <p class="plan__price"><span class="dt">0</span><span class="plan__unit">원</span></p>
+              <p class="plan__for">혼자 써 보는 기획자·개발자</p>
+            </header>
+            <dl class="plan__rows">
+              <div><dt>녹음 시간</dt><dd>매달 300분</dd></div>
+              <div><dt>문서 양식</dt><dd>기본 3개</dd></div>
+              <div><dt>협업</dt><dd>개인 워크스페이스</dd></div>
+              <div><dt>기록 보관</dt><dd>30일</dd></div>
+            </dl>
+            <a class="btn btn--ghost btn--block" href="#start">무료로 시작하기</a>
+          </article>
+
+          <article class="plan plan--pick" aria-labelledby="plan-team">
+            <header class="plan__head">
+              <h3 id="plan-team" class="plan__name">팀 <span class="dt">TEAM</span><span class="badge">추천</span></h3>
+              <p class="plan__price"><span class="dt">9<span class="sep">,</span>900</span><span class="plan__unit">원 / 사용자·월</span></p>
+              <p class="plan__for">2–30명 팀, 연간 결제 기준</p>
+            </header>
+            <dl class="plan__rows">
+              <div><dt>녹음 시간</dt><dd>무제한</dd></div>
+              <div><dt>문서 양식</dt><dd>무제한 · 팀 양식 등록</dd></div>
+              <div><dt>협업</dt><dd>팀 워크스페이스 · 할 일 배정</dd></div>
+              <div><dt>기록 보관</dt><dd>1년</dd></div>
+            </dl>
+            <a class="btn btn--primary btn--block" href="#start">14일 무료로 써 보기</a>
+          </article>
+
+          <article class="plan" aria-labelledby="plan-ent">
+            <header class="plan__head">
+              <h3 id="plan-ent" class="plan__name">기업 <span class="dt">ENTERPRISE</span></h3>
+              <p class="plan__price"><span class="plan__ask">별도 문의</span></p>
+              <p class="plan__for">보안 검토가 필요한 조직</p>
+            </header>
+            <dl class="plan__rows">
+              <div><dt>녹음 시간</dt><dd>무제한</dd></div>
+              <div><dt>문서 양식</dt><dd>맞춤 양식 · 용어 사전</dd></div>
+              <div><dt>협업</dt><dd>SSO · 감사 로그 · 권한 관리</dd></div>
+              <div><dt>기록 보관</dt><dd>기간 직접 설정</dd></div>
+            </dl>
+            <a class="btn btn--ghost btn--block" href="#start">도입 상담하기</a>
+          </article>
+        </div>
+
+        <div class="faq">
+          <h3 class="faq__title">자주 묻는 질문</h3>
+          <div class="faq__list">
+            <details>
+              <summary>녹음 파일은 어디에 보관되나요?</summary>
+              <p>국내 리전 서버에 암호화해 보관합니다. 플랜별 보관 기간이 지나면 자동으로 지워지고, 언제든 직접 삭제할 수도 있습니다.</p>
+            </details>
+            <details>
+              <summary>참석자 동의는 어떻게 받나요?</summary>
+              <p>녹음을 시작하면 참석자 화면에 안내 문구가 표시됩니다. 동의하지 않은 사람의 발화는 요약에서 뺄 수 있습니다.</p>
+            </details>
+            <details>
+              <summary>한국어 말고 다른 언어도 되나요?</summary>
+              <p>한국어와 영어를 지원하고, 한 회의에서 두 언어가 섞여도 알아듣습니다. 일본어는 베타로 제공합니다.</p>
+            </details>
+            <details>
+              <summary>무료 플랜은 언제까지 무료인가요?</summary>
+              <p>기간 제한이 없습니다. 매달 1일에 300분이 다시 채워집니다.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA BAND ── -->
+    <section id="start" class="cta" aria-labelledby="cta-title">
+      <div class="wrap">
+        <div class="cta__band">
+          <canvas class="cta__canvas" data-matrix="cta" role="img" aria-label="도트로 그린 도트라인 얼굴 상징"></canvas>
+          <div class="cta__copy">
+            <h2 id="cta-title" class="cta__title">다음 회의부터 바로 써 보세요.</h2>
+            <p class="cta__text">카드 등록 없이 1분이면 시작합니다. 첫 요약은 회의가 끝나고 1분 안에 도착합니다.</p>
+          </div>
+          <div class="cta__actions">
+            <!-- 실제 가입 / 상담 페이지 URL로 바꿔 주세요 -->
+            <a class="btn btn--primary" href="#signup">무료로 시작하기</a>
+            <a class="link" href="#contact">도입 상담하기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── FOOTER ── -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="site-footer__top">
+        <div class="site-footer__brand">
+          <a class="brand" href="#top" aria-label="DOTLINE 도트라인 맨 위로">
+            <span class="brand__mark" data-dots="logo" aria-hidden="true"></span>
+            <span class="brand__word dt">DOTLINE</span>
+          </a>
+          <p>회의를 듣고, 정리하는 AI.</p>
+          <p class="status dt"><span class="status__dot" aria-hidden="true"></span>ALL SYSTEMS NORMAL</p>
+        </div>
+        <nav class="site-footer__nav" aria-label="바닥글 메뉴">
+          <div>
+            <h2 class="site-footer__h">제품</h2>
+            <ul><li><a href="#features">기능</a></li><li><a href="#pricing">가격</a></li><li><a href="#cases">사용 사례</a></li></ul>
+          </div>
+          <div>
+            <h2 class="site-footer__h">회사</h2>
+            <ul><li><a href="#top">소개</a></li><li><a href="#top">채용</a></li><li><a href="#start">문의</a></li></ul>
+          </div>
+          <div>
+            <h2 class="site-footer__h">지원</h2>
+            <ul><li><a href="#pricing">자주 묻는 질문</a></li><li><a href="#top">개인정보처리방침</a></li><li><a href="#top">이용약관</a></li></ul>
+          </div>
+        </nav>
+      </div>
+      <div class="site-footer__bottom">
+        <p>© 2026 DOTLINE. 이 페이지는 가상 브랜드를 위한 홈페이지 템플릿입니다.</p>
+        <a class="site-footer__back" href="../">템플릿 목록</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
