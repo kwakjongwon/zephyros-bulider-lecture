@@ -82,6 +82,7 @@ button, input { font: inherit; color: inherit; }
 .num { font-family: var(--font-px); font-weight: 700; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+main:focus { outline: none; }
 
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -131,7 +132,8 @@ button, input { font: inherit; color: inherit; }
   border-bottom: 1px solid transparent;
   transition: background-color .2s steps(2), border-color .2s steps(2);
 }
-.site-header.is-solid { background: var(--bg); border-bottom-color: var(--line); }
+.site-header.is-solid { background: var(--bg); }
+.site-header.is-lined { border-bottom-color: var(--line); }
 .header__inner { display: flex; align-items: center; gap: var(--sp-5); height: 100%; }
 .logo { display: inline-flex; align-items: center; gap: var(--sp-2); text-decoration: none; }
 .logo__mark { width: 24px; height: 32px; }
@@ -243,7 +245,7 @@ button, input { font: inherit; color: inherit; }
 
 /* ───── 02 핵심 경험 ───── */
 .exp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-5); counter-reset: exp; }
-.exp__item { display: flex; flex-direction: column; gap: var(--sp-4); padding: var(--sp-6) var(--sp-5) var(--sp-5); background: var(--bg); clip-path: var(--notch-lg); }
+.exp__item { display: grid; grid-row: span 3; grid-template-rows: subgrid; row-gap: var(--sp-4); align-content: start; padding: var(--sp-6) var(--sp-5) var(--sp-5); background: var(--bg); clip-path: var(--notch-lg); }
 .exp__head { display: flex; align-items: center; gap: var(--sp-3); }
 .exp__icon { width: 32px; height: 32px; flex: none; }
 .exp__item h3 { font-size: var(--fs-h3); font-weight: 700; line-height: 1.3; display: flex; align-items: baseline; gap: var(--sp-2); }
@@ -252,13 +254,18 @@ button, input { font: inherit; color: inherit; }
 
 /* 게임 화면 목업 공통 */
 .mock {
-  margin-top: auto; padding: var(--sp-4);
+  display: flex; flex-direction: column; margin-top: var(--sp-2); padding: var(--sp-4);
   background: var(--surface); clip-path: var(--notch);
   box-shadow: inset 0 0 0 2px var(--haze);
   font-size: 15px; line-height: 1.5;
 }
 .mock__title { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-3); font-family: var(--font-px); font-size: 12px; color: var(--muted); }
 .mock__num { color: var(--accent); font-weight: 700; }
+.mock__foot { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: var(--sp-3); border-top: 2px solid var(--haze); font-family: var(--font-px); font-size: 12px; color: var(--muted); }
+.mock__bag { display: flex; gap: 4px; }
+.mock__bag i { width: 10px; height: 8px; background: var(--text); }
+.mock__bag i.is-empty { background: none; box-shadow: inset 0 0 0 2px var(--haze); }
+.mock--list ul { margin-bottom: var(--sp-3); }
 .mock--list li { display: grid; grid-template-columns: 12px 1fr auto; align-items: center; gap: var(--sp-3); padding: var(--sp-2) 0; border-top: 2px solid var(--haze); }
 .mock__check { width: 12px; height: 12px; box-shadow: inset 0 0 0 2px var(--muted); }
 .is-done .mock__check { background: var(--accent); box-shadow: none; clip-path: polygon(0 6px, 2px 6px, 2px 8px, 4px 8px, 4px 10px, 6px 10px, 6px 8px, 8px 8px, 8px 6px, 10px 6px, 10px 2px, 12px 2px, 12px 6px, 10px 6px, 10px 8px, 8px 8px, 8px 10px, 6px 10px, 6px 12px, 4px 12px, 4px 10px, 2px 10px, 2px 8px, 0 8px); }
@@ -268,12 +275,12 @@ button, input { font: inherit; color: inherit; }
 .mock__state { font-family: var(--font-px); font-size: 12px; color: var(--muted); }
 .is-now .mock__state { color: var(--accent); }
 
-.puzzle { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); max-width: 240px; margin-inline: auto; }
+.puzzle { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); width: 100%; max-width: 208px; margin-inline: auto; }
 .puzzle button {
   aspect-ratio: 1; display: grid; place-items: center; padding: 0; cursor: pointer;
   border: 0; background: var(--bg); clip-path: var(--notch);
 }
-.puzzle button canvas { width: 32px; height: 32px; }
+.puzzle button canvas { width: 48px; height: 48px; }
 .puzzle button:hover { background: var(--haze); }
 .puzzle button:focus-visible { outline: 2px solid var(--accent); outline-offset: -6px; }
 .puzzle__status { margin-top: var(--sp-3); text-align: center; font-size: var(--fs-small); color: var(--muted); min-height: 1.5em; }
@@ -284,7 +291,7 @@ button, input { font: inherit; color: inherit; }
 .dialog-box__face { width: 48px; height: 48px; background: var(--surface); }
 .dialog-box__name { font-family: var(--font-px); font-size: 12px; font-weight: 700; color: var(--accent); }
 .dialog-box__line { margin-top: var(--sp-1); font-size: 15px; min-height: 4.5em; }
-.choices { display: grid; gap: var(--sp-1); margin-top: var(--sp-3); }
+.choices { display: grid; gap: var(--sp-1); margin-top: auto; padding-top: var(--sp-3); }
 .choices button {
   position: relative; display: flex; gap: var(--sp-2); padding: var(--sp-2) var(--sp-3) var(--sp-2) var(--sp-6);
   text-align: left; cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 15px;
@@ -303,17 +310,16 @@ button, input { font: inherit; color: inherit; }
   border: 0; background: none; clip-path: var(--notch);
   box-shadow: inset 0 0 0 2px var(--line);
 }
-.cast__tab canvas { width: 64px; height: 64px; background: var(--surface); }
+.cast__tab canvas { width: 64px; height: 64px; background: var(--haze); }
 .cast__tab strong { display: block; font-size: 18px; line-height: 1.3; }
 .cast__tab small { display: block; font-size: var(--fs-small); color: var(--muted); }
 .cast__tab:hover { box-shadow: inset 0 0 0 2px var(--muted); }
 .cast__tab[aria-selected="true"] { background: var(--surface); box-shadow: inset 0 0 0 2px var(--accent); }
-.cast__tab[aria-selected="true"] canvas { background: var(--bg); }
 .cast__tab:focus-visible { outline-offset: -6px; }
 .cast__panel { display: grid; grid-template-columns: auto 1fr; gap: clamp(var(--sp-5), 4vw, var(--sp-7)); padding: clamp(var(--sp-5), 4vw, var(--sp-7)); }
 .cast__panel[hidden] { display: none; }
 .cast__panel:focus-visible { outline-offset: -6px; }
-.cast__portrait { width: 192px; height: 192px; background: var(--bg); }
+.cast__portrait { width: 192px; height: 192px; background: var(--haze); }
 .cast__role { font-family: var(--font-px); font-size: 12px; color: var(--accent); }
 .cast__info h3 { margin-top: var(--sp-2); font-family: var(--font-px); font-weight: 700; font-size: 36px; line-height: 1.1; }
 .cast__info > p:not(.cast__role):not(.cast__quote) { margin-top: var(--sp-4); color: var(--muted); }
@@ -356,7 +362,7 @@ img.trailer__canvas { width: 100%; height: 100%; object-fit: cover; }
 /* ───── 05 출시 안내 ───── */
 .section--release { padding-bottom: 0; }
 .release { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: var(--sp-5); align-items: start; }
-.release__main, .release__side { display: grid; gap: var(--sp-5); }
+.release__main, .release__side { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-5); min-width: 0; }
 .release__date { padding: var(--sp-6); }
 .release__when { font-family: var(--font-px); font-weight: 700; font-size: 48px; line-height: 1; color: var(--accent); }
 .release__when .num { font-size: 72px; }
@@ -406,7 +412,7 @@ td { color: var(--muted); }
 .faq details[open] summary::after { content: "–"; }
 .faq details p { padding-bottom: var(--sp-4); color: var(--muted); font-size: 15px; }
 
-.finale { position: relative; margin-top: var(--section-y); height: clamp(150px, 15vw, 240px); overflow: hidden; }
+.finale { position: relative; margin-top: var(--section-y); height: clamp(200px, 26vw, 380px); overflow: hidden; }
 .finale__canvas { position: absolute; left: 0; bottom: 0; }
 
 /* ───── 바닥글 ───── */
@@ -477,8 +483,7 @@ td { color: var(--muted); }
   .shots { grid-template-columns: 1fr; gap: var(--sp-6); }
   .map__legend { grid-template-columns: 1fr; }
   .cast__tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .cast__tab { grid-template-columns: 48px 1fr; justify-items: start; text-align: left; gap: var(--sp-3); padding: var(--sp-2); }
-  .cast__tab canvas { width: 48px; height: 48px; }
+  .cast__tab { grid-template-columns: 64px 1fr; justify-items: start; text-align: left; gap: var(--sp-3); padding: var(--sp-2); }
   .cast__panel { grid-template-columns: 1fr; }
   .cast__portrait { width: 128px; height: 128px; }
   .trailer__play { width: 72px; height: 72px; }
@@ -487,6 +492,7 @@ td { color: var(--muted); }
   .release__when .num { font-size: 48px; }
   .release__when { font-size: 36px; }
   .subscribe__row { flex-direction: column; }
+  .subscribe input[type="email"] { flex: 0 0 auto; }
   .platform .btn { width: 100%; }
   .footer__inner { grid-template-columns: 1fr; }
 }

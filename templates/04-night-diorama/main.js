@@ -7,10 +7,10 @@
 // ── ASSETS ─────────────────────────────────────────────────────
 const ASSETS = {
   // 히어로 레이어 PNG (1px = 1도트, 정수 배율로 확대됨). 아래 정렬·왼쪽 정렬로 그려집니다.
-  heroLayers: { sky: null, far: null, village: null, near: null },        // 가로 화면용 (권장 400×180)
+  heroLayers: { sky: null, far: null, village: null, near: null },        // 가로 화면용 (권장 440×200)
   heroLayersMobile: { sky: null, far: null, village: null, near: null },  // 세로 화면용 (권장 160×300)
   heroWindows: null,        // village PNG를 쓸 때 창문 좌표 [[x, y, w, h], ...] (레이어 좌표)
-  apprenticeSheet: null,    // 견습생 스프라이트 시트: 11×16 프레임 4개 가로 (대기1·대기2·걷기1·걷기2)
+  apprenticeSheet: null,    // 견습생 스프라이트 시트: 12×16 프레임 4개 가로 = 48×16 (대기1·대기2·걷기1·걷기2)
   sprites: {                // [data-sprite] 캔버스를 PNG로 교체 (키 = data-sprite 이름)
     logo: null, iconLetter: null, iconLamp: null, iconTalk: null, faceFisher: null,
     portraitApprentice: null, portraitKeeper: null, portraitCat: null, portraitFisher: null,
@@ -107,8 +107,8 @@ function patch(map, edits) {
   return out;
 }
 /** 화면 폭에 맞춰 정수 배율로 캔버스 크기 결정 (가로를 꽉 채우고 넘친 1도트 미만은 잘림) */
-function fitSize(cssW, cssH, targetW) {
-  const s = Math.max(1, Math.round(cssW / targetW));
+function fitSize(cssW, cssH, targetW, minS = 2) {
+  const s = Math.max(minS, Math.round(cssW / targetW));
   return { W: Math.ceil(cssW / s), H: Math.ceil(cssH / s), s };
 }
 function applySize(canvas, { W, H, s }) {
@@ -260,22 +260,22 @@ const SPRITES = {
     '................',
   ],
   iconLamp: [
-    '................',
-    '......kkkk......',
-    '.....kk..kk.....',
-    '.....k....k.....',
-    '....kkkkkkkk....',
-    '...kssssssssk...',
-    '....kkkkkkkk....',
-    '....kaacaaak....',
-    '....kacccaak....',
-    '....kacccaak....',
-    '....kaacaaak....',
-    '....kaaaaaak....',
-    '...kkkkkkkkkk...',
-    '...kssssssssk...',
-    '....kkkkkkkk....',
-    '................',
+    '......kkk.......',
+    '.....k...k......',
+    '...kkkkkkkkk....',
+    '..khhhhhhhhsk...',
+    '...kkkkkkkkk....',
+    '...kaaakaaak....',
+    '...kaackcaak....',
+    '...kacckccak....',
+    '...kacckccak....',
+    '...kaackcaak....',
+    '...kaaakaaak....',
+    '..kkkkkkkkkkk...',
+    '..khhhhhhhhsk...',
+    '...kkkkkkkkk....',
+    '......ksk.......',
+    '......ksk.......',
   ],
   iconTalk: [
     '................',
@@ -350,155 +350,143 @@ const SPRITES = {
     '.ktttttt',
   ]),
 
-  // 32×32 초상 — 좌우 대칭 바탕 + 비대칭 덧칠
-  portraitApprentice: patch(mirror([
-    '................',
-    '................',
-    '..........kkkkkk',
-    '........kkttttt t'.replace(' ', '').slice(0, 16),
-    '.......kttcttttt',
-    '......kttctttttt',
-    '......kttttttttt',
-    '.....kdddddddddd',
-    '....kkkkkkkkkkkk',
-    '.....kssssssssss',
-    '.....ksscccccccc',
-    '.....kscccccccc c'.replace(' ', '').slice(0, 16),
-    '.....kscckkccccc',
-    '.....kscckkccccc',
-    '.....ksccccccccc',
-    '......kcaccccccc',
-    '......kccccccccc',
-    '.......kccccccck',
-    '........kkcccccc',
-    '..........kkkkkk',
-    '.........ktttttt',
-    '.......kktttdttt',
-    '.....kkhhktttttt',
-    '....khhhhhkttttt',
-    '...khhhhhhhkdddd',
-    '..khhhhhhhhhkhhh',
-    '..khshhhhhhhhkhh',
-    '.khsshhhhhhhhhkh',
-    '.khsshhhhhhhhhhk',
-    '.khsshhhhhhhhhhk',
-    '.khsshhhhhhhhhhk',
-    '.khsshhhhhhhhhhk',
-  ]), [
-    [9, 12, 'c'], [21, 12, 'c'],                 // 눈 반짝임
-    [22, 25, 'd'], [21, 26, 'd'], [20, 27, 'd'], [19, 28, 'd'], [18, 29, 'd'], [17, 30, 'd'], [16, 31, 'd'], // 가방끈
-    [23, 26, 'sss'], [24, 27, 'ss'], [25, 28, 'sss'], [25, 29, 'sss'], [25, 30, 'sss'], [25, 31, 'sss'],     // 오른쪽 그늘
-    [26, 26, 'kkkk'], [26, 27, 'kaak'], [26, 28, 'kcak'], [26, 29, 'kaak'], [26, 30, 'kkkk'],                // 등불
-  ]),
-  portraitKeeper: patch(mirror([
-    '................',
-    '................',
-    '................',
-    '.........kkkkkkk',
-    '.......kkssssss s'.replace(' ', '').slice(0, 16),
-    '......ksshssssss',
-    '......kssssssssa',
-    '.....kkkkkkkkkkk',
-    '....kkkkkkkkkkkk',
-    '......kccccccccc',
-    '.....kcccccccccc',
-    '.....khcckkkkccc',
-    '.....khcccccccc c'.replace(' ', '').slice(0, 16),
-    '.....khcckkccccc',
-    '.....khccccccccc',
-    '.....kcccccccchh',
-    '.....kccccccccch',
-    '.....kccccccccck',
-    '.....kcccccccccc',
-    '......kccccccccc',
-    '......kcccccccch',
-    '.......kccccccch',
-    '........kccccccc',
-    '......kkdkcccccc',
-    '....kkdddkkccccc',
-    '...kdddddddkkkcc',
-    '..kddtdddddddkkk',
-    '..kdttddddddddda',
-    '.kdttdddddddddkd',
-    '.kdttdddddddddda',
-    '.kdttdddddddddkd',
-    '.kdttddddddddddd',
-  ]), [
-    [10, 13, 'c'], [20, 13, 'c'],
-    [15, 15, 'hh'], [16, 16, 'h'],
-  ]),
-  portraitCat: patch(mirror([
-    '................',
-    '................',
-    '....kk..........',
-    '....khk.........',
-    '....khhk........',
-    '....khshk.......',
-    '....kshsskkkkkkk',
-    '....ksssssssssss',
-    '...kssssssssssss',
-    '...kssssssssssss',
-    '...ksskkkkssssss',
-    '..kssk.aaakssss s'.replace(' ', '').slice(0, 16),
-    '..ksskaakaakssss',
-    '..ksskaakaakssss',
-    '..ksskaaaaakssss',
-    '..kssskaaaksssss',
-    '..kssssskkkkssss',
-    '..ksssssssssssck',
-    '...ksssssssssskk',
-    '....ksssssssssss',
-    '.....kksssssssss',
-    '.......kkkkkkkkk',
-    '......kssssssaaa',
-    '.....ksssssssaca',
-    '....kssssssssaaa',
-    '...ksssssssssssa',
-    '...ksssssssssssa',
-    '..kssssssssssssss',
-    '..ksssssssssssss',
-    '..ksssssssssssss',
-    '..ksssssssssssss',
-    '..ksssssssssssss',
-  ].map((r) => r.slice(0, 16))), [
-    [10, 12, 'c'], [20, 12, 'c'],
-  ]),
-  portraitFisher: patch(mirror([
-    '................',
-    '................',
-    '..........kkkkkk',
-    '........kkaaaaaa',
-    '.......kaaaaaaaa',
-    '......kaaaaaaaaa',
-    '......kaaaaaaaaa',
-    '.....kadadadadad',
-    '.....kadadadadad',
-    '.....kkkkkkkkkkk',
-    '.....khcccccccc c'.replace(' ', '').slice(0, 16),
-    '.....khccccccccc',
-    '.....khckkccccc c'.replace(' ', '').slice(0, 16),
-    '.....khccckcccc c'.replace(' ', '').slice(0, 16),
-    '.....khccccccccc',
-    '.....kccccccccch',
-    '.....khcccccccch',
-    '.....kshccccccch',
-    '......ksshhsssss',
-    '......kssssskkkk',
-    '.......ksssssss s'.replace(' ', '').slice(0, 16),
-    '........kkssssss',
-    '......kkkkkkkkkk',
-    '....kkttttttttdd',
-    '...kttttttttttdc',
-    '..ktttttttttttdc',
-    '..kttttttttttttd',
-    '.kttdtttttttttt t'.replace(' ', '').slice(0, 16),
-    '.kttdttttttttttt',
-    '.kttdttttttttttt',
-    '.kttdttttttttttt',
-    '.kttdttttttttttt',
-  ]), [
-    [9, 12, 'c'], [21, 12, 'c'],
-  ]),
+  // 32×32 초상 (배경 투명 — CSS에서 --haze 바탕)
+  portraitApprentice: [
+    '................................',
+    '................................',
+    '...........kkkkkkkkkk...........',
+    '.........kkddddddddddkk.........',
+    '........kdtttddddddtttdk........',
+    '.......kdttddddddddddttdk.......',
+    '.......kdtddddddddddddtdk.......',
+    '......kddddddddddddddddddk......',
+    '......kddddddddddddddddddk......',
+    '......kddddddddddddddddddk......',
+    '.....kttttttttttttttttttttk.....',
+    '...kkkkkkkkkkkkkkkkkkkkkkkkkk...',
+    '......kssshhhhhhhhhhhhsssk......',
+    '......kssccccccccccccccssk......',
+    '......ksccccccccccccccccsk......',
+    '......ksccckccccccckccccsk......',
+    '......ksccckkcccccckkcccsk......',
+    '......ksccaaccccccccaaccsk......',
+    '.......kccccccckkccccccck.......',
+    '.......kcccccccccccccccck.......',
+    '........kkcccccccccccckk........',
+    '..........kkkkkkkkkkkk..........',
+    '........kcccccccccccccck........',
+    '.......kcccccccccccccccck.......',
+    '.....kkhcccccccccccccccchkk.....',
+    '...kkttttkhcccccccccchkttttkk...',
+    '..ktttttttkhhhhhhhhhhktttttttk..',
+    '.kdttttttttthttkktttttttttddtdk.',
+    '.kdtttttttthtttkattttkkkkkddtdk.',
+    '.kdttttttthttttkkttttkccakddtdk.',
+    '.kdtttttthtttttkattttkccccddtdk.',
+    '.kdttttthttttttkkttttkkkkkddtdk.',
+  ],
+  portraitKeeper: [
+    '................................',
+    '................................',
+    '.........kkkkkkkkkkkkkk.........',
+    '.......kksssssssssssssskk.......',
+    '......kshhsssssssssssshhsk......',
+    '......kshsssssssssssssshsk......',
+    '......kssssssssssssssssssk......',
+    '.....kkkkkkkkkkkkkkkkkkkkkk.....',
+    '....kttttttttttaattttttttttk....',
+    '....kkkkkkkkkkkkkkkkkkkkkkkk....',
+    '......khcccccccccccccccchk......',
+    '......kcccccccccccccccccck......',
+    '......kchhhhcccccccchhhhck......',
+    '......kccckkcccccccckkccck......',
+    '......kcccccccccccccccccck......',
+    '......kccccccchcchccccccck......',
+    '......kcccccccccccccccccck......',
+    '......kcchhhhhhkkhhhhhhcck......',
+    '......kcccccccccccccccccck......',
+    '......kccchcccccccccchccck......',
+    '.......kccchcccccccchccck.......',
+    '.......khccchcccccchccchk.......',
+    '........kccchcccccchccck........',
+    '.....kkkkhccchcccchccchkkkk.....',
+    '...kkdddkkhhcchcchcchhkkdddkk...',
+    '..kddtddkkhhcch..hcchhkkddtddk..',
+    '.kdttdddddkkhhcccchhkkddddddtdk.',
+    '.kdtddddddddkkhhhhkkddddddddtdk.',
+    '.kdtdddddddddkkddkkdddddddddtdk.',
+    '.kdtddddddddddkadkddddddddddtdk.',
+    '.kdtddddddddddkddkddddddddddtdk.',
+    '.kdtddddddddddkdakddddddddddtdk.',
+  ],
+  portraitCat: [
+    '................................',
+    '................................',
+    '.....kk..................kk.....',
+    '.....ksk................ksk.....',
+    '....kshsk..............kshsk....',
+    '....kshhsk............kshhsk....',
+    '....kshhsskkkkkkkkkkkksshhsk....',
+    '....kssssssssssssssssssssssk....',
+    '...kssssssssssssssssssssssssk...',
+    '...kssssssssssssssssssssssssk...',
+    '...ksskkkksssssssssssskkkkssk...',
+    '..ksskaaaaksssssssssskaaaakssk..',
+    '..ksskackaksssssssssskakcakssk..',
+    '..ksskakkaksssssssssskakkakssk..',
+    '..ksskakaaksssssssssskaakakssk..',
+    '..kssskaaaksssshhsssskaaaksssk..',
+    '..ksssskkksssshkkhsssskkkssssk..',
+    'hhhssssssssssskkkkssssssssssshhh',
+    '..khhhsssssssskssksssssssshhhk..',
+    '...kssssssssshhkkhhsssssssssk...',
+    '....kksssssssssssssssssssskk....',
+    '......kksssssssssssssssskk......',
+    '........kkttttkcccktttkk........',
+    '......kkskttttkcacktttkskk......',
+    '.....kssskddddkccckdddksssk.....',
+    '....khssssksssskkksssksssshk....',
+    '...khsssssssssssssssssssssshk...',
+    '...khsssssssssssssssssssssshk...',
+    '..khsssssssssssssssssssssssshk..',
+    '..khsssssssssssssssssssssssshk..',
+    '..khsssssssssssssssssssssssshk..',
+    '..khsssssssssssssssssssssssshk..',
+  ],
+  portraitFisher: [
+    '................................',
+    '................................',
+    '..........kkkkkkkkkkkk..........',
+    '........kkaaaaaaaaaaaakk........',
+    '.......kaaaaaaaaaaaaaaaak.......',
+    '......kaacaaaaaaaaaaaacaak......',
+    '......kaaaaaaaaaaaaaaaaaak......',
+    '.....kaaaaaaaaaaaaaaaaaaaak.....',
+    '.....kakakakakakkakakakakak.....',
+    '.....kakakakakakkakakakakak.....',
+    '.....kkkkkkkkkkkkkkkkkkkkkk.....',
+    '......kshhcccccccccccchhsk......',
+    '......ksccccccccccccccccsk......',
+    '......kscckkkcccccckkkccsk......',
+    '......kcccckkcccccckkcccck......',
+    '......kcccccccccccccccccck......',
+    '......kcccccccchhcccccccck......',
+    '......kscccccchhhhccccccsk......',
+    '......kssccccskksssccccssk......',
+    '.......ksssssskkkkssssssk.......',
+    '.......ksssssskkkkssssssk.......',
+    '........kssssssssssssssk........',
+    '.........kksssssssssskk.........',
+    '......kkkkcccccccccccckkkk......',
+    '....kkhhhkcccccccccccckhhhkk....',
+    '...khhhhhhkcchhhhhhcckhhhhhhk...',
+    '..khhssssskhhhhhhhhhhkssssshhk..',
+    '.khhsssssskhhhhhhhhhhksssssshhk.',
+    '.khsssssssskhhhhhhhhksssssssshk.',
+    '.khssssssssskhhhhhhkssssssssshk.',
+    '.khssssssssskhhhhhhkssssssssshk.',
+    '.khssssssssskhhhhhhkssssssssshk.',
+  ],
 };
 // 파생 프레임
 SPRITES.apprenticeIdle1 = patch(SPRITES.apprenticeIdle0, [[9, 12, 'ca'], [9, 13, 'aa']]);
@@ -625,13 +613,11 @@ class HarborScene {
       far: makeLayer(W + m(F.far), H),
       village: makeLayer(W + m(F.village), H),
       near: makeLayer(W + m(F.near), H),
-      fore: L.fore ? makeLayer(W + m(F.fore), H) : null,
     };
     this.buildSky(this.layers.sky);
     this.buildFar(this.layers.far);
     this.buildVillage(this.layers.village);
     this.buildNear(this.layers.near);
-    if (L.fore) this.buildFore(this.layers.fore);
     this.buildWater();
     // 창문 켜지는 순서 (앞줄부터 섞어서)
     const r = rng((L.seed || 7) + 99);
@@ -927,33 +913,6 @@ class HarborScene {
     }
   }
 
-  /** 가장 가까운 층: 화면 오른쪽 아래의 굵은 계류 말뚝과 밧줄 */
-  buildFore(Ly) {
-    const { g, h } = Ly;
-    const { L } = this;
-    const { xs, top } = L.fore;
-    xs.forEach((x, i) => {
-      const t0 = top + (i % 2) * 5;
-      px(g, 'k', x - 1, t0 - 1, 8, h - t0 + 1);
-      px(g, 's', x, t0, 1, h - t0);
-      px(g, 'h', x, t0, 6, 1);
-      px(g, 's', x + 1, t0 + 1, 4, 1);
-      for (let yy = t0 + 5; yy < h; yy += 6) px(g, 'k', x + 2, yy, 3, 1);
-      // 쇠고리 밴드
-      px(g, 'k', x - 1, t0 + 3, 8, 1); px(g, 'h', x, t0 + 3, 1, 1);
-    });
-    for (let i = 0; i < xs.length - 1; i++) {
-      const x0 = xs[i] + 6, x1 = xs[i + 1] - 1;
-      const y0 = top + (i % 2) * 5 + 4, y1 = top + ((i + 1) % 2) * 5 + 4;
-      for (let x = x0; x <= x1; x++) {
-        const f = (x - x0) / Math.max(1, x1 - x0);
-        const yy = Math.round(lerp(y0, y1, f) + Math.sin(f * Math.PI) * 4);
-        px(g, 'k', x, yy, 1, 2);
-        if (x % 3 === 0) px(g, 's', x, yy, 1, 1);
-      }
-    }
-  }
-
   buildWater() {
     const { L, H } = this;
     // 수면 줄무늬 (가로 줄 단위라 시차 이동에도 무늬가 깨지지 않음)
@@ -1012,7 +971,7 @@ class HarborScene {
     // 등대 빛줄기 (빛은 평면 도트 + 디더)
     let lampMode = 0;
     if (this.lamp) {
-      const theta = reduceMotion ? -1.1 : t * (Math.PI * 2 / 9) + (L.seed || 0);
+      const theta = reduceMotion ? -0.5 : t * (Math.PI * 2 / 9) + (L.seed || 0);
       const sx = Math.sin(theta), cz = Math.cos(theta);
       lampMode = cz > 0.93 ? 1 : 0;
       const lx = this.lamp.lx - oVil, ly = this.lamp.ly;
@@ -1067,7 +1026,7 @@ class HarborScene {
       for (let r = 1; r < Math.min(30, H - hz); r += 2) {
         const wv = Math.max(1, Math.round(L.moon.r * 0.9 * (1 - r / 32)) - ((r + frame) % 3 === 0 ? 1 : 0));
         const wob = reduceMotion ? 0 : Math.round(Math.sin(t * 1.7 + r * 0.8) * 1.4);
-        px(ctx, r < 6 ? 'c' : 'h', mx - (wv >> 1) + wob, hz + r, wv, 1);
+        px(ctx, r < 4 ? 'c' : 'h', mx - (wv >> 1) + wob, hz + r, wv, 1);
       }
     }
     // 반영: 앞줄 창문
@@ -1146,7 +1105,6 @@ class HarborScene {
       px(ctx, 'a', cx + 9 + wob, L.pier.y + 16, 1, 1);
       px(ctx, 'h', cx + 9 - wob, L.pier.y + 18, 1, 1);
     }
-    if (layers.fore) ctx.drawImage(layers.fore.c, -this.off(F.fore, pan), 0);
   }
 
   sheetFrame(name) {
@@ -1155,8 +1113,8 @@ class HarborScene {
     if (idx < 0) return null;
     const key = 'sheet' + idx;
     if (spriteCache.has(key)) return spriteCache.get(key);
-    const L = makeLayer(11, 16);
-    L.g.drawImage(heroSheet, idx * 11, 0, 11, 16, 0, 0, 11, 16);
+    const L = makeLayer(12, 16);
+    L.g.drawImage(heroSheet, idx * 12, 0, 12, 16, 0, 0, 12, 16);
     spriteCache.set(key, L.c);
     return L.c;
   }
@@ -1200,7 +1158,7 @@ function layoutLandscape(W, H, text) {
     boat: { x: Math.round(W * 0.05), water: pierY + 27, travel: 30, f: 1.2 },
     char: { x0: pierX0 + 14, walk: 30 },
     pan: 36,
-    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1, fore: 1.35 },
+    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1 },
   };
 }
 /** 세로 화면 구도: 위쪽 하늘에 글, 아래에 마을·등대·잔교를 다시 배치 */
@@ -1237,7 +1195,7 @@ function layoutPortrait(W, H, text) {
     boat: { x: 2, water: pierY + 30, travel: 12, f: 1.2 },
     char: { x0: pierX0 + 8, walk: 14 },
     pan: 14,
-    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1, fore: 1.35 },
+    factors: { sky: 0.04, far: 0.12, village: 0.42, near: 1 },
   };
 }
 
@@ -1261,7 +1219,7 @@ function initHero() {
     if (force) key = '';
     const vw = stage.clientWidth, vh = stage.clientHeight;
     const portrait = vw / vh < 0.9;
-    s = portrait ? Math.max(2, Math.round(vw / 130)) : Math.max(2, Math.round(vh / 180));
+    s = portrait ? Math.max(2, Math.min(Math.round(vw / 130), Math.round(vh / 250))) : Math.max(2, Math.round(vh / 180));
     const W = Math.ceil(vw / s), H = Math.ceil(vh / s);
     const k = `${W}x${H}x${s}`;
     if (k === key && scene) return;
@@ -1297,8 +1255,7 @@ function initHero() {
   function updateHud() {
     if (!scene) return;
     const mins = Math.round(lerp(21 * 60, 22 * 60 + 30, reduceMotion ? 1 : progress));
-    const hh = Math.floor(mins / 60) - 12, mm = mins % 60;
-    const time = `PM ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+    const time = `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
     const count = `${String(scene.litCount).padStart(2, '0')}/${String(scene.windows.length).padStart(2, '0')}`;
     const st = time + count;
     if (st === hudState) return;
@@ -1335,10 +1292,17 @@ function initHero() {
     dirty = true; kick();
   }, { passive: true });
   new ResizeObserver(() => { build(); readProgress(); dirty = true; kick(); }).observe(stage);
-  let rz = 0;
+  let rz = 0, lastText = '';
+  const textKey = () => { const r = textEl?.getBoundingClientRect(); return r ? `${Math.round(r.width)}x${Math.round(r.height)}` : ''; };
+  lastText = textKey();
   addEventListener('resize', () => {
     cancelAnimationFrame(rz);
-    rz = requestAnimationFrame(() => { build(true); readProgress(); render(performance.now()); });
+    rz = requestAnimationFrame(() => {
+      const k = textKey();
+      build(k !== lastText);
+      lastText = k;
+      readProgress(); render(performance.now());
+    });
   });
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; if (visible) { dirty = true; kick(); } }).observe(stage);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { dirty = true; kick(); } });
@@ -1538,22 +1502,24 @@ function trailerVignette(W, H) {
 
 /** 마무리 띠: 모든 창에 불이 켜진 바람곶 */
 function finaleVignette(W, H) {
-  const horizon = Math.round(H * 0.72);
-  const cliffX = Math.round(W * 0.78);
+  const horizon = H - 12;
+  const narrow = W < 240;
+  const cliffX = Math.round(W * (narrow ? 0.72 : 0.8));
+  const x0 = Math.round(W * (narrow ? 0.12 : 0.42));
   const L = {
     seed: 33, horizon,
-    textZone: null, moon: null, spanLeft: 10, spanRight: Math.round(H * 0.6), domeX: Math.round(W * 0.66), domeW: Math.round(W * 0.3),
-    farHeight: 14, farEnv: (x) => 0.3 + 0.7 * smooth(0, W * 0.5, x),
-    island: { x: Math.round(W * 0.06), w: 20 },
+    textZone: null, moon: null, spanLeft: 8, spanRight: Math.round(H * 0.7), domeX: Math.round(W * 0.68), domeW: Math.round(W * 0.28),
+    farHeight: 12, farEnv: (x) => 0.3 + 0.7 * smooth(0, W * 0.5, x),
+    island: { x: Math.round(W * 0.08), w: 20 },
     terraces: [
-      { y: horizon - 3, x0: Math.round(W * 0.3), x1: cliffX - 3 },
-      { y: horizon - 17, x0: Math.round(W * 0.3) + 12, x1: cliffX + 1, offset: 3 },
-      { y: horizon - 31, x0: Math.round(W * 0.3) + 26, x1: cliffX - 6, offset: 1 },
+      { y: horizon - 3, x0, x1: cliffX - 3 },
+      { y: horizon - 17, x0: x0 + 12, x1: cliffX + 1, offset: 3 },
+      { y: horizon - 31, x0: x0 + 26, x1: cliffX - 6, offset: 1 },
     ],
-    cliffX, cliffTop: horizon - 44, cliffW: Math.round(W * 0.2),
-    lighthouse: { x: cliffX + 22, h: 28 },
-    beamLen: Math.round(W * 0.35),
-    pier: null, boat: null, char: null, rocks: null,
+    cliffX, cliffTop: Math.max(32, horizon - 40), cliffW: Math.round(W * 0.12),
+    lighthouse: { x: cliffX + 22, h: 24 },
+    beamLen: Math.round(W * 0.4),
+    pier: null, boat: null, char: null,
     pan: 0, factors: { sky: 0, far: 0, village: 0, near: 0 },
   };
   const scene = new HarborScene(W, H, L);
@@ -1613,7 +1579,7 @@ function postofficeVignette(W, H) {
   // 매달린 등 + 카운터 위 불빛
   const hx = Math.round(W * 0.42), hy = Math.round(H * 0.18);
   px(g, 'k', hx, 4, 1, hy - 4);
-  drawMap(g, SPRITES.iconLamp.slice(4, 15), hx - 8, hy);
+  drawMap(g, SPRITES.iconLamp.slice(0, 14), hx - 7, hy);
   dither(g, 'a', kx, ky, Math.round(W * 0.16), 1, (x) => 0.75 - (x - kx) * 0.04);
   const catX = kx + 4, catY = ky - 7;
   const apX = Math.round(W * 0.3), apY = floorY - 16;
@@ -1788,9 +1754,12 @@ function initHeader() {
   const hero = document.querySelector('[data-hero]');
   const toggle = document.querySelector('[data-nav-toggle]');
   const list = document.getElementById('site-nav');
+  // 하늘 윗부분과 같은 색이라 스크롤을 시작하면 바로 면을 깔고, 구분선은 히어로를 지난 뒤에만
   const onScroll = () => {
     const limit = hero ? hero.offsetHeight - innerHeight * 0.2 : 40;
-    header.classList.toggle('is-solid', scrollY > limit || list.classList.contains('is-open'));
+    const open = list.classList.contains('is-open');
+    header.classList.toggle('is-solid', scrollY > 4 || open);
+    header.classList.toggle('is-lined', scrollY > limit || open);
   };
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
@@ -1827,7 +1796,7 @@ function initPuzzle() {
   const count = document.querySelector('[data-puzzle-count]');
   const status = document.querySelector('[data-puzzle-status]');
   const reset = document.querySelector('[data-puzzle-reset]');
-  const START = [0, 1, 0, 1, 1, 1, 0, 1, 1]; // 두 번 누르면 풀리는 시작 상태 (가운데 → 오른쪽 아래)
+  const START = [1, 0, 1, 0, 0, 1, 1, 1, 0]; // 가운데 → 오른쪽 아래, 두 번 누르면 풀리는 시작 상태
   let state = START.slice();
   const btns = [];
   const draw = (b, on) => {
@@ -1970,7 +1939,7 @@ function initSubscribe() {
       return;
     }
     msg.classList.add('is-ok');
-    msg.textContent = `구독 신청이 접수되었습니다. ${email.value.trim()}로 확인 메일을 보내 드릴게요. (템플릿 예시: 실제로 전송되지 않습니다)`;
+    msg.textContent = `구독 신청이 접수되었습니다. 확인 메일을 ${email.value.trim()} 주소로 보내 드릴게요. (템플릿 예시: 실제로 전송되지 않습니다)`;
     form.reset();
   });
 }
@@ -2003,7 +1972,7 @@ function initVignettes() {
     map: [110, mapVignette],
     roofline: [320, rooflineVignette],
     trailer: [300, trailerVignette],
-    finale: [320, finaleVignette],
+    finale: [360, finaleVignette],
     postoffice: [150, postofficeVignette],
     alley: [150, alleyVignette],
     lighthouse: [150, lighthouseVignette],

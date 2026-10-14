@@ -39,16 +39,16 @@
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <!-- ───── HERO: 스크롤하며 들어가는 밤의 항구 ───── -->
     <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
       <div class="hero__stage" data-hero-stage>
         <canvas class="hero__canvas px" data-hero-canvas role="img"
-          aria-label="밤의 항구 마을 풍경. 언덕을 따라 지붕이 낮은 집들이 층층이 놓여 있고, 오른쪽 절벽 위 등대가 천천히 빛을 돌린다. 앞쪽 선착장에는 등불을 든 견습생과 묶여 있는 작은 배, 가로등이 있고 물 위로 창문 불빛이 비친다."></canvas>
+          aria-label="밤의 항구 마을 풍경. 언덕을 따라 지붕 낮은 집들이 층층이 놓여 있고, 오른쪽 절벽 위 등대가 천천히 빛을 돌린다. 앞쪽 잔교에는 등불을 든 견습생과 가로등이, 돌 부두의 우편 상자 위에는 고양이가 있다. 왼쪽 아래로 밤배가 들어오고, 물 위로 창문 불빛이 비친다. 스크롤하면 창문에 하나씩 불이 켜진다."></canvas>
         <div class="hero__hud" aria-hidden="true">
           <span class="hud__hint" data-hud-hint>스크롤하면 밤이 깊어집니다 <span class="hud__arrow">↓</span></span>
           <div class="hud">
-            <span class="hud__time" data-hud-time>PM 09:00</span>
+            <span class="hud__time" data-hud-time>21:00</span>
             <span class="hud__row"><span class="hud__label">켜진 창</span> <span class="hud__count" data-hud-count>00/00</span></span>
             <span class="hud__bar"><span data-hud-bar></span></span>
           </div>
@@ -77,7 +77,7 @@
     <section class="section section--world" id="world" aria-labelledby="world-title">
       <div class="container">
         <header class="section__head">
-          <p class="chapter"><span class="chapter__no">01</span><span class="chapter__name">세계</span><span class="chapter__time">PM 09:30</span></p>
+          <p class="chapter"><span class="chapter__no">01</span><span class="chapter__name">세계</span><span class="chapter__time">22:40</span></p>
           <h2 id="world-title">밤이 되어야 깨어나는 작은 항구, 바람곶</h2>
         </header>
         <div class="world">
@@ -118,7 +118,7 @@
     <section class="section section--surface" id="experience" aria-labelledby="exp-title">
       <div class="container">
         <header class="section__head">
-          <p class="chapter"><span class="chapter__no">02</span><span class="chapter__name">핵심 경험</span><span class="chapter__time">PM 10:10</span></p>
+          <p class="chapter"><span class="chapter__no">02</span><span class="chapter__name">핵심 경험</span><span class="chapter__time">23:20</span></p>
           <h2 id="exp-title">하룻밤은 세 가지 일로 채워집니다</h2>
           <p class="section__intro">전투도, 시간 제한도 없습니다. 걷고, 전하고, 밝히는 일이 이 게임의 전부입니다.</p>
         </header>
@@ -137,6 +137,7 @@
                 <li class="is-now"><span class="mock__check" aria-hidden="true"></span><span class="mock__to">선착장 · 어부 달수</span><span class="mock__state">42걸음</span></li>
                 <li><span class="mock__check" aria-hidden="true"></span><span class="mock__to">주소 없음 · 발신인 불명</span><span class="mock__state">???</span></li>
               </ul>
+              <p class="mock__foot"><span>편지 가방</span><span class="mock__bag" role="img" aria-label="가방 5칸 중 3칸 사용"><i></i><i></i><i></i><i class="is-empty"></i><i class="is-empty"></i></span></p>
             </div>
           </li>
 
@@ -182,7 +183,7 @@
     <section class="section" id="characters" aria-labelledby="chara-title">
       <div class="container">
         <header class="section__head">
-          <p class="chapter"><span class="chapter__no">03</span><span class="chapter__name">등장인물</span><span class="chapter__time">PM 11:20</span></p>
+          <p class="chapter"><span class="chapter__no">03</span><span class="chapter__name">등장인물</span><span class="chapter__time">00:30</span></p>
           <h2 id="chara-title">바람곶에서 만나게 될 얼굴들</h2>
         </header>
 
@@ -254,7 +255,7 @@
     <section class="section section--surface" id="media" aria-labelledby="media-title">
       <div class="container">
         <header class="section__head">
-          <p class="chapter"><span class="chapter__no">04</span><span class="chapter__name">영상·스크린샷</span><span class="chapter__time">AM 01:40</span></p>
+          <p class="chapter"><span class="chapter__no">04</span><span class="chapter__name">영상·스크린샷</span><span class="chapter__time">02:10</span></p>
           <h2 id="media-title">바람곶의 밤을 먼저 걸어 보세요</h2>
         </header>
 
@@ -281,7 +282,7 @@
             <figure class="shot">
               <div class="shot__screen">
                 <canvas class="px" data-vignette="alley" role="img" aria-label="스크린샷: 언덕길. 돌계단 옆 집들의 창에 불이 켜져 있고 견습생이 등불을 들고 계단을 오른다."></canvas>
-                <div class="shot__hud shot__hud--loc"><span class="hud-chip">언덕 3번지 · PM 10:24</span></div>
+                <div class="shot__hud shot__hud--loc"><span class="hud-chip">언덕 3번지 · 22:24</span></div>
               </div>
               <figcaption><strong>언덕길</strong> 주소를 따라 돌계단을 오릅니다.</figcaption>
             </figure>
@@ -303,7 +304,7 @@
     <section class="section section--release" id="release" aria-labelledby="release-title">
       <div class="container">
         <header class="section__head">
-          <p class="chapter"><span class="chapter__no">05</span><span class="chapter__name">출시 안내</span><span class="chapter__time">AM 05:50</span></p>
+          <p class="chapter"><span class="chapter__no">05</span><span class="chapter__name">출시 안내</span><span class="chapter__time">05:50</span></p>
           <h2 id="release-title">2027년 봄, 바람곶에 첫 불이 켜집니다</h2>
         </header>
 
